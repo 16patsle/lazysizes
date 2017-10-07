@@ -12,6 +12,7 @@ High performance and SEO friendly lazy loader for images, iframes and more
 == Description ==
 
 **lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images `picture`/`srcset`), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
+
 This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images and iframes dynamically when needed.
 
 Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible. Also thansk to dbhynds for making the Lazy Load XT plugin this plugin is based on.
