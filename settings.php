@@ -65,7 +65,7 @@ class LazysizesSettings {
   function ask_for_feedback() {
     ?>
     <div class="updated">
-        <p><?php _e( 'Help improve lazysizes: <a href="https://wordpress.org/support/plugin/lazy-load-xt" target="_blank">submit feedback, questions, and bug reports</a>.', self::ns ); ?></p>
+        <p><?php _e( 'Help improve lazysizes: <a href="https://wordpress.org/support/plugin/lazysizes" target="_blank">submit feedback, questions, and bug reports</a>.', self::ns ); ?></p>
     </div>
     <?php
     wp_enqueue_script('thickbox');
