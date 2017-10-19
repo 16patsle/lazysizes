@@ -16,7 +16,9 @@ High performance and SEO friendly lazy loader for images, iframes and more
 
 This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images and iframes dynamically when needed.
 
-Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible. Also thansk to dbhynds for making the Lazy Load XT plugin this plugin is based on.
+Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible, and for letting me use the same name.
+
+Also thanks to dbhynds for making the Lazy Load XT plugin this plugin is based on.
 
 == Installation ==
 
@@ -46,7 +48,21 @@ The main difference is that this plugin is a bit simplified, and is using a comp
 
 Thanks to dbhynds for making Lazy Load XT. Without that project, this one would not be possible.
 
+= Why is this plugin called the same as the lazysizes JS library?
+
+There are a couple of reasons:
+
+1. I like the name. It's good.
+2. I'm hoping it will help people discovering the plugin. I originally tried searching for a WordPress plugin using the library myself, and other people might be trying the same.
+
+If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
+
 == Changelog ==
 
+= 0.1.1
+
+* Updated readme
+
 = 0.1.0 =
+
 * Initial version of the plugin
