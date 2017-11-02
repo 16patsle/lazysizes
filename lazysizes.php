@@ -9,7 +9,7 @@ Plugin URI: http://wordpress.org/plugins/lazysizes/
 Description: High performance and SEO friendly lazy loader for images (responsive and normal), iframes and more using <a href="https://github.com/aFarkas/lazysizes" target="_blank">lazysizes</a>.
 Author: Patrick Sletvold
 Author URI: https://www.multitek.no/
-Version: 0.1.1
+Version: 0.1.2
 Text Domain: lazysizes
 */
 
@@ -55,9 +55,19 @@ class Lazysizes {
       if ($this->settings['avatars']) {
         //add_filter( 'get_avatar', array($this,'filter_html') );
       }
+
+      add_action( 'plugins_loaded', array($this, 'load_textdomain') );
     }
 
+  }
 
+  /**
+  * Load plugin textdomain.
+  *
+  * @since 0.1.2
+  */
+  function load_textdomain() {
+      load_plugin_textdomain( 'lazysizes' );
   }
 
   function get_settings() {

@@ -35,7 +35,7 @@ or
 
 ### Why aren't my images lazy loading?
 
-Lazysizes filters images added to the page using `the_content`, `post_thumbnail_html`, `widget_text` and `get_avatar`. If your images are added using another function (`wp_get_attachment_image` for example), lazysizes does not filter them. However, as of v0.4, you can filter the HTML yourself by passing it to `get_lazysizes_html`.
+Lazysizes filters images added to the page using `the_content`, `post_thumbnail_html`, `widget_text` and `get_avatar`. If your images are added using another function (`wp_get_attachment_image` for example), lazysizes does not filter them. However, you can filter the HTML yourself by passing it to `get_lazysizes_html`.
 
 For example, if a theme has: `echo wp_get_attachment_image($id);` Changing it to the following would lazy load the image: `echo get_lazysizes_html( wp_get_attachment_image($id) );`
 
@@ -55,6 +55,10 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
+
+### 0.1.2
+
+- Fix text domain loading
 
 ### 0.1.1
 
