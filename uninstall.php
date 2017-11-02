@@ -4,6 +4,6 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit();
 }
 
-foreach (array('lazysizes_general','lazysizes_effects','lazysizes_addons','lazysizes_advanced','lazysizes_version') as $option) {
+foreach (array('lazysizes_general','lazysizes_effects','lazysizes_addons','lazysizes_version') as $option) {
 	delete_option($option);
 }

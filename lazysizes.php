@@ -76,7 +76,6 @@ class Lazysizes {
     $general = get_option('lazysizes_general');
     $effects = get_option('lazysizes_effects');
     $addons = get_option('lazysizes_addons');
-    $advanced = get_option('lazysizes_advanced');
 
     // Set the array of options
     $settings_arr = array(
@@ -107,18 +106,6 @@ class Lazysizes {
         $return = false;
       }
       $settings[$setting] = $return;
-    }
-
-    // If enabled, set the advanced settings to an array
-    if ($advanced && array_key_exists('lazysizes_enabled', $advanced) && $advanced['lazysizes_enabled']) {
-      foreach ($advanced as $key => $val) {
-        if ( $key != 'lazysizes_enabled' ) {
-          $settings['advanced'][str_replace('lazysizes_','',$key)] = $val;
-        }
-      }
-    } else {
-      // Otherwise set it to false
-      $settings['advanced'] = false;
     }
 
     $settings['excludeclasses'] = ($settings['excludeclasses']) ? explode(' ',$settings['excludeclasses']) : array();
