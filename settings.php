@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 class LazysizesSettings {
 
-  const ver = '0.1.2'; // Plugin version
+  const ver = '0.1.3'; // Plugin version
   const ns = 'lazy-load-xt';
   protected $defaults = array(
     'general' => array(
@@ -215,65 +215,6 @@ class LazysizesSettings {
       <label for="lazysizes_auto_load">
         <input type='checkbox' id='lazysizes_auto_load' name='lazysizes_addons[lazysizes_auto_load]' <?php $this->checked_r( $options, 'lazysizes_auto_load', 1 ); ?> value="1">
         <?php _e('Automatically load all objects, even those not in view.', self::ns ); ?>
-      </label>
-    </fieldset>
-    <?php
-
-  }
-
-  /**
-   * Output HTML for Advanced Settings.
-   *
-   * @since Lazysizes 0.1.0
-   */
-  function lazysizes_advanced_render() {
-
-    $options = get_option( 'lazysizes_advanced' ); ?>
-    <fieldset>
-      <legend class="screen-reader-text">
-        <span><?php _e( 'Advanced settings', self::ns ); ?></span>
-      </legend>
-      <label for="lazysizes_enabled">
-        <input type='checkbox' id='lazysizes_enabled' name='lazysizes_advanced[lazysizes_enabled]' <?php $this->checked_r( $options, 'lazysizes_enabled', 1 ); ?> value="1">
-        <?php _e( 'Enable advanced options. ', self::ns ); ?>
-        <p class="description"><?php _e( 'The following settings will only go into effect if advanced options are enabled.', self::ns ); ?></p>
-        <p class="description"><?php _e( 'Refer to RESS.io\'s <a href="https://github.com/ressio/lazy-load-xt#options">documentation on github</a> for further explanation of each option.', self::ns ); ?></p>
-      </label>
-      <br />
-      <?php
-      /*
-        autoInit
-        selector
-        srcAttr
-        blankImage
-      */
-      ?>
-      <label for="lazysizes_edgeY">
-        <?php _e( 'Edge Y:', self::ns ); ?><br />
-        <input type='number' id='lazysizes_edgeY' name='lazysizes_advanced[lazysizes_edgeY]' value="<?php echo $options['lazysizes_edgeY']; ?>">
-        <?php _e( 'pixels', self::ns ); ?>
-      </label>
-      <br />
-      <label for="lazysizes_edgeX">
-        <?php _e( 'Edge X:', self::ns ); ?><br />
-        <input type='number' id='lazysizes_edgeX' name='lazysizes_advanced[lazysizes_edgeX]' value="<?php echo $options['lazysizes_edgeX']; ?>">
-        <?php _e( 'pixels', self::ns ); ?>
-      </label>
-      <br />
-      <label for="lazysizes_throttle">
-        <?php _e( 'Throttle:', self::ns ); ?><br />
-        <input type='number' id='lazysizes_throttle' name='lazysizes_advanced[lazysizes_throttle]' value="<?php echo $options['lazysizes_throttle']; ?>">
-        <?php _e( 'ms', self::ns ); ?>
-      </label>
-      <br />
-      <label for="lazysizes_visibleOnly">
-        <input type='checkbox' id='lazysizes_visibleOnly' name='lazysizes_advanced[lazysizes_visibleOnly]' <?php $this->checked_r( $options, 'lazysizes_visibleOnly', 1 ); ?> value="1">
-        <?php _e( 'Visible only', self::ns ); ?>
-      </label>
-      <br />
-      <label for="lazysizes_checkDuplicates">
-        <input type='checkbox' id='lazysizes_checkDuplicates' name='lazysizes_advanced[lazysizes_checkDuplicates]' <?php $this->checked_r( $options, 'lazysizes_checkDuplicates', 1 ); ?> value="1">
-        <?php _e( 'Check duplicates', self::ns ); ?>
       </label>
     </fieldset>
     <?php
