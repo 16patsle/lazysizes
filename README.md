@@ -56,6 +56,10 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 ## Changelog
 
+### 0.1.2
+
+- Fix text domain loading
+
 ### 0.1.1
 
 - Updated readme
