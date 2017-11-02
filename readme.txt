@@ -46,7 +46,7 @@ Changing it to the following would lazy load the image:
 Yes, it does. The PHP code for this plugin is heavily based on that of Lazy Load XT.
 The main difference is that this plugin is a bit simplified, and is using a completely different lazy loading library, with no jQuery dependency.
 
-Thanks to dbhynds for making Lazy Load XT. Without that project, this one would not be possible.
+Thanks to dbhynds for making the Lazy Load XT plugin. Without that project, this one would not be possible.
 
 = Why is this plugin called the same as the lazysizes JS library?
 
@@ -58,6 +58,10 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 == Changelog ==
+
+= 0.1.3
+
+* Remove unused code for advanced settings
 
 = 0.1.2
 
