@@ -167,7 +167,7 @@ class Lazysizes {
       $newcontent = $this->preg_replace_html($newcontent,array('img'));
       // If enabled, replace 'src' with 'data-src' on extra elements
       if ($this->settings['load_extras']) {
-        $newcontent = $this->preg_replace_html($newcontent,array('iframe', 'video','audio'));
+        $newcontent = $this->preg_replace_html($newcontent,array('iframe','video','audio'));
       }
       return $newcontent;
     } else {
