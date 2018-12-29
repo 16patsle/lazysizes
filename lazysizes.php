@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 class Lazysizes {
 
   protected $dir; // Plugin directory
-  protected $lazysizes_ver = '3.0.0'; // Version of lazysizes (the script, not this plugin)
+  protected $lazysizes_ver = '4.1.5'; // Version of lazysizes (the script, not this plugin)
   protected $settingsClass; // Settings class for admin area
   protected $settings; // Settings for this plugin
 
