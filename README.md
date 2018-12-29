@@ -59,6 +59,7 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 ### 0.2.0
 
 - Update the lazysizes library to version 4.1.5
+- Fix lazy loading of elements without a class attribute, like some iframes
 
 ### 0.1.3
 
