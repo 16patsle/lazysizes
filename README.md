@@ -4,7 +4,7 @@
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 - Requires at least: 3.1
 - Requires PHP: 5.6
-- Tested up to: 4.8.2
+- Tested up to: 5.0
 - Stable tag: 0.1.3
 - License: GPLv3 or later
 - License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
