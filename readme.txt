@@ -59,6 +59,10 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 0.2.0 =
+
+* Update the lazysizes library to version 4.1.5
+
 = 0.1.3 =
 
 * Remove unused code for advanced settings
