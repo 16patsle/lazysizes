@@ -223,6 +223,10 @@ class Lazysizes {
             $replace_markup = preg_replace('/[\s\r\n]('.$attrs.')?=/', $src.' data-$1=', $replace_markup);
             // Add lazyload class
             $replace_markup = preg_replace('/class="(.*?)"/', 'class="$1 lazyload"', $replace_markup);
+            // If there are no class attribute, add one
+            if (!count($classes_r)){
+              $replace_markup = preg_replace('/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup);
+            }
             // And add the original in as <noscript>
             $replace_markup .= '<noscript>'.$original.'</noscript>';
             // And add it to the $replace array.
