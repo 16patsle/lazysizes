@@ -9,7 +9,7 @@ Plugin URI: http://wordpress.org/plugins/lazysizes/
 Description: High performance and SEO friendly lazy loader for images (responsive and normal), iframes and more using <a href="https://github.com/aFarkas/lazysizes" target="_blank">lazysizes</a>.
 Author: Patrick Sletvold
 Author URI: https://www.multitek.no/
-Version: 0.1.3
+Version: 0.2.0
 Text Domain: lazysizes
 */
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 class Lazysizes {
 
   protected $dir; // Plugin directory
-  protected $lazysizes_ver = '3.0.0'; // Version of lazysizes (the script, not this plugin)
+  protected $lazysizes_ver = '4.1.5'; // Version of lazysizes (the script, not this plugin)
   protected $settingsClass; // Settings class for admin area
   protected $settings; // Settings for this plugin
 
@@ -167,7 +167,7 @@ class Lazysizes {
       $newcontent = $this->preg_replace_html($newcontent,array('img'));
       // If enabled, replace 'src' with 'data-src' on extra elements
       if ($this->settings['load_extras']) {
-        $newcontent = $this->preg_replace_html($newcontent,array('iframe', 'video','audio'));
+        $newcontent = $this->preg_replace_html($newcontent,array('iframe','video','audio'));
       }
       return $newcontent;
     } else {
@@ -223,6 +223,10 @@ class Lazysizes {
             $replace_markup = preg_replace('/[\s\r\n]('.$attrs.')?=/', $src.' data-$1=', $replace_markup);
             // Add lazyload class
             $replace_markup = preg_replace('/class="(.*?)"/', 'class="$1 lazyload"', $replace_markup);
+            // If there are no class attribute, add one
+            if (!count($classes_r)){
+              $replace_markup = preg_replace('/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup);
+            }
             // And add the original in as <noscript>
             $replace_markup .= '<noscript>'.$original.'</noscript>';
             // And add it to the $replace array.

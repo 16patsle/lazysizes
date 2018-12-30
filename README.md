@@ -4,8 +4,8 @@
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 - Requires at least: 3.1
 - Requires PHP: 5.6
-- Tested up to: 4.8.2
-- Stable tag: 0.1.0
+- Tested up to: 5.0.2
+- Stable tag: 0.2.0
 - License: GPLv3 or later
 - License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
@@ -55,6 +55,12 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
+
+### 0.2.0
+
+- Update the lazysizes library to version 4.1.5
+- Fix lazy loading of elements without a class attribute, like some iframes
+- Fix translation loading
 
 ### 0.1.3
 
