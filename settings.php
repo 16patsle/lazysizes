@@ -216,6 +216,11 @@ class LazysizesSettings {
         <input type='checkbox' id='lazysizes_auto_load' name='lazysizes_addons[lazysizes_auto_load]' <?php $this->checked_r( $options, 'lazysizes_auto_load', 1 ); ?> value="1">
         <?php _e('Automatically load all objects, even those not in view.', self::ns ); ?>
       </label>
+      <br />
+      <label for="lazysizes_aspectratio">
+        <input type='checkbox' id='lazysizes_aspectratio' name='lazysizes_addons[lazysizes_aspectratio]' <?php $this->checked_r( $options, 'lazysizes_aspectratio', 1 ); ?> value="1">
+        <?php _e('Keep original aspect ratio before the object is loaded.', self::ns ); ?>
+      </label>
     </fieldset>
     <?php
 

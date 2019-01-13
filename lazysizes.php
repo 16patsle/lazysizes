@@ -89,6 +89,7 @@ class Lazysizes {
         'fade_in',
         'spinner',
         'auto_load',
+        'aspectratio',
       );
 
     // Start fresh
@@ -138,6 +139,11 @@ class Lazysizes {
     // Enqueue auto load if enabled
     if ( $this->settings['auto_load'] ) {
       wp_enqueue_script( 'lazysizes-auto', $script_url_pre.'.auto'.$min.'.js', false, $this->lazysizes_ver, $footer );
+    }
+
+    // Enqueue aspectratio if enabled
+    if ( $this->settings['aspectratio'] ) {
+      wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre.'.aspectratio'.$min.'.js', false, $this->lazysizes_ver, $footer );
     }
 
     wp_enqueue_script( 'lazysizes', $script_url_pre.$min.'.js', false, $this->lazysizes_ver, $footer );
@@ -227,6 +233,16 @@ class Lazysizes {
             if (!count($classes_r)){
               $replace_markup = preg_replace('/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup);
             }
+
+            // Set aspect ratio
+            preg_match('/width="([^"]*)"/i', $replace_markup, $match_width);
+            $width = !empty($match_width) ? $match_width[1] : '';
+            preg_match('/height="([^"]*)"/i', $replace_markup, $match_height);
+            $height = !empty($match_height) ? $match_height[1] : '';
+            if (!empty($width) && !empty($height)) {
+                $replace_markup = preg_replace('/ width="/', ' data-aspectratio="' . absint($width) . '/' . absint($height) . '" width="', $replace_markup);
+            }
+
             // And add the original in as <noscript>
             $replace_markup .= '<noscript>'.$original.'</noscript>';
             // And add it to the $replace array.
