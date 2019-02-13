@@ -220,6 +220,7 @@ class LazysizesSettings {
       <label for="lazysizes_aspectratio">
         <input type='checkbox' id='lazysizes_aspectratio' name='lazysizes_addons[lazysizes_aspectratio]' <?php $this->checked_r( $options, 'lazysizes_aspectratio', 1 ); ?> value="1">
         <?php _e('Keep original aspect ratio before the object is loaded.', self::ns ); ?>
+        <p class="description"><?php _e('Currently this needs images to have a defined width and height. Make sure to set a size for the images in your posts.', self::ns ); ?></p>
       </label>
     </fieldset>
     <?php
