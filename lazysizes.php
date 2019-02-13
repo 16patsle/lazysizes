@@ -38,6 +38,9 @@ class Lazysizes {
       $this->settings = $this->get_settings();
       $this->dir = plugin_dir_url(__FILE__);
 
+      // Add inline css to head
+      add_action('wp_head', array($this,'wp_head'));
+
       // Enqueue lazysizes scripts and styles
       add_action( 'wp_enqueue_scripts', array($this,'load_scripts') );
 
@@ -152,6 +155,13 @@ class Lazysizes {
     if ( $this->settings['load_extras'] ) {
       wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre.'.unveilhooks'.$min.'.js', array('lazysizes'), $this->lazysizes_ver, $footer );
     }
+  }
+
+  function wp_head() {
+    // Hides lazyloaded images when JS is turned off
+    ?>
+      <noscript><style>.lazyload { display: none !important; }</style></noscript>
+    <?php
   }
 
   function filter_html($content) {
