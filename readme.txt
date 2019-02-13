@@ -61,7 +61,8 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 = 0.3.0 =
 
-* Add support for the aspectratio plugin for lazysizes, which makes images have the right height while loading. Thanks to Teemu Suoranta for implementing.
+* Add support for the aspectratio plugin for lazysizes, which makes images have the right height while loading. Thanks to Teemu Suoranta (@teemusuoranta) for implementing.
+* If Javascript is turned off, the image tag that would normally be lazy loaded is now hidden properly. Thanks to @diegocanal for reporting and fixing.
 
 = 0.2.0 =
 
