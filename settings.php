@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 class LazysizesSettings {
 
-  const ver = '0.2.0'; // Plugin version
+  const ver = '0.3.0'; // Plugin version
   const ns = 'lazysizes';
   protected $defaults = array(
     'general' => array(
