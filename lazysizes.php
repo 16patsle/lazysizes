@@ -40,7 +40,7 @@ class Lazysizes {
       $this->dir = plugin_dir_url(__FILE__);
 
       require dirname(__FILE__).'/lazysizes_preg_replace.php';
-      $this->$replaceClass = new LazysizesPregReplace($this->settings);
+      $this->replaceClass = new LazysizesPregReplace($this->settings);
 
       // Add inline css to head
       add_action('wp_head', array($this,'wp_head'));
@@ -189,10 +189,10 @@ class Lazysizes {
     if (strlen($content)) {
       $newcontent = $content;
       // Replace 'src' with 'data-src' on images
-      $newcontent = $this->$replaceClass->preg_replace_html($newcontent,array('img','picture'));
+      $newcontent = $this->replaceClass->preg_replace_html($newcontent,array('img','picture'));
       // If enabled, replace 'src' with 'data-src' on extra elements
       if ($this->settings['load_extras']) {
-        $newcontent = $this->$replaceClass->preg_replace_html($newcontent,array('iframe','video','audio'));
+        $newcontent = $this->replaceClass->preg_replace_html($newcontent,array('iframe','video','audio'));
       }
       return $newcontent;
     } else {
