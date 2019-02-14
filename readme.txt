@@ -4,7 +4,7 @@ Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 Requires at least: 3.1
 Requires PHP: 5.6
 Tested up to: 5.0.2
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,7 @@ High performance and SEO friendly lazy loader for images, iframes and more
 
 == Description ==
 
-**lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images `picture`/`srcset`), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
+**lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images with `srcset` and soon also the `picture` tag), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
 
 This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images and iframes dynamically when needed.
 
@@ -58,6 +58,11 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 == Changelog ==
+
+= 0.3.0 =
+
+* Add support for the aspectratio plugin for lazysizes, which makes images have the right height while loading. Thanks to Teemu Suoranta (@teemusuoranta) for implementing.
+* If Javascript is turned off, the image tag that would normally be lazy loaded is now hidden properly. Thanks to @diegocanal for reporting and fixing.
 
 = 0.2.0 =
 
