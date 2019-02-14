@@ -22,6 +22,7 @@ class Lazysizes {
   protected $lazysizes_ver = '4.1.5'; // Version of lazysizes (the script, not this plugin)
   protected $settingsClass; // Settings class for admin area
   protected $settings; // Settings for this plugin
+  protected $replaceClass; // The preg_replace class
 
   function __construct() {
 
@@ -37,6 +38,9 @@ class Lazysizes {
       // Store our settings in memory to reduce mysql calls
       $this->settings = $this->get_settings();
       $this->dir = plugin_dir_url(__FILE__);
+
+      require dirname(__FILE__).'/lasysizes_preg_replace.php';
+      $replaceClass = new LazysizesPregReplace($this->$settings);
 
       // Add inline css to head
       add_action('wp_head', array($this,'wp_head'));
@@ -185,10 +189,10 @@ class Lazysizes {
     if (strlen($content)) {
       $newcontent = $content;
       // Replace 'src' with 'data-src' on images
-      $newcontent = $this->preg_replace_html($newcontent,array('img'));
+      $newcontent = $this->$replaceClass->preg_replace_html($newcontent,array('img'));
       // If enabled, replace 'src' with 'data-src' on extra elements
       if ($this->settings['load_extras']) {
-        $newcontent = $this->preg_replace_html($newcontent,array('iframe','video','audio'));
+        $newcontent = $this->$replaceClass->preg_replace_html($newcontent,array('iframe','video','audio'));
       }
       return $newcontent;
     } else {
