@@ -48,9 +48,7 @@ before_script:
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
       composer global require wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp
-      echo "LS; ---"
-      echo $(ls $HOME/.composer/vendor)
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility-wp/PHPCompatibilityWP
+      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility/PHPCompatibilityWP
     fi
 
 script:
