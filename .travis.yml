@@ -47,15 +47,17 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs dealerdirect/phpcodesniffer-composer-installer:^0.4.3 phpcompatibility/phpcompatibility-wp:*
-      #phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility-wp/PHPCompatibilityWP
+      composer global require wp-coding-standards/wpcs phpcompatibility/phpcompatibility-wp
+      ls $HOME/.composer/vendor/
+      ls $HOME/.composer/vendor/phpcompatibility-wp
+      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility-wp/PHPCompatibilityWP
     fi
 
 script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
-      phpunit -i
-      WP_MULTISITE=1 phpunit -i
+      phpunit
+      WP_MULTISITE=1 phpunit
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
