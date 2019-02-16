@@ -21,27 +21,27 @@ class Lazysizes {
 
 	protected $dir; // Plugin directory.
 	protected $lazysizes_ver = '4.1.5'; // Version of lazysizes (the script, not this plugin).
-	protected $settingsClass; // Settings class for admin area.
+	protected $settings_class; // Settings class for admin area.
 	protected $settings; // Settings for this plugin.
-	protected $replaceClass; // The preg_replace class.
+	protected $replace_class; // The preg_replace class.
 
 	function __construct() {
 
 		// If we're in the admin area, load the settings class.
 		if ( is_admin() ) {
 			require dirname( __FILE__ ) . '/settings.php';
-			$settingsClass = new LazysizesSettings;
-			// If this is the first time we've enabled the plugin, setup default settings
-			register_activation_hook( __FILE__, array( $settingsClass, 'first_time_activation' ) );
-			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $settingsClass, 'lazysizes_action_links' ) );
+			$settings_class = new LazysizesSettings();
+			// If this is the first time we've enabled the plugin, setup default settings.
+			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $settings_class, 'lazysizes_action_links' ) );
 		} else {
 
 			// Store our settings in memory to reduce mysql calls.
 			$this->settings = $this->get_settings();
-			$this->dir = plugin_dir_url( __FILE__ );
+			$this->dir      = plugin_dir_url( __FILE__ );
 
 			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
-			$this->replaceClass = new LazysizesPregReplace( $this->settings );
+			$this->replace_class = new LazysizesPregReplace( $this->settings );
 
 			// Add inline css to head.
 			add_action( 'wp_head', array( $this, 'wp_head' ) );
@@ -60,20 +60,21 @@ class Lazysizes {
 				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ) );
 			}
 			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
+			/*
 			if ( $this->settings['avatars'] ) {
-				//add_filter( 'get_avatar', array($this,'filter_html') );.
+				add_filter( 'get_avatar', array($this,'filter_html') );.
 			}
+			*/
 
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		}
-
 	}
 
 	/**
-	* Load plugin textdomain.
-	*
-	* @since 0.1.2
-	*/
+	 * Load plugin textdomain.
+	 *
+	 * @since 0.1.2
+	 */
 	function load_textdomain() {
 		load_plugin_textdomain( 'lazysizes' );
 	}
@@ -83,7 +84,7 @@ class Lazysizes {
 		// Get setting options from the db.
 		$general = get_option( 'lazysizes_general' );
 		$effects = get_option( 'lazysizes_effects' );
-		$addons = get_option( 'lazysizes_addons' );
+		$addons  = get_option( 'lazysizes_addons' );
 
 		// Set the array of options.
 		$settings_arr = array(
@@ -105,23 +106,22 @@ class Lazysizes {
 		// Loop through the settings we're looking for, and set them if they exist.
 		foreach ( $settings_arr as $setting ) {
 			if ( $general && array_key_exists( 'lazysizes_' . $setting, $general ) ) {
-				$return = $general['lazysizes_' . $setting];
+				$return = $general[ 'lazysizes_' . $setting ];
 			} elseif ( $effects && array_key_exists( 'lazysizes_' . $setting, $effects ) ) {
-				$return = $effects['lazysizes_' . $setting];
+				$return = $effects[ 'lazysizes_' . $setting ];
 			} elseif ( $addons && array_key_exists( 'lazysizes_' . $setting, $addons ) ) {
-				$return = $addons['lazysizes_' . $setting];
+				$return = $addons[ 'lazysizes_' . $setting ];
 			} else {
 				// Otherwise set the option to false.
 				$return = false;
 			}
-			$settings[$setting] = $return;
+			$settings[ $setting ] = $return;
 		}
 
 		$settings['excludeclasses'] = ( $settings['excludeclasses'] ) ? explode( ' ', $settings['excludeclasses'] ) : array();
 
 		// Return the settings.
 		return $settings;
-
 	}
 
 	function load_scripts() {
@@ -129,10 +129,10 @@ class Lazysizes {
 		// Are these minified?
 		$min = ( $this->settings['minimize_scripts'] ) ? '.min' : '';
 		// Load in footer?
-		$footer =  $this->settings['footer'];
+		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre = $this->dir . 'css/lazysizes';
+		$style_url_pre  = $this->dir . 'css/lazysizes';
 		$script_url_pre = $this->dir . 'js/lazysizes';
 
 		// Enqueue fade-in if enabled.
@@ -158,7 +158,7 @@ class Lazysizes {
 
 		// Enqueue extras enabled.
 		if ( $this->settings['load_extras'] ) {
-			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array('lazysizes'), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
 	}
 
@@ -175,7 +175,6 @@ class Lazysizes {
 	 * @since Lazysizes 0.1.0
 	 */
 	function filter_html( $content ) {
-
 		if ( is_feed() ) {
 			return $content;
 		}
@@ -186,30 +185,32 @@ class Lazysizes {
 			}
 		}
 
-		// If there's anything there, replace the 'src' with 'data-src'
+		// If there's anything there, replace the 'src' with 'data-src'.
 		if ( strlen( $content ) ) {
 			$newcontent = $content;
-			// Replace 'src' with 'data-src' on images
-			$newcontent = $this->replaceClass->preg_replace_html( $newcontent, array( 'img', 'picture' ) );
-			// If enabled, replace 'src' with 'data-src' on extra elements
+			// Replace 'src' with 'data-src' on images.
+			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ) );
+			// If enabled, replace 'src' with 'data-src' on extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replaceClass->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ) );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ) );
 			}
 			return $newcontent;
 		} else {
-			// Otherwise, carry on
+			// Otherwise, carry on.
 			return $content;
 		}
 	}
 
 }
 
-// Init
+// Init.
 $lazysizes = new Lazysizes();
 
 /* API */
 
-// Pass HTML to this function to filter it for lazy loading
+/**
+ * Pass HTML to this function to filter it for lazy loading.
+ */
 function get_lazysizes_html( $html = '' ) {
 	global $lazysizes;
 	return $lazysizes->filter_html( $html );

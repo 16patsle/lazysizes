@@ -22,8 +22,7 @@ class LazysizesPregReplace {
 	 *
 	 * @since Lazysizes 1.0.0
 	 */
-	function preg_replace_html( $content,$tags ) {
-
+	function preg_replace_html( $content, $tags ) {
 		$search  = array();
 		$replace = array();
 
@@ -31,7 +30,7 @@ class LazysizesPregReplace {
 			array_push( $tags, 'source' );
 		}
 
-		// Loop through tags
+		// Loop through tags.
 		foreach ( $tags as $tag ) {
 
 			// Is the tag self closing?
@@ -40,7 +39,7 @@ class LazysizesPregReplace {
 			$tag_end = ( $self_closing ) ? '\/?' : '>.*<\/' . $tag;
 
 			// Look for tag in content.
-			if ( 'source' == $tag ) {
+			if ( 'source' === $tag ) {
 				// If the tag is source, we check if the parent is in the list of tags.
 				$media = array_intersect( array( 'picture', 'video', 'audio' ), $tags );
 
@@ -52,8 +51,10 @@ class LazysizesPregReplace {
 					$matches = array();
 					// Loop through to make sure we get all the matches.
 					foreach ( $source_matches[0] as $source_match ) {
-						/*preg_match_all('/<source[\s]*(?:[^<]+)\/?>/is',$source_matches[0][0],$loop_matches);
-						$matches = array_merge($matches,$loop_matches);*/
+						/*
+						preg_match_all('/<source[\s]*(?:[^<]+)\/?>/is',$source_matches[0][0],$loop_matches);
+						$matches = array_merge($matches,$loop_matches);
+						*/
 						$this->preg_replace_html( $source_match, array( 'source' ) );
 					}
 				} else {
@@ -63,9 +64,11 @@ class LazysizesPregReplace {
 				preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
 			}
 
-			/*if(in_array($tag,array('source'))){
+			/*
+			if(in_array($tag,array('source'))){
 				echo ' matches: ' . htmlspecialchars(json_encode($matches));
-			}*/
+			}
+			*/
 
 			// If tags exist, loop through them and replace stuff.
 			if ( count( $matches[0] ) ) {
@@ -74,7 +77,7 @@ class LazysizesPregReplace {
 					// If it has assigned classes, explode them.
 					$classes_r = $this->extract_classes( $match );
 					// But first, check that the tag doesn't have any excluded classes.
-					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) == 0 ) {
+					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 						// Set the original version for <noscript>.
 						$original = $match;
 						// And add it to the $search array.
@@ -131,9 +134,9 @@ class LazysizesPregReplace {
 		$src_req = array( 'img', 'video' );
 
 		// If the element requires a 'src', set the src to default image.
-		$src = ( in_array( $tag, $src_req ) ) ? ' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' : '';
+		$src = ( in_array( $tag, $src_req, true ) ) ? ' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' : '';
 		// If the element is an audio tag, set the src to a blank mp3.
-		$src = ( $tag == 'audio' ) ? ' src="' . $this->dir . 'assets/empty.mp3"' : $src;
+		$src = ( $tag === 'audio' ) ? ' src="' . $this->dir . 'assets/empty.mp3"' : $src;
 
 		return $src;
 	}
@@ -150,7 +153,7 @@ class LazysizesPregReplace {
 		$attrs = implode( '|', $attrs_array );
 
 		// Now replace attr with data-attr.
-		return preg_replace( '/[\s\r\n](' . $attrs . ')?=/', $src.' data-$1=', $replace_markup );
+		return preg_replace( '/[\s\r\n](' . $attrs . ')?=/', $src . ' data-$1=', $replace_markup );
 	}
 
 	/**
@@ -159,9 +162,9 @@ class LazysizesPregReplace {
 	 * @since Lazysizes 1.0.0
 	 */
 	function add_lazyload_class( $replace_markup, $tag, $classes_r ) {
-		$replace_markup =  preg_replace( '/class="(.*?)"/', 'class="$1 lazyload"', $replace_markup );
+		$replace_markup = preg_replace( '/class="(.*?)"/', 'class="$1 lazyload"', $replace_markup );
 		// If there are no class attribute, add one.
-		if (! count( $classes_r ) ) {
+		if ( ! count( $classes_r ) ) {
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
 		}
 		return $replace_markup;
