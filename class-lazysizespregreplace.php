@@ -1,5 +1,7 @@
 <?php
 /**
+ * The HTML transformer file
+ *
  * @package Lazysizes
  */
 
@@ -11,20 +13,28 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 class LazysizesPregReplace {
 
 	/**
-	 * @var string Plugin directory.
+	 * The path to the plugin's directory
+	 *
+	 * @var string
 	 */
 	protected $dir;
 	/**
-	 * @var string Version of lazysizes (the script, not this plugin).
+	 * The version of lazysizes (the script, not this plugin).
+	 *
+	 * @var string
 	 */
 	protected $lazysizes_ver = '4.1.5';
 	/**
-	 * @var array Settings for this plugin.
+	 * The settings for this plugin.
+	 *
+	 * @var array
 	 */
 	protected $settings;
 
 	/**
 	 * Set up the settings and plugin dir variables
+	 *
+	 * @param array The settings for this plugin.
 	 */
 	public function __construct( $settings ) {
 		// Store our settings in memory to reduce mysql calls.
@@ -35,10 +45,10 @@ class LazysizesPregReplace {
 	/**
 	 * Does the actual filtering, replacing src with data-src and similar
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $content HTML content to transform
-	 * @param string[] $tags Tags to look for in the content
-	 * @return string The transformed HTML content
+	 * @since 1.0.0
+	 * @param string $content HTML content to transform.
+	 * @param string[] $tags Tags to look for in the content.
+	 * @return string The transformed HTML content.
 	 */
 	public function preg_replace_html( $content, $tags ) {
 		$search  = array();
@@ -131,9 +141,9 @@ class LazysizesPregReplace {
 	/**
 	 * Extracts the classes from the HTML string
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $match The HTML element to extract classes from
-	 * @return string[]|array The extracted classes
+	 * @since 1.0.0
+	 * @param string $match The HTML element to extract classes from.
+	 * @return string[]|array The extracted classes.
 	 */
 	public function extract_classes( $match ) {
 		preg_match( '/[\s\r\n]class=[\'"](.*?)[\'"]/', $match, $classes );
@@ -144,9 +154,9 @@ class LazysizesPregReplace {
 	/**
 	 * Figures out what the value of the src attribute should be, if any
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $tag The current tag type being processed
-	 * @return string A src string fit for the current tag
+	 * @since 1.0.0
+	 * @param string $tag The current tag type being processed.
+	 * @return string A src string fit for the current tag.
 	 */
 	public function check_add_src( $tag ) {
 		// Elements requiring a 'src' attribute to be valid HTML.
@@ -155,7 +165,7 @@ class LazysizesPregReplace {
 		// If the element requires a 'src', set the src to default image.
 		$src = ( in_array( $tag, $src_req, true ) ) ? ' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"' : '';
 		// If the element is an audio tag, set the src to a blank mp3.
-		$src = ( $tag === 'audio' ) ? ' src="' . $this->dir . 'assets/empty.mp3"' : $src;
+		$src = ( 'audio' === $tag ) ? ' src="' . $this->dir . 'assets/empty.mp3"' : $src;
 
 		return $src;
 	}
@@ -163,10 +173,10 @@ class LazysizesPregReplace {
 	/**
 	 * Replaces attributes with the equivalent data-attribute
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $replace_markup The HTML markup being processed
-	 * @param string $tag The current tag type being processed
-	 * @return string The HTML markup with attributes replaced
+	 * @since 1.0.0
+	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string $tag The current tag type being processed.
+	 * @return string The HTML markup with attributes replaced.
 	 */
 	public function replace_attr( $replace_markup, $tag ) {
 		// Attributes to search for.
@@ -187,21 +197,21 @@ class LazysizesPregReplace {
 	/**
 	 * Adds the lazyload class
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $replace_markup The HTML markup being processed
-	 * @param string $tag The current tag type being processed
-	 * @param string[] $classes_r The classes of the element in $replace_markup
-	 * @return string The HTML markup with lazyload class added
+	 * @since 1.0.0
+	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string $tag The current tag type being processed.
+	 * @param string[] $classes_r The classes of the element in $replace_markup.
+	 * @return string The HTML markup with lazyload class added.
 	 */
 	public function add_lazyload_class( $replace_markup, $tag, $classes_r ) {
 		// The contents of the class attribute.
-		$classes = implode(' ', $classes_r);
+		$classes = implode( ' ', $classes_r );
 
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
 			// If there are no class attribute, add one.
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
-		} elseif ( $classes === '' ) {
+		} elseif ( '' === $classes ) {
 			// If the attribute is emtpy, just add 'lazyload'.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
 		} else {
@@ -215,9 +225,9 @@ class LazysizesPregReplace {
 	/**
 	 * Sets the data-aspectration attribute if a width and height is specified
 	 *
-	 * @since Lazysizes 1.0.0
-	 * @param string $replace_markup The HTML markup being processed
-	 * @return string The HTML markup with data-aspectratio applied if possible
+	 * @since 1.0.0
+	 * @param string $replace_markup The HTML markup being processed.
+	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
 	public function set_aspect_ratio( $replace_markup ) {
 		// Extract width.
@@ -228,7 +238,7 @@ class LazysizesPregReplace {
 		preg_match( '/height="([^"]*)"/i', $replace_markup, $match_height );
 		$height = ! empty( $match_height ) ? $match_height[1] : '';
 
-		// If both width and height is set, add data-aspectratio
+		// If both width and height is set, add data-aspectratio.
 		if ( ! empty( $width ) && ! empty( $height ) ) {
 			$replace_markup = preg_replace( '/ width="/', ' data-aspectratio="' . absint( $width ) . '/' . absint( $height ) . '" width="', $replace_markup );
 		}

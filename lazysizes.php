@@ -26,20 +26,27 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 class Lazysizes {
 
 	/**
-	 * @var string Plugin directory.
+	 * The path to the plugin's directory
+	 *
+	 * @var string
 	 */
 	protected $dir;
 	/**
-	 * @var string Version of lazysizes (the script, not this plugin).
+	 * The version of lazysizes (the script, not this plugin).
+	 *
+	 * @var string
 	 */
 	protected $lazysizes_ver = '4.1.5';
 	/**
-	 * @var array Settings for this plugin.
+	 * The settings for this plugin.
+	 *
+	 * @var array
 	 */
 	protected $settings;
 	/**
 	 * The preg_replace class.
-	 * @var
+	 *
+	 * @var LazysizesSettings
 	 */
 	protected $replace_class;
 
@@ -247,6 +254,7 @@ $lazysizes = new Lazysizes();
 
 /* API */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 /**
  * Pass HTML to this function to filter it for lazy loading.
  */

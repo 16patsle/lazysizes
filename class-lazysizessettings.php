@@ -16,9 +16,10 @@ class LazysizesSettings {
 	/**
 	 * Plugin version.
 	 */
-	const VER           = '1.0.0';
+	const VER = '1.0.0';
 	/**
-	 * @var array[] $defaults The default plugin settings values
+	 * The default plugin settings values
+	 * @var array[]
 	 */
 	protected $defaults = array(
 		'general' => array(
@@ -104,10 +105,11 @@ class LazysizesSettings {
 			<p>
 				<?php
 				printf(
-					/* translators: 1: <a> (opening tag), 2: </a> (closing tag). */
-					html_esc__( 'Help improve lazysizes: %1$ssubmit feedback, questions, and bug reports%2$s.', 'lazysizes' ),
-					'<a href="https://wordpress.org/support/plugin/lazysizes" target="_blank">',
-					'</a>' );
+				/* translators: 1: <a> (opening tag), 2: </a> (closing tag). */
+				esc_html__( 'Help improve lazysizes: %1$ssubmit feedback, questions, and bug reports%2$s.', 'lazysizes' ),
+				'<a href="https://wordpress.org/support/plugin/lazysizes" target="_blank">',
+				'</a>'
+				);
 				?>
 			</p>
 		</div>
@@ -119,6 +121,7 @@ class LazysizesSettings {
 	 * Generate link to the settings page
 	 *
 	 * @since 0.1.0
+	 * @param array
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {
@@ -222,7 +225,7 @@ class LazysizesSettings {
 			<br />
 			<label for="lazysizes_excludeclasses">
 				<?php esc_html_e( 'Skip lazy loading on these classes:', 'lazysizes' ); ?><br />
-				<textarea id='lazysizes_excludeclasses' name='lazysizes_general[lazysizes_excludeclasses]' rows="3" cols="60"><?php echo esc_html($options['lazysizes_excludeclasses']); ?></textarea>
+				<textarea id='lazysizes_excludeclasses' name='lazysizes_general[lazysizes_excludeclasses]' rows="3" cols="60"><?php echo esc_html( $options['lazysizes_excludeclasses'] ); ?></textarea>
 				<p class="description">
 					<?php esc_html_e( 'Prevent objects with the above classes from being lazy loaded. (List classes separated by a space and without the proceding period. e.g. "skip-lazy-load size-thumbnail".)', 'lazysizes' ); ?>
 				</p>
@@ -324,11 +327,11 @@ class LazysizesSettings {
 	 * If they match, the 'checked' HTML attribute is returned
 	 *
 	 * @since 0.1.0
-	 * @param mixed[] $option Array of all options
-	 * @param string $key The key of the option to compare
-	 * @param mixed $current The other value to compare if not just true
-	 * @param bool $echo Whether to echo or just return the string
-	 * @return string html attribute or empty string
+	 * @param mixed[] $option Array of all options.
+	 * @param string $key The key of the option to compare.
+	 * @param mixed $current The other value to compare if not just true.
+	 * @param bool $echo Whether to echo or just return the string.
+	 * @return string|void html attribute or empty string.
 	 */
 	public function checked_r( $option, $key, $current = true, $echo = true ) {
 		if ( is_array( $option ) && array_key_exists( $key, $option ) ) {
