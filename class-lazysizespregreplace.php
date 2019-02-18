@@ -85,10 +85,8 @@ class LazysizesPregReplace {
 
 						// TODO: Move the source regex stuff here.
 
-						$src = $this->check_add_src( $tag );
-
 						// Set replace html and replace attr with data-attr.
-						$replace_markup = $this->replace_attr( $match );
+						$replace_markup = $this->replace_attr( $match, $tag );
 						// Add lazyload class.
 						$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
@@ -146,14 +144,20 @@ class LazysizesPregReplace {
 	 *
 	 * @since Lazysizes 1.0.0
 	 */
-	function replace_attr( $replace_markup ) {
-		$attrs_array = array( 'src', 'poster', 'srcset' );
-
+	function replace_attr( $replace_markup, $tag ) {
 		// Attributes to search for.
-		$attrs = implode( '|', $attrs_array );
+		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
+
+		// Replacement src attribute.
+		$src = $this->check_add_src( $tag );
 
 		// Now replace attr with data-attr.
-		return preg_replace( '/[\s\r\n](' . $attrs . ')?=/', $src . ' data-$1=', $replace_markup );
+		$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
+
+		// And add in a replacement src attribute if necessary.
+		$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
+
+		return $replace_markup;
 	}
 
 	/**
