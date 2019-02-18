@@ -122,7 +122,7 @@ class LazysizesSettings {
 	 * Generate link to the settings page
 	 *
 	 * @since 0.1.0
-	 * @param array $links The links
+	 * @param array $links The links.
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {
