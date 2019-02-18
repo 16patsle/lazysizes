@@ -34,7 +34,7 @@ class LazysizesPregReplace {
 	/**
 	 * Set up the settings and plugin dir variables
 	 *
-	 * @param array The settings for this plugin.
+	 * @param array $settings The settings for this plugin.
 	 */
 	public function __construct( $settings ) {
 		// Store our settings in memory to reduce mysql calls.
@@ -46,7 +46,7 @@ class LazysizesPregReplace {
 	 * Does the actual filtering, replacing src with data-src and similar
 	 *
 	 * @since 1.0.0
-	 * @param string $content HTML content to transform.
+	 * @param string   $content HTML content to transform.
 	 * @param string[] $tags Tags to look for in the content.
 	 * @return string The transformed HTML content.
 	 */
@@ -80,7 +80,7 @@ class LazysizesPregReplace {
 					// Loop through to make sure we get all the matches.
 					foreach ( $source_matches[0] as $source_match ) {
 						/*
-						preg_match_all('/<source[\s]*(?:[^<]+)\/?>/is',$source_matches[0][0],$loop_matches);
+						A preg_match_all('/<source[\s]*(?:[^<]+)\/?>/is',$source_matches[0][0],$loop_matches);
 						$matches = array_merge($matches,$loop_matches);
 						*/
 						$this->preg_replace_html( $source_match, array( 'source' ) );
@@ -93,7 +93,7 @@ class LazysizesPregReplace {
 			}
 
 			/*
-			if(in_array($tag,array('source'))){
+			A if(in_array($tag,array('source'))){
 				echo ' matches: ' . htmlspecialchars(json_encode($matches));
 			}
 			*/
@@ -111,7 +111,6 @@ class LazysizesPregReplace {
 						array_push( $search, $original );
 
 						// TODO: Move the source regex stuff here.
-
 						// Set replace html and replace attr with data-attr.
 						$replace_markup = $this->replace_attr( $match, $tag );
 						// Add lazyload class.
@@ -125,9 +124,11 @@ class LazysizesPregReplace {
 
 						// And add it to the $replace array.
 						array_push( $replace, $replace_markup );
-						/*if(in_array($tag,array('picture'))){
+						/*
+						A if(in_array($tag,array('picture'))){
 							echo ' picture: ' . htmlspecialchars(json_encode($replace));
-						}*/
+						}
+						*/
 					}
 				}
 			}
@@ -198,8 +199,8 @@ class LazysizesPregReplace {
 	 * Adds the lazyload class
 	 *
 	 * @since 1.0.0
-	 * @param string $replace_markup The HTML markup being processed.
-	 * @param string $tag The current tag type being processed.
+	 * @param string   $replace_markup The HTML markup being processed.
+	 * @param string   $tag The current tag type being processed.
 	 * @param string[] $classes_r The classes of the element in $replace_markup.
 	 * @return string The HTML markup with lazyload class added.
 	 */

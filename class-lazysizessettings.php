@@ -19,6 +19,7 @@ class LazysizesSettings {
 	const VER = '1.0.0';
 	/**
 	 * The default plugin settings values
+	 *
 	 * @var array[]
 	 */
 	protected $defaults = array(
@@ -121,7 +122,7 @@ class LazysizesSettings {
 	 * Generate link to the settings page
 	 *
 	 * @since 0.1.0
-	 * @param array
+	 * @param array $links
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {
@@ -328,9 +329,9 @@ class LazysizesSettings {
 	 *
 	 * @since 0.1.0
 	 * @param mixed[] $option Array of all options.
-	 * @param string $key The key of the option to compare.
-	 * @param mixed $current The other value to compare if not just true.
-	 * @param bool $echo Whether to echo or just return the string.
+	 * @param string  $key The key of the option to compare.
+	 * @param mixed   $current The other value to compare if not just true.
+	 * @param bool    $echo Whether to echo or just return the string.
 	 * @return string|void html attribute or empty string.
 	 */
 	public function checked_r( $option, $key, $current = true, $echo = true ) {
