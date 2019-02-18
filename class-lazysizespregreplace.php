@@ -73,8 +73,7 @@ class LazysizesPregReplace {
 			// If tags exist, loop through them and replace stuff.
 			if ( count( $matches[0] ) ) {
 				foreach ( $matches[0] as $match ) {
-					preg_match( '/[\s\r\n]class=[\'"](.*?)[\'"]/', $match, $classes );
-					// If it has assigned classes, explode them.
+					// If it has assigned classes, extract them.
 					$classes_r = $this->extract_classes( $match );
 					// But first, check that the tag doesn't have any excluded classes.
 					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
@@ -166,11 +165,21 @@ class LazysizesPregReplace {
 	 * @since Lazysizes 1.0.0
 	 */
 	function add_lazyload_class( $replace_markup, $tag, $classes_r ) {
-		$replace_markup = preg_replace( '/class="(.*?)"/', 'class="$1 lazyload"', $replace_markup );
-		// If there are no class attribute, add one.
+		// The contents of the class attribute.
+		$classes = implode(' ', $classes_r);
+
+		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
+			// If there are no class attribute, add one.
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
+		} elseif ( $classes === '' ) {
+			// If the attribute is emtpy, just add 'lazyload'.
+			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
+		} else {
+			// Append lazyload class to end of attribute contents.
+			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
 		}
+
 		return $replace_markup;
 	}
 
@@ -180,10 +189,15 @@ class LazysizesPregReplace {
 	 * @since Lazysizes 1.0.0
 	 */
 	function set_aspect_ratio( $replace_markup ) {
+		// Extract width.
 		preg_match( '/width="([^"]*)"/i', $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
+
+		// Extract height.
 		preg_match( '/height="([^"]*)"/i', $replace_markup, $match_height );
 		$height = ! empty( $match_height ) ? $match_height[1] : '';
+
+		// If both width and height is set, add data-aspectratio
 		if ( ! empty( $width ) && ! empty( $height ) ) {
 			$replace_markup = preg_replace( '/ width="/', ' data-aspectratio="' . absint( $width ) . '/' . absint( $height ) . '" width="', $replace_markup );
 		}
