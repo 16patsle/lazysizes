@@ -51,92 +51,176 @@ class LazysizesPregReplace {
 	 * @return string The transformed HTML content.
 	 */
 	public function preg_replace_html( $content, $tags ) {
-		$search  = array();
-		$replace = array();
-
-		if ( ( in_array( 'picture', $tags, true ) || in_array( 'video', $tags, true ) || in_array( 'audio', $tags, true ) ) && ! in_array( 'source', $tags, true ) ) {
-			array_push( $tags, 'source' );
-		}
-
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
 
-			// Is the tag self closing?
-			$self_closing = in_array( $tag, array( 'img', 'embed', 'source' ), true );
 			// Set tag end, depending of if it's self-closing.
-			$tag_end = ( $self_closing ) ? '\/?' : '>.*<\/' . $tag;
+			if( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
+				$tag_end = '\/?';
+			} else {
+				$tag_end = '>.*<\/' . $tag;
+			}
 
 			// Look for tag in content.
-			if ( 'source' === $tag ) {
-				// If the tag is source, we check if the parent is in the list of tags.
-				$media = array_intersect( array( 'picture', 'video', 'audio' ), $tags );
-
-				// Matching with the list of media elements to check.
-				preg_match_all( '/<(?:' . implode( '|', $media ) . ')[\s]*(?:[^<]*)>[\s]*<source[\s]*(?:[^<]+)\/?>.*<\/(?:' . implode( '|', $media ) . ')>(?!<noscript>|<\/noscript>)/is', $content, $source_matches );
-
-				// If tags is inside allowed parent, we do the usual check (just simplified).
-				if ( count( $source_matches[0] ) ) {
-					$matches = array();
-					// Loop through to make sure we get all the matches.
-					foreach ( $source_matches[0] as $source_match ) {
-						/*
-						A preg_match_all('/<source[\s]*(?:[^<]+)\/?>/is',$source_matches[0][0],$loop_matches);
-						$matches = array_merge($matches,$loop_matches);
-						*/
-						$this->preg_replace_html( $source_match, array( 'source' ) );
-					}
-				} else {
-					$matches = $source_matches;
-				}
+			if ( in_array( $tag, array( 'picture', 'video', 'audio' ) ) ) {
+				$result = $this->replace_picture_video_audio( $content, $tag );
 			} else {
-				preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
+				$result = $this->replace_generic_tag( $content, $tag );
 			}
+			$newcontent = str_replace( $content, $result, $content );
+		}
 
-			/*
-			A if(in_array($tag,array('source'))){
-				echo ' matches: ' . htmlspecialchars(json_encode($matches));
-			}
-			*/
+		return $newcontent;
+	}
 
-			// If tags exist, loop through them and replace stuff.
-			if ( count( $matches[0] ) ) {
-				foreach ( $matches[0] as $match ) {
+	/**
+	 * Special filtering for <picture>, <video> and <audio>
+	 *
+	 * @since 1.0.0
+	 * @param string $content HTML content to transform.
+	 * @param string $tag Tag currently being processed.
+	 * @param bool $noscript If <noscript> fallbacks should be generated.
+	 * @return string The transformed HTML content.
+	 */
+	public function replace_picture_video_audio( $content, $tag, $noscript = true ) {
+		// Set tag end, depending of if it's self-closing.
+		$tag_end = $this->get_tag_end( $tag );
+
+		// Matching with the list of media elements to check.
+		preg_match_all( '/<' . $tag . '\s*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
+
+		$newcontent = $content;
+
+		// If tags exist, loop through them and replace stuff.
+		if ( count( $matches[0] ) ) {
+			foreach ( $matches[0] as $match ) {
+				// Check if the tag has a src attribute.
+				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
+				$has_src = count ( $src_match );
+
+				if ( $has_src ) {
 					// If it has assigned classes, extract them.
 					$classes_r = $this->extract_classes( $match );
 					// But first, check that the tag doesn't have any excluded classes.
 					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 						// Set the original version for <noscript>.
 						$original = $match;
-						// And add it to the $search array.
-						array_push( $search, $original );
 
-						// TODO: Move the source regex stuff here.
 						// Set replace html and replace attr with data-attr.
 						$replace_markup = $this->replace_attr( $match, $tag );
+
 						// Add lazyload class.
 						$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
 						// Set aspect ratio.
 						$replace_markup = $this->set_aspect_ratio( $replace_markup );
 
-						// And add the original in as <noscript>.
-						$replace_markup .= '<noscript>' . $original . '</noscript>';
-
-						// And add it to the $replace array.
-						array_push( $replace, $replace_markup );
-
-						/*
-						A if(in_array($tag,array('picture'))){
-							echo ' picture: ' . htmlspecialchars(json_encode($replace));
+						if ( $noscript ) {
+							// And add the original in as <noscript>.
+							$replace_markup .= '<noscript>' . $original . '</noscript>';
 						}
-						*/
+
+						// And replace it.
+						$newcontent = str_replace( $original, $replace_markup, $newcontent );
+					}
+				} else {
+					// If it has assigned classes, extract them.
+					$classes_r = $this->extract_classes( $match );
+					// But first, check that the tag doesn't have any excluded classes.
+					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+						$original = $match;
+
+						$new_replace = $match;
+
+						// Set replace html and replace attr with data-attr.
+						$new_replace = $this->replace_attr( $new_replace, 'source' );
+
+						// Add lazyload class.
+						$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
+
+						preg_match_all( '/<' . 'source' . '\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
+
+						foreach ( $sources[0] as $match ) {
+							// If it has assigned classes, extract them.
+							$classes_r = $this->extract_classes( $match );
+							// But first, check that the tag doesn't have any excluded classes.
+							if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+								// Set the original version for <noscript>.
+								$source_original = $match;
+
+								// Set replace html and replace attr with data-attr.
+								$replace_markup = $this->replace_attr( $match, 'source' );
+
+								// Add lazyload class.
+								$replace_markup = $this->add_lazyload_class( $replace_markup, 'source', $classes_r );
+
+								// Set aspect ratio.
+								$replace_markup = $this->set_aspect_ratio( $replace_markup );
+
+								// And replace it.
+								$new_replace = str_replace( $source_original, $replace_markup, $new_replace );
+							}
+						}
+
+						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false );
+						if ( $noscript ) {
+							// And add the original in as <noscript>.
+							$new_replace .= '<noscript>' . $original . '</noscript>';
+						}
+						$newcontent = str_replace( $original, $new_replace, $newcontent );
 					}
 				}
 			}
 		}
+		return $newcontent;
+	}
 
-		// Replace all the $search items with the $replace items.
-		$newcontent = str_replace( $search, $replace, $content );
+	/**
+	 * Generic filtering for other tags
+	 *
+	 * @since 1.0.0
+	 * @param string $content HTML content to transform.
+	 * @param string $tag Tag currently being processed.
+	 * @param bool $noscript If <noscript> fallbacks should be generated.
+	 * @return string The transformed HTML content.
+	 */
+	public function replace_generic_tag( $content, $tag, $noscript = true ) {
+		// Set tag end, depending of if it's self-closing.
+		$tag_end = $this->get_tag_end( $tag );
+
+		preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
+
+		$newcontent = $content;
+
+		// If tags exist, loop through them and replace stuff.
+		if ( count( $matches[0] ) ) {
+			foreach ( $matches[0] as $match ) {
+				// If it has assigned classes, extract them.
+				$classes_r = $this->extract_classes( $match );
+				// But first, check that the tag doesn't have any excluded classes.
+				if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+					// Set the original version for <noscript>.
+					$original = $match;
+
+					// Set replace html and replace attr with data-attr.
+					$replace_markup = $this->replace_attr( $match, $tag );
+
+					// Add lazyload class.
+					$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
+
+					// Set aspect ratio.
+					$replace_markup = $this->set_aspect_ratio( $replace_markup );
+
+					if ( $noscript ) {
+						// And add the original in as <noscript>.
+						$replace_markup .= '<noscript>' . $original . '</noscript>';
+					}
+
+					// And replace it.
+					$newcontent = str_replace( $original, $replace_markup, $newcontent );
+				}
+			}
+		}
 		return $newcontent;
 	}
 
@@ -160,7 +244,7 @@ class LazysizesPregReplace {
 	 * @param string $tag The current tag type being processed.
 	 * @return string A src string fit for the current tag.
 	 */
-	public function check_add_src( $tag ) {
+	public function get_src_attr( $tag ) {
 		// Elements requiring a 'src' attribute to be valid HTML.
 		$src_req = array( 'img', 'video' );
 
@@ -170,6 +254,22 @@ class LazysizesPregReplace {
 		$src = ( 'audio' === $tag ) ? ' src="' . $this->dir . 'assets/empty.mp3"' : $src;
 
 		return $src;
+	}
+
+	/**
+	 * Figures out what the end of the tag would be
+	 *
+	 * @since 1.0.0
+	 * @param string $tag The current tag type being processed.
+	 * @return string The end regex for the current tag.
+	 */
+	function get_tag_end( $tag ) {
+		if( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
+			$tag_end = '\/?';
+		} else {
+			$tag_end = '>.*\s*<\/' . $tag;
+		}
+		return $tag_end;
 	}
 
 	/**
@@ -185,7 +285,7 @@ class LazysizesPregReplace {
 		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
 
 		// Replacement src attribute.
-		$src = $this->check_add_src( $tag );
+		$src = $this->get_src_attr( $tag );
 
 		// Now replace attr with data-attr.
 		$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
