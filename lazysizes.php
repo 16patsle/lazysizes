@@ -1,8 +1,12 @@
 <?php
 /**
+ * The main plugin file
+ *
  * @package Lazysizes
  * @version 1.0.0
  */
+
+// phpcs:disable WordPress.Files.FileName.InvalidClassFileName
 
 /*
 Plugin Name: lazysizes
@@ -16,16 +20,33 @@ Text Domain: lazysizes
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
-
+/**
+ * The main plugin class
+ */
 class Lazysizes {
 
-	protected $dir; // Plugin directory.
-	protected $lazysizes_ver = '4.1.5'; // Version of lazysizes (the script, not this plugin).
-	protected $settings_class; // Settings class for admin area.
-	protected $settings; // Settings for this plugin.
-	protected $replace_class; // The preg_replace class.
+	/**
+	 * @var string Plugin directory.
+	 */
+	protected $dir;
+	/**
+	 * @var string Version of lazysizes (the script, not this plugin).
+	 */
+	protected $lazysizes_ver = '4.1.5';
+	/**
+	 * @var array Settings for this plugin.
+	 */
+	protected $settings;
+	/**
+	 * The preg_replace class.
+	 * @var
+	 */
+	protected $replace_class;
 
-	function __construct() {
+	/**
+	 * Set up the plugin, including adding actions and filters
+	 */
+	public function __construct() {
 
 		// If we're in the admin area, load the settings class.
 		if ( is_admin() ) {
@@ -60,6 +81,7 @@ class Lazysizes {
 				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ) );
 			}
 			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
+
 			/*
 			if ( $this->settings['avatars'] ) {
 				add_filter( 'get_avatar', array($this,'filter_html') );.
@@ -75,11 +97,17 @@ class Lazysizes {
 	 *
 	 * @since 0.1.2
 	 */
-	function load_textdomain() {
+	public function load_textdomain() {
 		load_plugin_textdomain( 'lazysizes' );
 	}
 
-	function get_settings() {
+	/**
+	 * Load the settings from the database
+	 *
+	 * @since 0.1.0
+	 * @return mixed[] The plugin settings
+	 */
+	protected function get_settings() {
 
 		// Get setting options from the db.
 		$general = get_option( 'lazysizes_general' );
@@ -124,7 +152,12 @@ class Lazysizes {
 		return $settings;
 	}
 
-	function load_scripts() {
+	/**
+	 * Load all the lazysizes scripts for the frontend
+	 *
+	 * @since 0.1.0
+	 */
+	public function load_scripts() {
 
 		// Are these minified?
 		$min = ( $this->settings['minimize_scripts'] ) ? '.min' : '';
@@ -162,8 +195,12 @@ class Lazysizes {
 		}
 	}
 
-	function wp_head() {
-		// Hides lazyloaded images when JS is turned off.
+	/**
+	 * Inject styling in head to hide lazyloaded images when JS is turned off.
+	 *
+	 * @since 0.3.0
+	 */
+	public function wp_head() {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
@@ -173,8 +210,10 @@ class Lazysizes {
 	 * Filter the html
 	 *
 	 * @since Lazysizes 0.1.0
+	 * @param string $content HTML content to transform
+	 * @return string The transformed HTML content
 	 */
-	function filter_html( $content ) {
+	public function filter_html( $content ) {
 		if ( is_feed() ) {
 			return $content;
 		}
