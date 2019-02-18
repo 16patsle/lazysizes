@@ -38,6 +38,7 @@ class LazysizesPregReplace {
 	 * @since Lazysizes 1.0.0
 	 * @param string $content HTML content to transform
 	 * @param string[] $tags Tags to look for in the content
+	 * @return string The transformed HTML content
 	 */
 	public function preg_replace_html( $content, $tags ) {
 		$search  = array();
@@ -132,6 +133,7 @@ class LazysizesPregReplace {
 	 *
 	 * @since Lazysizes 1.0.0
 	 * @param string $match The HTML element to extract classes from
+	 * @return string[]|array The extracted classes
 	 */
 	public function extract_classes( $match ) {
 		preg_match( '/[\s\r\n]class=[\'"](.*?)[\'"]/', $match, $classes );
@@ -144,6 +146,7 @@ class LazysizesPregReplace {
 	 *
 	 * @since Lazysizes 1.0.0
 	 * @param string $tag The current tag type being processed
+	 * @return string A src string fit for the current tag
 	 */
 	public function check_add_src( $tag ) {
 		// Elements requiring a 'src' attribute to be valid HTML.
@@ -163,6 +166,7 @@ class LazysizesPregReplace {
 	 * @since Lazysizes 1.0.0
 	 * @param string $replace_markup The HTML markup being processed
 	 * @param string $tag The current tag type being processed
+	 * @return string The HTML markup with attributes replaced
 	 */
 	public function replace_attr( $replace_markup, $tag ) {
 		// Attributes to search for.
@@ -187,6 +191,7 @@ class LazysizesPregReplace {
 	 * @param string $replace_markup The HTML markup being processed
 	 * @param string $tag The current tag type being processed
 	 * @param string[] $classes_r The classes of the element in $replace_markup
+	 * @return string The HTML markup with lazyload class added
 	 */
 	public function add_lazyload_class( $replace_markup, $tag, $classes_r ) {
 		// The contents of the class attribute.
@@ -212,6 +217,7 @@ class LazysizesPregReplace {
 	 *
 	 * @since Lazysizes 1.0.0
 	 * @param string $replace_markup The HTML markup being processed
+	 * @return string The HTML markup with data-aspectratio applied if possible
 	 */
 	public function set_aspect_ratio( $replace_markup ) {
 		// Extract width.
