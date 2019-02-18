@@ -50,7 +50,7 @@ class Lazysizes {
 
 		// If we're in the admin area, load the settings class.
 		if ( is_admin() ) {
-			require dirname( __FILE__ ) . '/settings.php';
+			require dirname( __FILE__ ) . '/class-lazysizessettings.php';
 			$settings_class = new LazysizesSettings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
