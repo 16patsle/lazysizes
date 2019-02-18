@@ -75,9 +75,10 @@ class Lazysizes {
 			if ( $this->settings['thumbnails'] ) {
 				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ) );
 			}
-			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
+
 			/*
 			A if ( $this->settings['avatars'] ) {
+				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
 				add_filter( 'get_avatar', array($this,'filter_html') );.
 			}
 			*/

@@ -27,6 +27,7 @@ $lazysizes = new Lazysizes();
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 /**
  * Pass HTML to this function to filter it for lazy loading.
+ *
  * @param string $html HTML content to transform.
  * @return string The transformed HTML content.
  */

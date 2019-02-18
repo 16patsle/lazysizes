@@ -106,10 +106,10 @@ class LazysizesSettings {
 			<p>
 				<?php
 				printf(
-				/* translators: 1: <a> (opening tag), 2: </a> (closing tag). */
-				esc_html__( 'Help improve lazysizes: %1$ssubmit feedback, questions, and bug reports%2$s.', 'lazysizes' ),
-				'<a href="https://wordpress.org/support/plugin/lazysizes" target="_blank">',
-				'</a>'
+					/* translators: 1: <a> (opening tag), 2: </a> (closing tag). */
+					esc_html__( 'Help improve lazysizes: %1$ssubmit feedback, questions, and bug reports%2$s.', 'lazysizes' ),
+					'<a href="https://wordpress.org/support/plugin/lazysizes" target="_blank">',
+					'</a>'
 				);
 				?>
 			</p>
@@ -122,7 +122,7 @@ class LazysizesSettings {
 	 * Generate link to the settings page
 	 *
 	 * @since 0.1.0
-	 * @param array $links
+	 * @param array $links The links
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {

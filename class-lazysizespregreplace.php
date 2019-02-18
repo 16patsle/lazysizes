@@ -124,6 +124,7 @@ class LazysizesPregReplace {
 
 						// And add it to the $replace array.
 						array_push( $replace, $replace_markup );
+
 						/*
 						A if(in_array($tag,array('picture'))){
 							echo ' picture: ' . htmlspecialchars(json_encode($replace));
