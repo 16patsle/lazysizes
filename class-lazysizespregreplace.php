@@ -55,14 +55,14 @@ class LazysizesPregReplace {
 		foreach ( $tags as $tag ) {
 
 			// Set tag end, depending of if it's self-closing.
-			if( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
+			if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
 				$tag_end = '\/?';
 			} else {
 				$tag_end = '>.*<\/' . $tag;
 			}
 
 			// Look for tag in content.
-			if ( in_array( $tag, array( 'picture', 'video', 'audio' ) ) ) {
+			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
 				$result = $this->replace_picture_video_audio( $content, $tag );
 			} else {
 				$result = $this->replace_generic_tag( $content, $tag );
@@ -79,7 +79,7 @@ class LazysizesPregReplace {
 	 * @since 1.0.0
 	 * @param string $content HTML content to transform.
 	 * @param string $tag Tag currently being processed.
-	 * @param bool $noscript If <noscript> fallbacks should be generated.
+	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @return string The transformed HTML content.
 	 */
 	public function replace_picture_video_audio( $content, $tag, $noscript = true ) {
@@ -96,7 +96,7 @@ class LazysizesPregReplace {
 			foreach ( $matches[0] as $match ) {
 				// Check if the tag has a src attribute.
 				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
-				$has_src = count ( $src_match );
+				$has_src = count( $src_match );
 
 				if ( $has_src ) {
 					// If it has assigned classes, extract them.
@@ -138,7 +138,7 @@ class LazysizesPregReplace {
 						// Add lazyload class.
 						$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
 
-						preg_match_all( '/<' . 'source' . '\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
+						preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
 
 						foreach ( $sources[0] as $match ) {
 							// If it has assigned classes, extract them.
@@ -181,7 +181,7 @@ class LazysizesPregReplace {
 	 * @since 1.0.0
 	 * @param string $content HTML content to transform.
 	 * @param string $tag Tag currently being processed.
-	 * @param bool $noscript If <noscript> fallbacks should be generated.
+	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @return string The transformed HTML content.
 	 */
 	public function replace_generic_tag( $content, $tag, $noscript = true ) {
@@ -263,8 +263,8 @@ class LazysizesPregReplace {
 	 * @param string $tag The current tag type being processed.
 	 * @return string The end regex for the current tag.
 	 */
-	function get_tag_end( $tag ) {
-		if( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
+	public function get_tag_end( $tag ) {
+		if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
 			$tag_end = '\/?';
 		} else {
 			$tag_end = '>.*\s*<\/' . $tag;
