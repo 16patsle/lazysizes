@@ -2,7 +2,7 @@
 
 - Contributors: 16patsle
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
-- Requires at least: 3.7
+- Requires at least: 3.9
 - Requires PHP: 5.6
 - Tested up to: 5.0.2
 - Stable tag: 0.3.0
