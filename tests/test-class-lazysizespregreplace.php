@@ -87,7 +87,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_should_return_audio_src() {
 		$src      = $this->class_instance->check_add_src( 'audio' );
-		$expected = ' src="http://example.org/wp-content/plugins/app/assets/empty.mp3"';
+		$expected = ' src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'assets/empty.mp3"';
 
 		$this->assertEquals( $expected, $src );
 	}
