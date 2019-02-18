@@ -1,5 +1,6 @@
 <?php
 /**
- * Silence is golden.
  * @package Lazysizes
  */
+
+ // Silence is golden.

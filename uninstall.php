@@ -1,6 +1,7 @@
 <?php
 /**
  * Uninstall the plugin
+ *
  * @package Lazysizes
  */
 
