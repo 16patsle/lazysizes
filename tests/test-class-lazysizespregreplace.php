@@ -20,10 +20,105 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test the actual filtering.
+	 * Test the filtering of an img tag.
 	 */
-	public function test_preg_replace_html() {
-		$this->assertEquals( true, true );
+	public function test_preg_replace_html_img() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
+		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an audio tag with a src atribute.
+	 */
+	public function test_preg_replace_html_audio_src_attr() {
+		$markup   = $this->class_instance->preg_replace_html( '<audio src="sound.mp3"></audio>', array( 'audio' ) );
+		$expected = '<audio src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'assets/empty.mp3" data-src="sound.mp3" class="lazyload"></audio><noscript><audio src="sound.mp3"></audio></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of a video tag with a src attribute.
+	 */
+	public function test_preg_replace_html_video_src_attr() {
+		$markup   = $this->class_instance->preg_replace_html( '<video src="vid.mp4" poster="img.png"></video>', array( 'video' ) );
+		$expected = '<video src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="vid.mp4" data-poster="img.png" class="lazyload"></video><noscript><video src="vid.mp4" poster="img.png"></video></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an audio tag with source elements.
+	 */
+	public function test_preg_replace_html_audio_source_elem() {
+		$html     = '
+		<audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
+		$expected = '
+		<audio class="lazyload">
+			<source data-src="myAudio.mp3" type="audio/mp3">
+			<source data-src="myAudio.ogg" type="audio/ogg">
+		</audio><noscript><audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of a video tag with source elements.
+	 */
+	public function test_preg_replace_html_video_source_elem() {
+		$html     = '
+		<video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'video' ) );
+		$expected = '
+		<video data-poster="img.png" class="lazyload">
+			<source data-src="myVideo.mp4" type="video/mp4">
+			<source data-src="myVideo.webm" type="video/webm">
+		</video><noscript><video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of a picture tag with source elements and img child.
+	 */
+	public function test_preg_replace_html_picture_source_elem() {
+		$html     = '
+		<picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$expected = '
+		<picture class="lazyload">
+			<source data-srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="logo-narrow.png" alt="Logo" class="lazyload">
+		</picture><noscript><picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
 	}
 
 	/**
@@ -64,7 +159,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * This tests for the image tag.
 	 */
 	public function test_should_return_image_src() {
-		$src      = $this->class_instance->check_add_src( 'img' );
+		$src      = $this->class_instance->get_src_attr( 'img' );
 		$expected = ' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"';
 
 		$this->assertEquals( $expected, $src );
@@ -75,7 +170,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * This tests for the video tag.
 	 */
 	public function test_should_return_video_src() {
-		$src      = $this->class_instance->check_add_src( 'video' );
+		$src      = $this->class_instance->get_src_attr( 'video' );
 		$expected = ' src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"';
 
 		$this->assertEquals( $expected, $src );
@@ -86,7 +181,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * This tests for the audio tag.
 	 */
 	public function test_should_return_audio_src() {
-		$src      = $this->class_instance->check_add_src( 'audio' );
+		$src      = $this->class_instance->get_src_attr( 'audio' );
 		$expected = ' src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'assets/empty.mp3"';
 
 		$this->assertEquals( $expected, $src );
@@ -97,7 +192,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * This tests for a random tag that doesn't need src.
 	 */
 	public function test_should_return_no_src() {
-		$src      = $this->class_instance->check_add_src( 'random other tag' );
+		$src      = $this->class_instance->get_src_attr( 'random other tag' );
 		$expected = '';
 
 		$this->assertEquals( $expected, $src );
