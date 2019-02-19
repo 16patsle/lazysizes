@@ -1,5 +1,7 @@
 # lazysizes
 
+[![Build Status](https://travis-ci.org/16patsle/lazysizes.svg?branch=master)](https://travis-ci.org/16patsle/lazysizes)
+
 - Contributors: 16patsle
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 - Requires at least: 3.9
