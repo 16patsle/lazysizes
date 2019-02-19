@@ -3,7 +3,6 @@
  * The plugin settings file
  *
  * @package Lazysizes
- * @version 1.0.0
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -16,7 +15,7 @@ class LazysizesSettings {
 	/**
 	 * Plugin version.
 	 */
-	const VER = '1.0.0';
+	const VER = '0.4.0';
 	/**
 	 * The default plugin settings values
 	 *
