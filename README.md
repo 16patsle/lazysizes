@@ -56,6 +56,12 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 ## Changelog
 
+### 0.4.0
+
+- Proper support for the picture tag, by popular request. This also means audio and video tags with multiple sources should work better.
+- Big refactoring of the HTML transforming code was done to make picture element support possible.
+- Note: 0.4.0 is a prerelease for what will later be known as 1.0.0.
+
 ### 0.3.0
 
 - Add support for the aspectratio plugin for lazysizes, which makes images have the right height while loading. Thanks to Teemu Suoranta (@teemusuoranta) for implementing.
