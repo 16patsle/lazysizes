@@ -98,24 +98,15 @@ class LazysizesPregReplace {
 				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
 				$has_src = count( $src_match );
 
+				// Check if has a src attr. Otherwise it may have source tags as children.
 				if ( $has_src ) {
-					// If it has assigned classes, extract them.
-					$classes_r = $this->extract_classes( $match );
-					// But first, check that the tag doesn't have any excluded classes.
-					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-						// Replace attr, add lazyload class, calculate aspectratio etc.
-						$replace_markup = $this->get_replace_markup( $match, $tag, $classes_r, $noscript );
-
-						// And replace it.
-						$newcontent = str_replace( $match, $replace_markup, $newcontent );
-					}
+					// Replace attr, add class and similar.
+					$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
 				} else {
 					// If it has assigned classes, extract them.
 					$classes_r = $this->extract_classes( $match );
 					// But first, check that the tag doesn't have any excluded classes.
 					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-						$original = $match;
-
 						$new_replace = $match;
 
 						// Set replace html and replace attr with data-attr.
@@ -126,25 +117,22 @@ class LazysizesPregReplace {
 
 						preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
 
-						foreach ( $sources[0] as $match ) {
-							// If it has assigned classes, extract them.
-							$classes_r = $this->extract_classes( $match );
-							// But first, check that the tag doesn't have any excluded classes.
-							if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-								// Replace attr, add lazyload class, calculate aspectratio etc.
-								$replace_markup = $this->get_replace_markup( $match, 'source', $classes_r, $noscript );
-
-								// And replace it.
-								$new_replace = str_replace( $match, $replace_markup, $new_replace );
+						// If tags exist, loop through them and replace stuff.
+						if ( count( $sources[0] ) ) {
+							foreach ( $sources[0] as $source_match ) {
+								// Replace attr, add class and similar.
+								$new_replace = $this->get_replace_markup( $new_replace, $source_match, $tag, $noscript );
 							}
 						}
 
+						// Replace any img tags inside, needed for picture tags.
 						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false );
+
 						if ( $noscript ) {
 							// And add the original in as <noscript>.
-							$new_replace .= '<noscript>' . $original . '</noscript>';
+							$new_replace .= '<noscript>' . $match . '</noscript>';
 						}
-						$newcontent = str_replace( $original, $new_replace, $newcontent );
+						$newcontent = str_replace( $match, $new_replace, $newcontent );
 					}
 				}
 			}
@@ -172,15 +160,8 @@ class LazysizesPregReplace {
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				// If it has assigned classes, extract them.
-				$classes_r = $this->extract_classes( $match );
-				// But first, check that the tag doesn't have any excluded classes.
-				if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-					$replace_markup = $this->get_replace_markup( $match, $tag, $classes_r, $noscript );
-
-					// And replace it.
-					$newcontent = str_replace( $match, $replace_markup, $newcontent );
-				}
+				// Replace attr, add class and similar.
+				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
 			}
 		}
 		return $newcontent;
@@ -189,31 +170,38 @@ class LazysizesPregReplace {
 	/**
 	 * Generates the markup to be replaced later.
 	 *
+	 * @param string   $content The whole HTML string being processed.
 	 * @param string   $match HTML content to transform.
 	 * @param string   $tag Tag currently being processed.
-	 * @param string[] $classes_r The classes of the element in $match.
 	 * @param bool     $noscript If <noscript> fallbacks should be generated.
 	 * @return string The new markup.
 	 */
-	public function get_replace_markup( $match, $tag, $classes_r, $noscript = true ) {
-		// Set the original version for <noscript>.
-		$original = $match;
+	public function get_replace_markup( $content, $match, $tag, $noscript = true ) {
+		$newcontent = $content;
 
-		// Set replace html and replace attr with data-attr.
-		$replace_markup = $this->replace_attr( $match, $tag );
+		// If it has assigned classes, extract them.
+		$classes_r = $this->extract_classes( $match );
+		// But first, check that the tag doesn't have any excluded classes.
+		if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+			// Set replace html and replace attr with data-attr.
+			$replace_markup = $this->replace_attr( $match, $tag );
 
-		// Add lazyload class.
-		$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
+			// Add lazyload class.
+			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
-		// Set aspect ratio.
-		$replace_markup = $this->set_aspect_ratio( $replace_markup );
+			// Set aspect ratio.
+			$replace_markup = $this->set_aspect_ratio( $replace_markup );
 
-		if ( $noscript ) {
-			// And add the original in as <noscript>.
-			$replace_markup .= '<noscript>' . $original . '</noscript>';
+			if ( $noscript ) {
+				// And add the original in as <noscript>.
+				$replace_markup .= '<noscript>' . $match . '</noscript>';
+			}
+
+			// And replace it.
+			$newcontent = str_replace( $match, $replace_markup, $newcontent );
 		}
 
-		return $replace_markup;
+		return $newcontent;
 	}
 
 	/**
