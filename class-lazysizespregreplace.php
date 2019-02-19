@@ -170,10 +170,10 @@ class LazysizesPregReplace {
 	/**
 	 * Generates the markup to be replaced later.
 	 *
-	 * @param string   $content The whole HTML string being processed.
-	 * @param string   $match HTML content to transform.
-	 * @param string   $tag Tag currently being processed.
-	 * @param bool     $noscript If <noscript> fallbacks should be generated.
+	 * @param string $content The whole HTML string being processed.
+	 * @param string $match HTML content to transform.
+	 * @param string $tag Tag currently being processed.
+	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @return string The new markup.
 	 */
 	public function get_replace_markup( $content, $match, $tag, $noscript = true ) {
