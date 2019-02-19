@@ -2,7 +2,7 @@
 
 - Contributors: 16patsle
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
-- Requires at least: 3.1
+- Requires at least: 3.9
 - Requires PHP: 5.6
 - Tested up to: 5.0.2
 - Stable tag: 0.3.0
@@ -55,6 +55,12 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
+
+### 0.4.0
+
+- Proper support for the picture tag, by popular request. This also means audio and video tags with multiple sources should work better.
+- Big refactoring of the HTML transforming code was done to make picture element support possible.
+- Note: 0.4.0 is a prerelease for what will later be known as 1.0.0.
 
 ### 0.3.0
 
