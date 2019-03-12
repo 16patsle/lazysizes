@@ -116,6 +116,7 @@ class Lazysizes {
 			'load_extras',
 			'thumbnails',
 			'avatars',
+			'attachment_image',
 			'textwidgets',
 			'excludeclasses',
 			'fade_in',
