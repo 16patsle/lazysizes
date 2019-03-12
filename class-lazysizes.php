@@ -83,6 +83,14 @@ class Lazysizes {
 			}
 			*/
 
+			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
+			if ( $this->settings['attachment_image'] ) {
+				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ) );
+			}
+
+			echo htmlspecialchars( wp_get_attachment_image( 6 ) );
+
+
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		}
 	}
@@ -200,6 +208,48 @@ class Lazysizes {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
+	}
+
+	/**
+	 * Filter associative array of attributes
+	 *
+	 * @since 1.0.0
+	 * @param array $attr Attributes for the image markup.
+	 * @return array The transformed attributes.
+	 */
+	public function filter_attributes( $attr ) {
+		if ( is_feed() || is_admin() ) {
+			return $attr;
+		}
+
+		if ( function_exists( 'is_amp_endpoint' ) ) {
+			if ( is_amp_endpoint() ) {
+				return $attr;
+			}
+		}
+
+		// Combine attribute array into html attribute string.
+		$attributes = array();
+		foreach ( array_keys( $attr ) as $a ) {
+			array_push( $attributes, $a . '="' . $attr[$a] . '"' );
+		}
+
+		// Construct an html string and run the replace function.
+		$new_markup = $this->replace_class->preg_replace_html( '<img ' . implode( ' ', $attributes ) . ' />', array( 'img' ), false );
+
+		// Extract the attributes from the new html string.
+		$attr_array = array();
+		preg_match_all( '/[^\s]+?=".+?"/m', $new_markup, $attr_array );
+
+		// Split array of html attributes into associative array with attribute name as keys.
+		$new_attr = array();
+		foreach ( $attr_array[0] as $a ) {
+			$new_attr = array_merge( $new_attr, array( explode( '=', $a )[0] => trim( explode( '=', $a )[1], '"' ) ) );
+		}
+
+		// Return the transformed attributes.
+		return $new_attr;
+
 	}
 
 	/**
