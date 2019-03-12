@@ -228,7 +228,7 @@ class Lazysizes {
 		// Combine the attribute associative array into array of html attribute strings.
 		$attr_html = array();
 		foreach ( array_keys( $attr ) as $a ) {
-			array_push( $attr_html, $a . '="' . $attr[$a] . '"' );
+			array_push( $attr_html, $a . '="' . $attr[ $a ] . '"' );
 		}
 
 		// Construct an html string and run the replace function.
@@ -241,12 +241,12 @@ class Lazysizes {
 		// Split array of html attributes into associative array with attribute name as keys.
 		$new_attr = array();
 		foreach ( $new_attr_html[0] as $a ) {
-			$new_attr = array_merge( $new_attr, array( explode( '=', $a )[0] => trim( explode( '=', $a )[1], '"' ) ) );
+			$attribute = explode( '=', $a );
+			$new_attr = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
 		}
 
 		// Return the transformed attributes.
 		return $new_attr;
-
 	}
 
 	/**
