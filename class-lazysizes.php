@@ -88,9 +88,6 @@ class Lazysizes {
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ) );
 			}
 
-			echo htmlspecialchars( wp_get_attachment_image( 6 ) );
-
-
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		}
 	}
@@ -228,22 +225,22 @@ class Lazysizes {
 			}
 		}
 
-		// Combine attribute array into html attribute string.
-		$attributes = array();
+		// Combine the attribute associative array into array of html attribute strings.
+		$attr_html = array();
 		foreach ( array_keys( $attr ) as $a ) {
-			array_push( $attributes, $a . '="' . $attr[$a] . '"' );
+			array_push( $attr_html, $a . '="' . $attr[$a] . '"' );
 		}
 
 		// Construct an html string and run the replace function.
-		$new_markup = $this->replace_class->preg_replace_html( '<img ' . implode( ' ', $attributes ) . ' />', array( 'img' ), false );
+		$markup = $this->replace_class->preg_replace_html( '<img ' . implode( ' ', $attr_html ) . ' />', array( 'img' ), false );
 
 		// Extract the attributes from the new html string.
-		$attr_array = array();
-		preg_match_all( '/[^\s]+?=".+?"/m', $new_markup, $attr_array );
+		$new_attr_html = array();
+		preg_match_all( '/[^\s]+?=".+?"/m', $markup, $new_attr_html );
 
 		// Split array of html attributes into associative array with attribute name as keys.
 		$new_attr = array();
-		foreach ( $attr_array[0] as $a ) {
+		foreach ( $new_attr_html[0] as $a ) {
 			$new_attr = array_merge( $new_attr, array( explode( '=', $a )[0] => trim( explode( '=', $a )[1], '"' ) ) );
 		}
 
