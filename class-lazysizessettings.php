@@ -223,6 +223,14 @@ class LazysizesSettings {
 				<?php esc_html_e( 'Lazy load gravatars.', 'lazysizes' ); ?>
 			</label>
 			<br />
+			<label for="lazysizes_attachment_image">
+				<input type='checkbox' id='lazysizes_attachment_image' name='lazysizes_general[lazysizes_attachment_image]' <?php $this->checked_r( $options, 'lazysizes_attachment_image', 1 ); ?> value="1">
+				<?php esc_html_e( 'Lazy load images loaded with wp_get_attachment_image.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'You can try this if your theme doesn\'t work with the plugin. Caveat: Does not add fallback for users with JavaScript disabled.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
 			<label for="lazysizes_excludeclasses">
 				<?php esc_html_e( 'Skip lazy loading on these classes:', 'lazysizes' ); ?><br />
 				<textarea id='lazysizes_excludeclasses' name='lazysizes_general[lazysizes_excludeclasses]' rows="3" cols="60"><?php echo esc_html( $options['lazysizes_excludeclasses'] ); ?></textarea>
