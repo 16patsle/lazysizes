@@ -48,9 +48,10 @@ class LazysizesPregReplace {
 	 * @since 1.0.0
 	 * @param string   $content HTML content to transform.
 	 * @param string[] $tags Tags to look for in the content.
+	 * @param bool     $noscript If <noscript> fallbacks should be generated.
 	 * @return string The transformed HTML content.
 	 */
-	public function preg_replace_html( $content, $tags ) {
+	public function preg_replace_html( $content, $tags, $noscript = true ) {
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
 
@@ -63,9 +64,9 @@ class LazysizesPregReplace {
 
 			// Look for tag in content.
 			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
-				$result = $this->replace_picture_video_audio( $content, $tag );
+				$result = $this->replace_picture_video_audio( $content, $tag, $noscript );
 			} else {
-				$result = $this->replace_generic_tag( $content, $tag );
+				$result = $this->replace_generic_tag( $content, $tag, $noscript );
 			}
 			$newcontent = str_replace( $content, $result, $content );
 		}

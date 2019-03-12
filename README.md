@@ -1,5 +1,7 @@
 # lazysizes
 
+[![Build Status](https://travis-ci.org/16patsle/lazysizes.svg?branch=master)](https://travis-ci.org/16patsle/lazysizes)
+
 - Contributors: 16patsle
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 - Requires at least: 3.9
@@ -56,7 +58,11 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 ## Changelog
 
-### 0.4.0
+### 0.5.0 (beta)
+
+- Opt-in support for get_attachment_image. Please note that the plugin cannot add a no-js fallback for images lazy-loaded using this method.
+
+### 0.4.0 (beta)
 
 - Proper support for the picture tag, by popular request. This also means audio and video tags with multiple sources should work better.
 - Big refactoring of the HTML transforming code was done to make picture element support possible.
