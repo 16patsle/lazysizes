@@ -267,15 +267,17 @@ class LazysizesPregReplace {
 		// Attributes to search for.
 		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
 
-		// Now replace attr with data-attr.
-		$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
+		if( !preg_match('/[\s]data-src=/', $replace_markup) ){
+			// Now replace attr with data-attr.
+			$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
 
-		if ( $tag ) {
-			// Replacement src attribute.
-			$src = $this->get_src_attr( $tag );
+			if ( $tag ) {
+				// Replacement src attribute.
+				$src = $this->get_src_attr( $tag );
 
-			// And add in a replacement src attribute if necessary.
-			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
+				// And add in a replacement src attribute if necessary.
+				$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
+			}
 		}
 
 		return $replace_markup;
@@ -301,7 +303,7 @@ class LazysizesPregReplace {
 		} elseif ( '' === $classes ) {
 			// If the attribute is emtpy, just add 'lazyload'.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
-		} else {
+		} elseif ( !preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
 		}
