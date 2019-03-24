@@ -129,7 +129,7 @@ class LazysizesPregReplace {
 						}
 
 						// Replace any img tags inside, needed for picture tags.
-						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false );
+						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
 
 						if ( $noscript ) {
 							// And add the original in as <noscript>.
@@ -150,9 +150,10 @@ class LazysizesPregReplace {
 	 * @param string $content HTML content to transform.
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
+	 * @param bool   $inside_picture If tags inside picture tags should be transformed.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_generic_tag( $content, $tag, $noscript = true ) {
+	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false ) {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -165,7 +166,7 @@ class LazysizesPregReplace {
 			foreach ( $matches[0] as $match ) {
 				// Escape the match and use in regex to check if inside picture tag
 				$escaped = preg_replace('/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match);
-				if($tag === 'img' && preg_match('/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res)){
+				if( !$inside_picture && $tag === 'img' && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
 					// Continue if transforming img tag inside picture tag
 					continue;
 				}
@@ -273,17 +274,19 @@ class LazysizesPregReplace {
 		// Attributes to search for.
 		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
 
-		if( !preg_match('/[\s]data-src=/', $replace_markup) ){
+		// If there is no data-src attribute, turn the src into one.
+		if( !preg_match( '/[\s]data-src=/', $replace_markup ) ) {
 			// Now replace attr with data-attr.
 			$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
+		}
 
-			if ( $tag ) {
-				// Replacement src attribute.
-				$src = $this->get_src_attr( $tag );
+		// If there is no src attribute (i.e. because we made it into data-src), we add a placeholder.
+		if ( $tag && !preg_match( '/[\s]src=/', $replace_markup ) ) {
+			// Replacement src attribute.
+			$src = $this->get_src_attr( $tag );
 
-				// And add in a replacement src attribute if necessary.
-				$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
-			}
+			// And add in a replacement src attribute if necessary.
+			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
 		}
 
 		return $replace_markup;
