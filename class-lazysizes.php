@@ -66,26 +66,26 @@ class Lazysizes {
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 
 			// Replace the 'src' attr with 'data-src' in the_content.
-			add_filter( 'the_content', array( $this, 'filter_html' ) );
+			add_filter( 'the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
 			// If enabled replace the 'src' attr with 'data-src' in text widgets.
 			if ( $this->settings['textwidgets'] ) {
-				add_filter( 'widget_text', array( $this, 'filter_html' ) );
+				add_filter( 'widget_text', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
 			if ( $this->settings['thumbnails'] ) {
-				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ) );
+				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 
 			/*
 			A if ( $this->settings['avatars'] ) {
 				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
-				add_filter( 'get_avatar', array($this,'filter_html') );.
+				add_filter( 'get_avatar', array($this,'filter_html'), PHP_INT_MAX );.
 			}
 			*/
 
 			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
 			if ( $this->settings['attachment_image'] ) {
-				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ) );
+				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
 			}
 
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
