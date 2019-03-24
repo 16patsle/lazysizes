@@ -15,7 +15,7 @@ class LazysizesSettings {
 	/**
 	 * Plugin version.
 	 */
-	const VER = '0.5.1';
+	const VER = '1.0.0';
 	/**
 	 * The default plugin settings values
 	 *
