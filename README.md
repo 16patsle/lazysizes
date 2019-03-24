@@ -58,6 +58,10 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 ## Changelog
 
+### 0.5.1 (beta)
+
+- Several fixes to improve compatibility
+
 ### 0.5.0 (beta)
 
 - Opt-in support for get_attachment_image. Please note that the plugin cannot add a no-js fallback for images lazy-loaded using this method.
