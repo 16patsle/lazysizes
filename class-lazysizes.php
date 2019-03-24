@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 0.5.0
+ * @version 0.5.1
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -66,26 +66,26 @@ class Lazysizes {
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 
 			// Replace the 'src' attr with 'data-src' in the_content.
-			add_filter( 'the_content', array( $this, 'filter_html' ) );
+			add_filter( 'the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
 			// If enabled replace the 'src' attr with 'data-src' in text widgets.
 			if ( $this->settings['textwidgets'] ) {
-				add_filter( 'widget_text', array( $this, 'filter_html' ) );
+				add_filter( 'widget_text', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
 			if ( $this->settings['thumbnails'] ) {
-				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ) );
+				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 
 			/*
 			A if ( $this->settings['avatars'] ) {
 				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
-				add_filter( 'get_avatar', array($this,'filter_html') );.
+				add_filter( 'get_avatar', array($this,'filter_html'), PHP_INT_MAX );.
 			}
 			*/
 
 			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
 			if ( $this->settings['attachment_image'] ) {
-				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ) );
+				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
 			}
 
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
@@ -228,7 +228,7 @@ class Lazysizes {
 		// Combine the attribute associative array into array of html attribute strings.
 		$attr_html = array();
 		foreach ( array_keys( $attr ) as $a ) {
-			array_push( $attr_html, $a . '="' . $attr[$a] . '"' );
+			array_push( $attr_html, $a . '="' . $attr[ $a ] . '"' );
 		}
 
 		// Construct an html string and run the replace function.
@@ -241,12 +241,12 @@ class Lazysizes {
 		// Split array of html attributes into associative array with attribute name as keys.
 		$new_attr = array();
 		foreach ( $new_attr_html[0] as $a ) {
-			$new_attr = array_merge( $new_attr, array( explode( '=', $a )[0] => trim( explode( '=', $a )[1], '"' ) ) );
+			$attribute = explode( '=', $a );
+			$new_attr = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
 		}
 
 		// Return the transformed attributes.
 		return $new_attr;
-
 	}
 
 	/**
