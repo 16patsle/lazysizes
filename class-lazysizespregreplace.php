@@ -257,7 +257,7 @@ class LazysizesPregReplace {
 		if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
 			$tag_end = '\/?';
 		} else {
-			$tag_end = '>.*\s*<\/' . $tag;
+			$tag_end = '>.*?\s*<\/' . $tag;
 		}
 		return $tag_end;
 	}
