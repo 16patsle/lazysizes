@@ -59,6 +59,10 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 0.5.2 (beta) =
+
+* Fix duplication bug with multiple picture elements (regression)
+
 = 0.5.1 (beta) =
 
 * Several fixes to improve compatibility
