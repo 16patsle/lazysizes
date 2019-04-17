@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.0.0
+ * @version 0.5.2
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
