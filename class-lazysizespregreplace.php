@@ -97,6 +97,12 @@ class LazysizesPregReplace {
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
+				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
+				if ( preg_match( '/<noscript[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/noscript>/', $newcontent ) ) {
+					// Continue if transforming img tag inside picture tag.
+					continue;
+				}
+
 				// Check if the tag has a src attribute.
 				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
 				$has_src = count( $src_match );
