@@ -130,7 +130,7 @@ class LazysizesPregReplace {
 						if ( count( $sources[0] ) ) {
 							foreach ( $sources[0] as $source_match ) {
 								// Replace attr, add class and similar.
-								$new_replace = $this->get_replace_markup( $new_replace, $source_match, $tag, false );
+								$new_replace = $this->get_replace_markup( $new_replace, $source_match, 'source', false );
 							}
 						}
 
@@ -310,6 +310,10 @@ class LazysizesPregReplace {
 	public function add_lazyload_class( $replace_markup, $tag, $classes_r ) {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
+
+		if( in_array( $tag, array( 'source' ) ) ) {
+			return $replace_markup;
+		}
 
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
