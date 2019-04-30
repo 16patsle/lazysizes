@@ -122,6 +122,41 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the filtering of several picture tags.
+	 */
+	public function test_preg_replace_html_several_picture() {
+		$html     = '
+		<picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture>
+		<picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$expected = '
+		<picture class="lazyload">
+			<source data-srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="logo-narrow.png" alt="Logo" class="lazyload">
+		</picture><noscript><picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture></noscript>
+		<picture class="lazyload">
+			<source data-srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="logo-narrow.png" alt="Logo" class="lazyload">
+		</picture><noscript><picture>
+			<source srcset="logo-wide.png" media="(min-width: 600px)">
+			<img src="logo-narrow.png" alt="Logo">
+		</picture></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test extracting of classes from the HTML string.
 	 * This test has 4 classes.
 	 */
