@@ -103,47 +103,37 @@ class LazysizesPregReplace {
 					continue;
 				}
 
-				// Check if the tag has a src attribute.
-				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
-				$has_src = count( $src_match );
+				// If it has assigned classes, extract them.
+				$classes_r = $this->extract_classes( $match );
+				// But first, check that the tag doesn't have any excluded classes.
+				if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+					$new_replace = $match;
 
-				// Check if has a src attr. Otherwise it may have source tags as children.
-				if ( $has_src ) {
-					// Replace attr, add class and similar.
-					$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
-				} else {
-					// If it has assigned classes, extract them.
-					$classes_r = $this->extract_classes( $match );
-					// But first, check that the tag doesn't have any excluded classes.
-					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-						$new_replace = $match;
+					// Set replace html and replace attr with data-attr.
+					$new_replace = $this->replace_attr( $new_replace, $tag );
 
-						// Set replace html and replace attr with data-attr.
-						$new_replace = $this->replace_attr( $new_replace );
+					// Add lazyload class.
+					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
 
-						// Add lazyload class.
-						$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
+					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
 
-						preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
-
-						// If tags exist, loop through them and replace stuff.
-						if ( count( $sources[0] ) ) {
-							foreach ( $sources[0] as $source_match ) {
-								// Replace attr, add class and similar.
-								$new_replace = $this->get_replace_markup( $new_replace, $source_match, 'source', false );
-							}
+					// If tags exist, loop through them and replace stuff.
+					if ( count( $sources[0] ) ) {
+						foreach ( $sources[0] as $source_match ) {
+							// Replace attr, add class and similar.
+							$new_replace = $this->get_replace_markup( $new_replace, $source_match, 'source', false );
 						}
-
-						// Replace any img tags inside, needed for picture tags.
-						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
-
-						if ( $noscript ) {
-							// And add the original in as <noscript>.
-							$new_replace .= '<noscript>' . $match . '</noscript>';
-						}
-						$newcontent = str_replace( $match, $new_replace, $newcontent );
 					}
-				}
+
+					// Replace any img tags inside, needed for picture tags.
+					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
+
+					if ( $noscript ) {
+						// And add the original in as <noscript>.
+						$new_replace .= '<noscript>' . $match . '</noscript>';
+					}
+					$newcontent = str_replace( $match, $new_replace, $newcontent );
+					}
 			}
 		}
 		return $newcontent;
