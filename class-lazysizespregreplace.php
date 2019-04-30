@@ -97,46 +97,42 @@ class LazysizesPregReplace {
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				// Check if the tag has a src attribute.
-				preg_match( '/<' . $tag . '\s*.*src=\s*[^<]*>/', $match, $src_match );
-				$has_src = count( $src_match );
+				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
+				if ( preg_match( '/<noscript[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/noscript>/', $newcontent ) ) {
+					// Continue if transforming img tag inside picture tag.
+					continue;
+				}
 
-				// Check if has a src attr. Otherwise it may have source tags as children.
-				if ( $has_src ) {
-					// Replace attr, add class and similar.
-					$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
-				} else {
-					// If it has assigned classes, extract them.
-					$classes_r = $this->extract_classes( $match );
-					// But first, check that the tag doesn't have any excluded classes.
-					if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
-						$new_replace = $match;
+				// If it has assigned classes, extract them.
+				$classes_r = $this->extract_classes( $match );
+				// But first, check that the tag doesn't have any excluded classes.
+				if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
+					$new_replace = $match;
 
-						// Set replace html and replace attr with data-attr.
-						$new_replace = $this->replace_attr( $new_replace );
+					// Set replace html and replace attr with data-attr.
+					$new_replace = $this->replace_attr( $new_replace, $tag );
 
-						// Add lazyload class.
-						$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
+					// Add lazyload class.
+					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
 
-						preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
+					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
 
-						// If tags exist, loop through them and replace stuff.
-						if ( count( $sources[0] ) ) {
-							foreach ( $sources[0] as $source_match ) {
-								// Replace attr, add class and similar.
-								$new_replace = $this->get_replace_markup( $new_replace, $source_match, $tag, $noscript );
-							}
+					// If tags exist, loop through them and replace stuff.
+					if ( count( $sources[0] ) ) {
+						foreach ( $sources[0] as $source_match ) {
+							// Replace attr, add class and similar.
+							$new_replace = $this->get_replace_markup( $new_replace, $source_match, 'source', false );
 						}
-
-						// Replace any img tags inside, needed for picture tags.
-						$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
-
-						if ( $noscript ) {
-							// And add the original in as <noscript>.
-							$new_replace .= '<noscript>' . $match . '</noscript>';
-						}
-						$newcontent = str_replace( $match, $new_replace, $newcontent );
 					}
+
+					// Replace any img tags inside, needed for picture tags.
+					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
+
+					if ( $noscript ) {
+						// And add the original in as <noscript>.
+						$new_replace .= '<noscript>' . $match . '</noscript>';
+					}
+					$newcontent = str_replace( $match, $new_replace, $newcontent );
 				}
 			}
 		}
@@ -164,10 +160,10 @@ class LazysizesPregReplace {
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				// Escape the match and use in regex to check if inside picture tag
-				$escaped = preg_replace('/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match);
-				if( !$inside_picture && $tag === 'img' && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
-					// Continue if transforming img tag inside picture tag
+				// Escape the match and use in regex to check if inside picture tag.
+				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
+				if ( ! $inside_picture && 'img' === $tag && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
+					// Continue if transforming img tag inside picture tag.
 					continue;
 				}
 				// Replace attr, add class and similar.
@@ -271,22 +267,25 @@ class LazysizesPregReplace {
 	 * @return string The HTML markup with attributes replaced.
 	 */
 	public function replace_attr( $replace_markup, $tag = false ) {
-		// Attributes to search for.
-		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
-
-		// If there is no data-src attribute, turn the src into one.
-		if( !preg_match( '/[\s]data-src=/', $replace_markup ) ) {
-			// Now replace attr with data-attr.
-			$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
+		if ( ! $tag ) {
+			return $replace_markup;
 		}
 
-		// If there is no src attribute (i.e. because we made it into data-src), we add a placeholder.
-		if ( $tag && !preg_match( '/[\s]src=/', $replace_markup ) ) {
-			// Replacement src attribute.
-			$src = $this->get_src_attr( $tag );
+		$had_src = preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup );
 
+		// Attributes to search for.
+		foreach ( array( 'src', 'poster', 'srcset' ) as $attr ) {
+			// If there is no data attribute, turn the regular attribute into one.
+			if ( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
+				// Now replace attr with data-attr.
+				$replace_markup = preg_replace( '/(<' . $tag . '[^>]*)[\s]' . $attr . '=/', '$1 data-' . $attr . '=', $replace_markup );
+			}
+		}
+
+		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
+		if ( ! preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
 			// And add in a replacement src attribute if necessary.
-			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
+			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
 
 		return $replace_markup;
@@ -305,6 +304,10 @@ class LazysizesPregReplace {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
 
+		if( in_array( $tag, array( 'source' ), true ) ) {
+			return $replace_markup;
+		}
+
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
 			// If there are no class attribute, add one.
@@ -312,7 +315,7 @@ class LazysizesPregReplace {
 		} elseif ( '' === $classes ) {
 			// If the attribute is emtpy, just add 'lazyload'.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
-		} elseif ( !preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
+		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
 		}

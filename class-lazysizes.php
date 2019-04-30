@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 0.5.2
+ * @version 0.5.3
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -40,8 +40,10 @@ class Lazysizes {
 
 	/**
 	 * Set up the plugin, including adding actions and filters
+	 *
+	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct() {
+	public function __construct( $pluginfile ) {
 
 		// If we're in the admin area, load the settings class.
 		if ( is_admin() ) {
@@ -49,7 +51,7 @@ class Lazysizes {
 			$settings_class = new LazysizesSettings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
-			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $settings_class, 'lazysizes_action_links' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 		} else {
 
 			// Store our settings in memory to reduce mysql calls.
@@ -59,8 +61,10 @@ class Lazysizes {
 			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
 			$this->replace_class = new LazysizesPregReplace( $this->settings );
 
-			// Add inline css to head.
-			add_action( 'wp_head', array( $this, 'wp_head' ) );
+			// Add inline css to head, part of noscript support.
+			if ( $this->settings['add_noscript'] ) {
+				add_action( 'wp_head', array( $this, 'wp_head' ) );
+			}
 
 			// Enqueue lazysizes scripts and styles.
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
@@ -122,6 +126,7 @@ class Lazysizes {
 			'thumbnails',
 			'avatars',
 			'attachment_image',
+			'add_noscript',
 			'textwidgets',
 			'excludeclasses',
 			'fade_in',
@@ -242,7 +247,7 @@ class Lazysizes {
 		$new_attr = array();
 		foreach ( $new_attr_html[0] as $a ) {
 			$attribute = explode( '=', $a );
-			$new_attr = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
+			$new_attr  = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
 		}
 
 		// Return the transformed attributes.
@@ -271,10 +276,10 @@ class Lazysizes {
 		if ( strlen( $content ) ) {
 			$newcontent = $content;
 			// Replace 'src' with 'data-src' on images.
-			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ) );
+			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
 			// If enabled, replace 'src' with 'data-src' on extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ) );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {

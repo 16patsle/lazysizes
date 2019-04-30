@@ -15,7 +15,7 @@ class LazysizesSettings {
 	/**
 	 * Plugin version.
 	 */
-	const VER = '0.5.2';
+	const VER = '0.5.3';
 	/**
 	 * The default plugin settings values
 	 *
@@ -27,6 +27,7 @@ class LazysizesSettings {
 			'lazysizes_thumbnails'       => 1,
 			'lazysizes_textwidgets'      => 1,
 			'lazysizes_avatars'          => 1,
+			'lazysizes_add_noscript'     => 1,
 			'lazysizes_load_extras'      => 1,
 			'lazysizes_excludeclasses'   => '',
 			'lazysizes_img'              => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
@@ -69,6 +70,12 @@ class LazysizesSettings {
 		$dbver    = get_option( 'lazysizes_version', '' );
 		if ( version_compare( $ver, $dbver, '>' ) ) {
 			update_option( 'lazysizes_version', $ver );
+
+			if ( version_compare( $dbver, '0.3.0', '<=' ) ) {
+				$general                           = get_option( 'lazysizes_general' );
+				$general['lazysizes_add_noscript'] = $this->defaults['general']['lazysizes_add_noscript'];
+				update_option( 'lazysizes_general', $general );
+			}
 		}
 	}
 
@@ -125,8 +132,8 @@ class LazysizesSettings {
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {
-		$links[] = '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>';
-		return $links;
+		$settings = array( '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>' );
+		return array_merge( $settings, $links );
 	}
 
 	/**
@@ -228,6 +235,14 @@ class LazysizesSettings {
 				<?php esc_html_e( 'Lazy load images loaded with wp_get_attachment_image.', 'lazysizes' ); ?>
 				<p class="description">
 					<?php esc_html_e( 'You can try this if your theme doesn\'t work with the plugin. Caveat: Does not add fallback for users with JavaScript disabled.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
+			<label for="lazysizes_add_noscript">
+				<input type='checkbox' id='lazysizes_add_noscript' name='lazysizes_general[lazysizes_add_noscript]' <?php $this->checked_r( $options, 'lazysizes_add_noscript', 1 ); ?> value="1">
+				<?php esc_html_e( 'Add fallback for users without JavaScript.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'Disabling this will make images invisible when JavaScript is not available.', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />
