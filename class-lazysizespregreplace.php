@@ -133,7 +133,7 @@ class LazysizesPregReplace {
 						$new_replace .= '<noscript>' . $match . '</noscript>';
 					}
 					$newcontent = str_replace( $match, $new_replace, $newcontent );
-					}
+				}
 			}
 		}
 		return $newcontent;
@@ -267,7 +267,7 @@ class LazysizesPregReplace {
 	 * @return string The HTML markup with attributes replaced.
 	 */
 	public function replace_attr( $replace_markup, $tag = false ) {
-		if ( !$tag ) {
+		if ( ! $tag ) {
 			return $replace_markup;
 		}
 
@@ -276,14 +276,14 @@ class LazysizesPregReplace {
 		// Attributes to search for.
 		foreach ( array( 'src', 'poster', 'srcset' ) as $attr ) {
 			// If there is no data attribute, turn the regular attribute into one.
-			if( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
+			if ( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
 				// Now replace attr with data-attr.
 				$replace_markup = preg_replace( '/(<' . $tag . '[^>]*)[\s]' . $attr . '=/', '$1 data-' . $attr . '=', $replace_markup );
 			}
 		}
 
 		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
-		if (!preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
+		if ( ! preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
 			// And add in a replacement src attribute if necessary.
 			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
@@ -304,7 +304,7 @@ class LazysizesPregReplace {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
 
-		if( in_array( $tag, array( 'source' ) ) ) {
+		if( in_array( $tag, array( 'source' ), true ) ) {
 			return $replace_markup;
 		}
 
