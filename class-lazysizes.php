@@ -40,6 +40,7 @@ class Lazysizes {
 
 	/**
 	 * Set up the plugin, including adding actions and filters
+	 *
 	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
 	public function __construct( $pluginfile ) {
@@ -246,7 +247,7 @@ class Lazysizes {
 		$new_attr = array();
 		foreach ( $new_attr_html[0] as $a ) {
 			$attribute = explode( '=', $a );
-			$new_attr = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
+			$new_attr  = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
 		}
 
 		// Return the transformed attributes.

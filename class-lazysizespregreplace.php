@@ -164,10 +164,10 @@ class LazysizesPregReplace {
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				// Escape the match and use in regex to check if inside picture tag
-				$escaped = preg_replace('/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match);
-				if( !$inside_picture && $tag === 'img' && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
-					// Continue if transforming img tag inside picture tag
+				// Escape the match and use in regex to check if inside picture tag.
+				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
+				if ( ! $inside_picture && 'img' === $tag && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
+					// Continue if transforming img tag inside picture tag.
 					continue;
 				}
 				// Replace attr, add class and similar.
@@ -275,13 +275,13 @@ class LazysizesPregReplace {
 		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
 
 		// If there is no data-src attribute, turn the src into one.
-		if( !preg_match( '/[\s]data-src=/', $replace_markup ) ) {
+		if ( ! preg_match( '/[\s]data-src=/', $replace_markup ) ) {
 			// Now replace attr with data-attr.
 			$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
 		}
 
 		// If there is no src attribute (i.e. because we made it into data-src), we add a placeholder.
-		if ( $tag && !preg_match( '/[\s]src=/', $replace_markup ) ) {
+		if ( $tag && ! preg_match( '/[\s]src=/', $replace_markup ) ) {
 			// Replacement src attribute.
 			$src = $this->get_src_attr( $tag );
 
@@ -312,7 +312,7 @@ class LazysizesPregReplace {
 		} elseif ( '' === $classes ) {
 			// If the attribute is emtpy, just add 'lazyload'.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
-		} elseif ( !preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
+		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
 		}

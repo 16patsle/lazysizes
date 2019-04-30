@@ -72,10 +72,9 @@ class LazysizesSettings {
 			update_option( 'lazysizes_version', $ver );
 
 			if ( version_compare( $dbver, '0.3.0', '<=' ) ) {
-				$general = get_option('lazysizes_general');
+				$general                           = get_option( 'lazysizes_general' );
 				$general['lazysizes_add_noscript'] = $this->defaults['general']['lazysizes_add_noscript'];
-				error_log($this->defaults['general']['lazysizes_add_noscript']);
-				update_option('lazysizes_general',$general);
+				update_option( 'lazysizes_general', $general );
 			}
 		}
 	}
