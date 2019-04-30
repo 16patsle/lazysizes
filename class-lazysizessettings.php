@@ -133,8 +133,8 @@ class LazysizesSettings {
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( $links ) {
-		$links[] = '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>';
-		return $links;
+		$settings = array( '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>' );
+		return array_merge( $settings, $links );
 	}
 
 	/**

@@ -40,8 +40,9 @@ class Lazysizes {
 
 	/**
 	 * Set up the plugin, including adding actions and filters
+	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct() {
+	public function __construct( $pluginfile ) {
 
 		// If we're in the admin area, load the settings class.
 		if ( is_admin() ) {
@@ -49,7 +50,7 @@ class Lazysizes {
 			$settings_class = new LazysizesSettings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
-			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $settings_class, 'lazysizes_action_links' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 		} else {
 
 			// Store our settings in memory to reduce mysql calls.

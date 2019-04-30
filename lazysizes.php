@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 // Init.
 require dirname( __FILE__ ) . '/class-lazysizes.php';
-$lazysizes = new Lazysizes();
+$lazysizes = new Lazysizes( __FILE__ );
 
 /* API */
 
