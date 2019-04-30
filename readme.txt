@@ -59,6 +59,12 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 0.5.3 (beta) =
+
+* Add option to enable/disable noscript fallback
+* Fix plugin action links
+* Improvements to handling of source elements and picture/video/audio
+
 = 0.5.2 (beta) =
 
 * Fix duplication bug with multiple picture elements (regression)
