@@ -277,22 +277,25 @@ class LazysizesPregReplace {
 	 * @return string The HTML markup with attributes replaced.
 	 */
 	public function replace_attr( $replace_markup, $tag = false ) {
-		// Attributes to search for.
-		$attrs = implode( '|', array( 'src', 'poster', 'srcset' ) );
-
-		// If there is no data-src attribute, turn the src into one.
-		if ( ! preg_match( '/[\s]data-src=/', $replace_markup ) ) {
-			// Now replace attr with data-attr.
-			$replace_markup = preg_replace( '/[\s\r\n](' . $attrs . ')?=/', ' data-$1=', $replace_markup );
+		if ( !$tag ) {
+			return $replace_markup;
 		}
 
-		// If there is no src attribute (i.e. because we made it into data-src), we add a placeholder.
-		if ( $tag && ! preg_match( '/[\s]src=/', $replace_markup ) ) {
-			// Replacement src attribute.
-			$src = $this->get_src_attr( $tag );
+		$had_src = preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup );
 
+		// Attributes to search for.
+		foreach ( array( 'src', 'poster', 'srcset' ) as $attr ) {
+			// If there is no data attribute, turn the regular attribute into one.
+			if( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
+				// Now replace attr with data-attr.
+				$replace_markup = preg_replace( '/(<' . $tag . '[^>]*)[\s]' . $attr . '=/', '$1 data-' . $attr . '=', $replace_markup );
+			}
+		}
+
+		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
+		if (!preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
 			// And add in a replacement src attribute if necessary.
-			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $src, $replace_markup );
+			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
 
 		return $replace_markup;
