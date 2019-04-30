@@ -59,8 +59,10 @@ class Lazysizes {
 			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
 			$this->replace_class = new LazysizesPregReplace( $this->settings );
 
-			// Add inline css to head.
-			add_action( 'wp_head', array( $this, 'wp_head' ) );
+			// Add inline css to head, part of noscript support.
+			if ( $this->settings['add_noscript'] ) {
+				add_action( 'wp_head', array( $this, 'wp_head' ) );
+			}
 
 			// Enqueue lazysizes scripts and styles.
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
@@ -122,6 +124,7 @@ class Lazysizes {
 			'thumbnails',
 			'avatars',
 			'attachment_image',
+			'add_noscript',
 			'textwidgets',
 			'excludeclasses',
 			'fade_in',
@@ -271,10 +274,10 @@ class Lazysizes {
 		if ( strlen( $content ) ) {
 			$newcontent = $content;
 			// Replace 'src' with 'data-src' on images.
-			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ) );
+			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
 			// If enabled, replace 'src' with 'data-src' on extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ) );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {
