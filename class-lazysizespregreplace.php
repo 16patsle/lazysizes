@@ -124,7 +124,7 @@ class LazysizesPregReplace {
 						if ( count( $sources[0] ) ) {
 							foreach ( $sources[0] as $source_match ) {
 								// Replace attr, add class and similar.
-								$new_replace = $this->get_replace_markup( $new_replace, $source_match, $tag, $noscript );
+								$new_replace = $this->get_replace_markup( $new_replace, $source_match, $tag, false );
 							}
 						}
 
