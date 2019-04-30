@@ -304,7 +304,7 @@ class LazysizesPregReplace {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
 
-		if( in_array( $tag, array( 'source' ), true ) ) {
+		if ( in_array( $tag, array( 'source' ), true ) ) {
 			return $replace_markup;
 		}
 
