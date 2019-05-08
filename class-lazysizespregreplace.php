@@ -273,8 +273,14 @@ class LazysizesPregReplace {
 
 		$had_src = preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup );
 
+		if ( 'source' === $tag ) {
+			$attrs = array( 'poster', 'srcset' );
+		} else {
+			$attrs = array( 'src', 'poster', 'srcset' );
+		}
+
 		// Attributes to search for.
-		foreach ( array( 'src', 'poster', 'srcset' ) as $attr ) {
+		foreach ( $attrs as $attr ) {
 			// If there is no data attribute, turn the regular attribute into one.
 			if ( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
 				// Now replace attr with data-attr.
