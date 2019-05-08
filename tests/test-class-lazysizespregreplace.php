@@ -34,7 +34,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_audio_src_attr() {
 		$markup   = $this->class_instance->preg_replace_html( '<audio src="sound.mp3"></audio>', array( 'audio' ) );
-		$expected = '<audio src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'assets/empty.mp3" data-src="sound.mp3" class="lazyload"></audio><noscript><audio src="sound.mp3"></audio></noscript>';
+		$expected = '<audio src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'assets/empty.mp3" data-src="sound.mp3" class="lazyload" preload="none"></audio><noscript><audio src="sound.mp3"></audio></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -44,7 +44,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_video_src_attr() {
 		$markup   = $this->class_instance->preg_replace_html( '<video src="vid.mp4" poster="img.png"></video>', array( 'video' ) );
-		$expected = '<video src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="vid.mp4" data-poster="img.png" class="lazyload"></video><noscript><video src="vid.mp4" poster="img.png"></video></noscript>';
+		$expected = '<video src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="vid.mp4" data-poster="img.png" class="lazyload" preload="none"></video><noscript><video src="vid.mp4" poster="img.png"></video></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -61,9 +61,9 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
 		$expected = '
-		<audio class="lazyload">
-			<source data-src="myAudio.mp3" type="audio/mp3">
-			<source data-src="myAudio.ogg" type="audio/ogg">
+		<audio class="lazyload" preload="none">
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
 		</audio><noscript><audio>
 			<source src="myAudio.mp3" type="audio/mp3">
 			<source src="myAudio.ogg" type="audio/ogg">
@@ -89,16 +89,16 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
 		$expected = '
-		<audio class="lazyload">
-			<source data-src="myAudio.mp3" type="audio/mp3">
-			<source data-src="myAudio.ogg" type="audio/ogg">
+		<audio class="lazyload" preload="none">
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
 		</audio><noscript><audio>
 			<source src="myAudio.mp3" type="audio/mp3">
 			<source src="myAudio.ogg" type="audio/ogg">
 		</audio></noscript>
-		<audio class="lazyload">
-			<source data-src="myAudio.mp3" type="audio/mp3">
-			<source data-src="myAudio.ogg" type="audio/ogg">
+		<audio class="lazyload" preload="none">
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
 		</audio><noscript><audio>
 			<source src="myAudio.mp3" type="audio/mp3">
 			<source src="myAudio.ogg" type="audio/ogg">
@@ -120,9 +120,9 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'video' ) );
 		$expected = '
-		<video data-poster="img.png" class="lazyload">
-			<source data-src="myVideo.mp4" type="video/mp4">
-			<source data-src="myVideo.webm" type="video/webm">
+		<video data-poster="img.png" class="lazyload" preload="none">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
 		</video><noscript><video poster="img.png">
 			<source src="myVideo.mp4" type="video/mp4">
 			<source src="myVideo.webm" type="video/webm">
@@ -148,16 +148,16 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'video' ) );
 		$expected = '
-		<video data-poster="img.png" class="lazyload">
-			<source data-src="myVideo.mp4" type="video/mp4">
-			<source data-src="myVideo.webm" type="video/webm">
+		<video data-poster="img.png" class="lazyload" preload="none">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
 		</video><noscript><video poster="img.png">
 			<source src="myVideo.mp4" type="video/mp4">
 			<source src="myVideo.webm" type="video/webm">
 		</video></noscript>
-		<video data-poster="img.png" class="lazyload">
-			<source data-src="myVideo.mp4" type="video/mp4">
-			<source data-src="myVideo.webm" type="video/webm">
+		<video data-poster="img.png" class="lazyload" preload="none">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
 		</video><noscript><video poster="img.png">
 			<source src="myVideo.mp4" type="video/mp4">
 			<source src="myVideo.webm" type="video/webm">
@@ -342,6 +342,39 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	public function test_should_add_lazyload_class_no_classes() {
 		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg">', 'img', array() );
 		$expected = '<img src="image.jpg" class="lazyload">';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test if the preload attribute is added properly.
+	 * This test has no preload attribute.
+	 */
+	public function test_should_add_preload_attr_none() {
+		$markup   = $this->class_instance->add_preload_attr( '<video poster="img.png"><source src="myVideo.mp4" type="video/mp4"></video>', 'video' );
+		$expected = '<video poster="img.png" preload="none"><source src="myVideo.mp4" type="video/mp4"></video>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test if the preload attribute is added properly.
+	 * This test has a wrong preload attribute.
+	 */
+	public function test_should_add_preload_attr_wrong() {
+		$markup   = $this->class_instance->add_preload_attr( '<video poster="img.png" preload="something"><source src="myVideo.mp4" type="video/mp4"></video>', 'video' );
+		$expected = '<video poster="img.png" preload="none"><source src="myVideo.mp4" type="video/mp4"></video>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test if the preload attribute is added properly.
+	 * This test has a correct preload attribute.
+	 */
+	public function test_should_add_preload_attr_correct() {
+		$markup   = $this->class_instance->add_preload_attr( '<video poster="img.png" preload="none"><source src="myVideo.mp4" type="video/mp4"></video>', 'video' );
+		$expected = '<video poster="img.png" preload="none"><source src="myVideo.mp4" type="video/mp4"></video>';
 
 		$this->assertEquals( $expected, $markup );
 	}
