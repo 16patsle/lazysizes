@@ -115,6 +115,9 @@ class LazysizesPregReplace {
 					// Add lazyload class.
 					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
 
+					// Add preload="none" for audio/video.
+					$new_replace = $this->add_preload_attr( $new_replace, $tag );
+
 					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
 
 					// If tags exist, loop through them and replace stuff.
@@ -324,6 +327,34 @@ class LazysizesPregReplace {
 		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
+		}
+
+		return $replace_markup;
+	}
+
+	/**
+	 * Adds the preload="none" attribute
+	 *
+	 * @since 1.0.0
+	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string $tag The current tag type being processed.
+	 * @return string The HTML markup with preload attribute added.
+	 */
+	public function add_preload_attr( $replace_markup, $tag ) {
+		if ( in_array( $tag, array( 'picture' ), true ) ) {
+			return $replace_markup;
+		}
+
+		// Get preload attribute.
+		preg_match( '/[\s]preload=[\'"]\s*(.*?)\s*[\'"]/', $replace_markup, $preload );
+
+		// Here we construct the new preload attribute.
+		if ( ! array_key_exists( 0, $preload ) ) {
+			// If there are no preload attribute, add one.
+			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 preload="none">', $replace_markup );
+		} elseif ( array_key_exists( 0, $preload ) && count( $preload[0] ) && 'none' !== $preload[1] ) {
+			// If the attribute is wrong, replace it.
+			$replace_markup = preg_replace( '/' . $preload[0] . '/', ' preload="none"', $replace_markup );
 		}
 
 		return $replace_markup;
