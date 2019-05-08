@@ -74,6 +74,41 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the filtering of several audio tags.
+	 */
+	public function test_preg_replace_html_several_audio() {
+		$html     = '
+		<audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio>
+		<audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
+		$expected = '
+		<audio class="lazyload">
+			<source data-src="myAudio.mp3" type="audio/mp3">
+			<source data-src="myAudio.ogg" type="audio/ogg">
+		</audio><noscript><audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio></noscript>
+		<audio class="lazyload">
+			<source data-src="myAudio.mp3" type="audio/mp3">
+			<source data-src="myAudio.ogg" type="audio/ogg">
+		</audio><noscript><audio>
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test the filtering of a video tag with source elements.
 	 */
 	public function test_preg_replace_html_video_source_elem() {
@@ -85,6 +120,41 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'video' ) );
 		$expected = '
+		<video data-poster="img.png" class="lazyload">
+			<source data-src="myVideo.mp4" type="video/mp4">
+			<source data-src="myVideo.webm" type="video/webm">
+		</video><noscript><video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of several video tags.
+	 */
+	public function test_preg_replace_html_several_video() {
+		$html     = '
+		<video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video>
+		<video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'video' ) );
+		$expected = '
+		<video data-poster="img.png" class="lazyload">
+			<source data-src="myVideo.mp4" type="video/mp4">
+			<source data-src="myVideo.webm" type="video/webm">
+		</video><noscript><video poster="img.png">
+			<source src="myVideo.mp4" type="video/mp4">
+			<source src="myVideo.webm" type="video/webm">
+		</video></noscript>
 		<video data-poster="img.png" class="lazyload">
 			<source data-src="myVideo.mp4" type="video/mp4">
 			<source data-src="myVideo.webm" type="video/webm">
