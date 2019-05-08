@@ -59,6 +59,10 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 1.0.0 =
+
+* Improve and fix transformation of audio/video elements, by handling the preload attribute and leaving the src attribute alone on source inside video/audio.
+
 = 0.5.3 (beta) =
 
 * Add option to enable/disable noscript fallback
