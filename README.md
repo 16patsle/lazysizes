@@ -6,8 +6,8 @@
 - Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 - Requires at least: 3.9
 - Requires PHP: 5.6
-- Tested up to: 5.0.2
-- Stable tag: 0.3.0
+- Tested up to: 5.2
+- Stable tag: 1.0.0
 - License: GPLv3 or later
 - License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
@@ -58,29 +58,16 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 ## Changelog
 
-### 0.5.3 (beta)
+### 1.0.0
 
+Big thanks to martychc23 and dutze for their help and patience in making this release as good as it is.
+
+- Proper support for the picture tag, by popular request. Big refactoring of the HTML transforming code was done to make picture element support possible.
+- Improve and fix support for audio/video elements. The plugin now handles the preload attribute and leaves the src attribute alone on source elements inside video/audio.
+- Opt-in support for get_attachment_image. Please note that the plugin cannot add a no-js fallback for images lazy-loaded using this method.
 - Add option to enable/disable noscript fallback
 - Fix plugin action links
-- Improvements to handling of source elements and picture/video/audio
-
-### 0.5.2 (beta)
-
-- Fix duplication bug with multiple picture elements (regression)
-
-### 0.5.1 (beta)
-
 - Several fixes to improve compatibility
-
-### 0.5.0 (beta)
-
-- Opt-in support for get_attachment_image. Please note that the plugin cannot add a no-js fallback for images lazy-loaded using this method.
-
-### 0.4.0 (beta)
-
-- Proper support for the picture tag, by popular request. This also means audio and video tags with multiple sources should work better.
-- Big refactoring of the HTML transforming code was done to make picture element support possible.
-- Note: 0.4.0 is a prerelease for what will later be known as 1.0.0.
 
 ### 0.3.0
 
