@@ -24,7 +24,7 @@ class Lazysizes {
 	 *
 	 * @var string
 	 */
-	protected $lazysizes_ver = '4.1.5';
+	protected $lazysizes_ver = '5.0.0';
 	/**
 	 * The settings for this plugin.
 	 *
