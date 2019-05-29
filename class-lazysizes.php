@@ -133,6 +133,7 @@ class Lazysizes {
 			'spinner',
 			'auto_load',
 			'aspectratio',
+			'native_lazy',
 		);
 
 		// Start fresh.

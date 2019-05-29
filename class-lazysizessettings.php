@@ -310,6 +310,14 @@ class LazysizesSettings {
 					<?php esc_html_e( 'Currently this needs images to have a defined width and height. Make sure to set a size for the images in your posts.', 'lazysizes' ); ?>
 				</p>
 			</label>
+			<br />
+			<label for="lazysizes_native_lazy">
+				<input type='checkbox' id='lazysizes_native_lazy' name='lazysizes_addons[lazysizes_native_lazy]' <?php $this->checked_r( $options, 'lazysizes_native_lazy', 1 ); ?> value="1">
+				<?php esc_html_e( 'Use native browser lazy loading when supported.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'Chrome 75+ supports native lazy loading, giving the browser controls over when to load images and iframes.', 'lazysizes' ); ?>
+				</p>
+			</label>
 		</fieldset>
 		<?php
 	}
