@@ -200,6 +200,11 @@ class Lazysizes {
 		if ( $this->settings['load_extras'] ) {
 			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
+
+		// Enqueue native lazy loading.
+		if ( $this->settings['native_lazy'] ) {
+			wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+		}
 	}
 
 	/**
