@@ -63,6 +63,7 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 - Upgrade lazysizes library to version 5.0.0.
 - Add experimental support for native lazy loading.
 - Fix fatal error during ajax processing. Thanks to @eastgate for reporting.
+- Fix PHP warning on certain pages, like the events page from the plugin The Events Calendar. Thanks @julian_wave for reporting.
 
 ### 1.0.0
 
