@@ -204,6 +204,7 @@ class Lazysizes {
 		// Enqueue native lazy loading.
 		if ( $this->settings['native_lazy'] ) {
 			wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . '.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
 	}
 
