@@ -164,8 +164,8 @@ class LazysizesPregReplace {
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
 				// Escape the match and use in regex to check if inside picture tag.
-				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
-				if ( ! $inside_picture && 'img' === $tag && preg_match( '/<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>/', $newcontent, $res ) ) {
+				$escaped = preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $match );
+				if ( ! $inside_picture && 'img' === $tag && preg_match( '~<picture[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/picture>~', $newcontent, $res ) ) {
 					// Continue if transforming img tag inside picture tag.
 					continue;
 				}
