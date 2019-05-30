@@ -352,7 +352,7 @@ class LazysizesPregReplace {
 		if ( ! array_key_exists( 0, $preload ) ) {
 			// If there are no preload attribute, add one.
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 preload="none">', $replace_markup );
-		} elseif ( array_key_exists( 0, $preload ) && count( $preload[0] ) && 'none' !== $preload[1] ) {
+		} elseif ( array_key_exists( 0, $preload ) && $preload[0] && 'none' !== $preload[1] ) {
 			// If the attribute is wrong, replace it.
 			$replace_markup = preg_replace( '/' . $preload[0] . '/', ' preload="none"', $replace_markup );
 		}
