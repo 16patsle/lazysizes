@@ -7,7 +7,7 @@
 - Requires at least: 3.9
 - Requires PHP: 5.6
 - Tested up to: 5.2
-- Stable tag: 1.0.0
+- Stable tag: 1.1.0
 - License: GPLv3 or later
 - License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
@@ -15,7 +15,7 @@ High performance and SEO friendly lazy loader for images, iframes and more
 
 ## Description
 
-**lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images with `srcset` and soon also the `picture` tag), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
+**lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images with `srcset` and the `picture` tag), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
 
 This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images, iframes etc. dynamically when needed.
 
@@ -57,6 +57,13 @@ There are a couple of reasons:
 If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
+
+### 1.1.0
+
+- Upgrade lazysizes library to version 5.0.0.
+- Add experimental support for native lazy loading.
+- Fix fatal error during ajax processing. Thanks to @eastgate for reporting.
+- Fix PHP warning on certain pages, like the events page from the plugin The Events Calendar. Thanks @julian_wave for reporting.
 
 ### 1.0.0
 

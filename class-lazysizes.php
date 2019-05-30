@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -24,7 +24,7 @@ class Lazysizes {
 	 *
 	 * @var string
 	 */
-	protected $lazysizes_ver = '4.1.5';
+	protected $lazysizes_ver = '5.0.0';
 	/**
 	 * The settings for this plugin.
 	 *
@@ -45,8 +45,8 @@ class Lazysizes {
 	 */
 	public function __construct( $pluginfile ) {
 
-		// If we're in the admin area, load the settings class.
-		if ( is_admin() ) {
+		// If we're in the admin area, and not processing an ajax call, load the settings class.
+		if ( is_admin() && ! wp_doing_ajax() ) {
 			require dirname( __FILE__ ) . '/class-lazysizessettings.php';
 			$settings_class = new LazysizesSettings();
 			// If this is the first time we've enabled the plugin, setup default settings.
@@ -133,6 +133,7 @@ class Lazysizes {
 			'spinner',
 			'auto_load',
 			'aspectratio',
+			'native_lazy',
 		);
 
 		// Start fresh.
@@ -198,6 +199,12 @@ class Lazysizes {
 		// Enqueue extras enabled.
 		if ( $this->settings['load_extras'] ) {
 			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+		}
+
+		// Enqueue native lazy loading.
+		if ( $this->settings['native_lazy'] ) {
+			wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . '.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
 	}
 
