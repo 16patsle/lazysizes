@@ -45,8 +45,8 @@ class Lazysizes {
 	 */
 	public function __construct( $pluginfile ) {
 
-		// If we're in the admin area, load the settings class.
-		if ( is_admin() ) {
+		// If we're in the admin area, and not processing an ajax call, load the settings class.
+		if ( is_admin() && ! wp_doing_ajax() ) {
 			require dirname( __FILE__ ) . '/class-lazysizessettings.php';
 			$settings_class = new LazysizesSettings();
 			// If this is the first time we've enabled the plugin, setup default settings.
