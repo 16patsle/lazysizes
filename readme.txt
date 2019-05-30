@@ -59,6 +59,12 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 1.1.0 =
+
+* Upgrade lazysizes library to version 5.0.0.
+* Add experimental support for native lazy loading.
+* Fix fatal error during ajax processing. Thanks to @eastgate for reporting.
+
 = 1.0.0 =
 
 Big thanks to martychc23 and dutze for their help and patience in making this release as good as it is.
