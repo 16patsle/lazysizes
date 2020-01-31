@@ -61,10 +61,10 @@ class PluginCore {
 
 			// Store our settings in memory to reduce mysql calls.
 			$this->settings = $this->get_settings();
-			$this->dir      = plugin_dir_url( __FILE__ );
+			$this->dir      = plugin_dir_url( $pluginfile );
 
 			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
-			$this->replace_class = new PregReplace( $this->settings );
+			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
