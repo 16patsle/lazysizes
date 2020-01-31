@@ -19,6 +19,7 @@ Text Domain: lazysizes
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 // Init.
+require dirname( __FILE__ ) . '/inc/Lazysizes/class-lazysizes.php';
 use Lazysizes\PluginCore;
 
 $lazysizes = new PluginCore( __FILE__ );

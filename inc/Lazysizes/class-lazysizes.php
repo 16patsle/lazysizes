@@ -8,7 +8,8 @@
 
 namespace Lazysizes;
 
-use Lazysizes\*;
+use Lazysizes\Settings;
+use Lazysizes\PregReplace;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
@@ -51,6 +52,7 @@ class PluginCore {
 
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
+			require dirname( __FILE__ ) . '/class-lazysizessettings.php';
 			$settings_class = new Settings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
@@ -61,6 +63,7 @@ class PluginCore {
 			$this->settings = $this->get_settings();
 			$this->dir      = plugin_dir_url( __FILE__ );
 
+			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
 			$this->replace_class = new PregReplace( $this->settings );
 
 			// Add inline css to head, part of noscript support.
