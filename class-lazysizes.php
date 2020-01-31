@@ -71,6 +71,7 @@ class Lazysizes {
 
 			// Replace the 'src' attr with 'data-src' in the_content.
 			add_filter( 'the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
+			add_filter( 'acf_the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
 			// If enabled replace the 'src' attr with 'data-src' in text widgets.
 			if ( $this->settings['textwidgets'] ) {
 				add_filter( 'widget_text', array( $this, 'filter_html' ), PHP_INT_MAX );
