@@ -315,7 +315,7 @@ class LazysizesSettings {
 				<input type='checkbox' id='lazysizes_native_lazy' name='lazysizes_addons[lazysizes_native_lazy]' <?php $this->checked_r( $options, 'lazysizes_native_lazy', 1 ); ?> value="1">
 				<?php esc_html_e( 'Use native browser lazy loading when supported.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Experimental. Chrome 75+ supports native lazy loading, giving the browser control over when to load images and iframes.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Experimental. Chrome 76+ supports native lazy loading, giving the browser control over when to load images and iframes.', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>
