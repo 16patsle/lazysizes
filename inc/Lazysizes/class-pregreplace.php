@@ -36,7 +36,7 @@ class PregReplace {
 	/**
 	 * Set up the settings and plugin dir variables
 	 *
-	 * @param array $settings    The settings for this plugin.
+	 * @param array  $settings The settings for this plugin.
 	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
 	public function __construct( $settings, $pluginfile ) {
