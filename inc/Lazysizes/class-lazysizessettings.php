@@ -5,12 +5,14 @@
  * @package Lazysizes
  */
 
+namespace Lazysizes;
+
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 /**
  * The plugin settings class
  */
-class LazysizesSettings {
+class Settings {
 
 	/**
 	 * Plugin version.

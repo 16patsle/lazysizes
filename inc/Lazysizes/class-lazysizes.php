@@ -6,12 +6,14 @@
  * @version 1.1.0
  */
 
+namespace Lazysizes;
+
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 /**
  * The main plugin class
  */
-class Lazysizes {
+class PluginCore {
 
 	/**
 	 * The path to the plugin's directory
@@ -140,7 +142,7 @@ class Lazysizes {
 			'auto_load',
 			'aspectratio',
 			'native_lazy',
-			'acf_content'
+			'acf_content',
 		);
 
 		// Start fresh.

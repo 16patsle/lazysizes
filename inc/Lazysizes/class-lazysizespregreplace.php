@@ -5,12 +5,14 @@
  * @package Lazysizes
  */
 
+namespace Lazysizes;
+
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 /**
  * The class responsible for transforming the HTML
  */
-class LazysizesPregReplace {
+class PregReplace {
 
 	/**
 	 * The path to the plugin's directory

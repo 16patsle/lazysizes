@@ -5,6 +5,8 @@
  * @package Lazysizes
  */
 
+use Lazysizes\PregReplace;
+
 /**
  * Testing for the LazysizesPregReplace class
  */
@@ -16,7 +18,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->class_instance = new LazysizesPregReplace( array( 'excludeclasses' => array() ) );
+		$this->class_instance = new PregReplace( array( 'excludeclasses' => array() ) );
 	}
 
 	/**
