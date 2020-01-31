@@ -3,15 +3,20 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.1.0
+ * @version 1.2.0
  */
+
+namespace Lazysizes;
+
+use Lazysizes\Settings;
+use Lazysizes\PregReplace;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 /**
  * The main plugin class
  */
-class Lazysizes {
+class PluginCore {
 
 	/**
 	 * The path to the plugin's directory
@@ -24,7 +29,7 @@ class Lazysizes {
 	 *
 	 * @var string
 	 */
-	protected $lazysizes_ver = '5.0.0';
+	protected $lazysizes_ver = '5.2.0';
 	/**
 	 * The settings for this plugin.
 	 *
@@ -47,8 +52,8 @@ class Lazysizes {
 
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
-			require dirname( __FILE__ ) . '/class-lazysizessettings.php';
-			$settings_class = new LazysizesSettings();
+			require dirname( __FILE__ ) . '/class-settings.php';
+			$settings_class = new Settings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
@@ -56,10 +61,10 @@ class Lazysizes {
 
 			// Store our settings in memory to reduce mysql calls.
 			$this->settings = $this->get_settings();
-			$this->dir      = plugin_dir_url( __FILE__ );
+			$this->dir      = plugin_dir_url( $pluginfile );
 
-			require dirname( __FILE__ ) . '/class-lazysizespregreplace.php';
-			$this->replace_class = new LazysizesPregReplace( $this->settings );
+			require dirname( __FILE__ ) . '/class-pregreplace.php';
+			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
@@ -71,6 +76,12 @@ class Lazysizes {
 
 			// Replace the 'src' attr with 'data-src' in the_content.
 			add_filter( 'the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
+
+			// If Advanced Custom Fields support is enabled, do the same there.
+			if ( $this->settings['acf_content'] ) {
+				add_filter( 'acf_the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
+			}
+
 			// If enabled replace the 'src' attr with 'data-src' in text widgets.
 			if ( $this->settings['textwidgets'] ) {
 				add_filter( 'widget_text', array( $this, 'filter_html' ), PHP_INT_MAX );
@@ -134,6 +145,7 @@ class Lazysizes {
 			'auto_load',
 			'aspectratio',
 			'native_lazy',
+			'acf_content',
 		);
 
 		// Start fresh.

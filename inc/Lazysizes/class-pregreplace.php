@@ -5,12 +5,14 @@
  * @package Lazysizes
  */
 
+namespace Lazysizes;
+
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 /**
  * The class responsible for transforming the HTML
  */
-class LazysizesPregReplace {
+class PregReplace {
 
 	/**
 	 * The path to the plugin's directory
@@ -34,12 +36,13 @@ class LazysizesPregReplace {
 	/**
 	 * Set up the settings and plugin dir variables
 	 *
-	 * @param array $settings The settings for this plugin.
+	 * @param array  $settings The settings for this plugin.
+	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct( $settings ) {
+	public function __construct( $settings, $pluginfile ) {
 		// Store our settings in memory to reduce mysql calls.
 		$this->settings = $settings;
-		$this->dir      = plugin_dir_url( __FILE__ );
+		$this->dir      = plugin_dir_url( $pluginfile );
 	}
 
 	/**
