@@ -59,6 +59,13 @@ If you are wondering, this plugin is not affiliated with the lazysizes project. 
 
 == Changelog ==
 
+= 1.2.0 =
+
+* Upgrade lazysizes library to version 5.2.0.
+* Add opt-in support for Advanced Custom Fields.
+* The plugin now uses namespaces for PHP classes.
+* Confirmed working with WordPress 5.3 and PHP 7.4.
+
 = 1.1.0 =
 
 * Upgrade lazysizes library to version 5.0.0.
