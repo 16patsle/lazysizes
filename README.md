@@ -11,7 +11,7 @@
 - License: GPLv3 or later
 - License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
-High performance and SEO friendly lazy loader for images, iframes and more
+High performance, easy to use and SEO friendly lazy loader for images, iframes and more
 
 ## Description
 
