@@ -27,7 +27,7 @@ This plugin works by loading the lazysizes script and replacing the `src` and `s
 
 Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible, and for letting me use the same name.
 
-Also thanks to dbhynds for making the Lazy Load XT plugin this plugin is based on.
+Also thanks to dbhynds who made the Lazy Load XT plugin, which this plugin is based on.
 
 ## Installation
 
