@@ -1,17 +1,16 @@
 # lazysizes
+Contributors: 16patsle
+Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
+Requires at least: 3.9
+Requires PHP: 5.6
+Tested up to: 5.3.2
+Stable tag: 1.2.0
+License: GPLv3 or later
+License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
 [![Build Status](https://travis-ci.org/16patsle/lazysizes.svg?branch=master)](https://travis-ci.org/16patsle/lazysizes)
 
-- Contributors: 16patsle
-- Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
-- Requires at least: 3.9
-- Requires PHP: 5.6
-- Tested up to: 5.3.2
-- Stable tag: 1.2.0
-- License: GPLv3 or later
-- License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
-
-High performance and SEO friendly lazy loader for images, iframes and more
+High performance, easy to use and SEO friendly lazy loader for images, iframes and more
 
 ## Description
 
@@ -21,7 +20,7 @@ This plugin works by loading the lazysizes script and replacing the `src` and `s
 
 Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible, and for letting me use the same name.
 
-Also thanks to dbhynds for making the Lazy Load XT plugin this plugin is based on.
+Also thanks to dbhynds who made the Lazy Load XT plugin, which this plugin is based on.
 
 ## Installation
 
@@ -37,11 +36,11 @@ or
 
 ### Why aren't my images lazy loading?
 
-Lazysizes filters images added to the page using `the_content`, `post_thumbnail_html`, `widget_text` and `get_avatar`. If your images are added using another function (`wp_get_attachment_image` for example), lazysizes does not filter them. However, you can filter the HTML yourself by passing it to `get_lazysizes_html`.
+Lazysizes filters images added to the page using `the_content`, `post_thumbnail_html`, `widget_text` and `get_avatar`. If your images are added using another function (`wp_get_attachment_image` for example), lazysizes does not filter them by default. There are several options for changing what lazysizes filters, like enabling it to filter `acf_the_content` for WYSIWYG content from Advanced Custom Fields, and enabling `wp_get_attachment_image` support (somewhat limited, see below). For unsupported use cases you can also filter the HTML yourself by passing it to `get_lazysizes_html`.
 
-For example, if a theme has: `echo wp_get_attachment_image($id);` Changing it to the following would lazy load the image: `echo get_lazysizes_html( wp_get_attachment_image($id) );`
+While this plugin has opt-in support for `wp_get_attachment_image`, it doesn't add a no-Javascript fallback, which causes images to become invisible for users where Javascript is disabled or unsupported. We cannot fix this for you automatically, but you can fix this with a couple of changes to the code that uses `wp_get_attachment_image`. For example, if a theme has: `echo wp_get_attachment_image($id);`, changing it to the following would lazy load the image and add no-Javascript fallback if enabled in settings: `echo get_lazysizes_html( wp_get_attachment_image($id) );`
 
-### But this plugin looks like Lazy Load XT!!
+### But this plugin looks like Lazy Load XT!
 
 Yes, it does. The PHP code for this plugin is heavily based on that of Lazy Load XT. The main difference is that this plugin is a bit simplified, and is using a completely different lazy loading library, with no jQuery dependency.
 
@@ -51,10 +50,10 @@ Thanks to dbhynds for making the Lazy Load XT plugin. Without that project, this
 
 There are a couple of reasons:
 
-1. I like the name. It's good.
+1. I think it's a good name.
 2. I'm hoping it will help people discovering the plugin. I originally tried searching for a WordPress plugin using the library myself, and other people might be trying the same.
 
-If you are wondering, this plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
+This plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
 

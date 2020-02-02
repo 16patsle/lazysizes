@@ -1,0 +1,13 @@
+/.wordpress-org
+/.git
+/.github
+/bin
+/tests
+
+.distignore
+.gitignore
+.editorconfig
+.phpcs.xml.dist
+.travis.yml
+docker-compose.phpunit.yml
+phpunit.xml.dist
