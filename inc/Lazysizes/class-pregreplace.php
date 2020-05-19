@@ -172,6 +172,11 @@ class PregReplace {
 					// Continue if transforming img tag inside picture tag.
 					continue;
 				}
+				// Check if inside noscript
+				if ( preg_match( '/<noscript>(?!<\/*noscript>).*' . $escaped . '.*<\/noscript>/', $newcontent, $res ) ) {
+					// Continue if inside noscript
+					continue;
+				}
 				// Replace attr, add class and similar.
 				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
 			}
