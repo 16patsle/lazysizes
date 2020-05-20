@@ -252,6 +252,52 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test filtering images both inside and after noscript tag.
+	 */
+	public function test_preg_replace_img_after_noscript() {
+		$html     = '
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+		</noscript>
+		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$expected = '
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+		</noscript>
+		<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test filtering images both inside and before noscript tag.
+	 */
+	public function test_preg_replace_img_before_noscript() {
+		$html     = '
+		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+		</noscript>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$expected = '
+		<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+		</noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test extracting of classes from the HTML string.
 	 * This test has 4 classes.
 	 */
