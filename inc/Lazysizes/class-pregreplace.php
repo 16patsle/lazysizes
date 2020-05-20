@@ -59,14 +59,6 @@ class PregReplace {
 
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
-
-			// Set tag end, depending of if it's self-closing.
-			if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
-				$tag_end = '\/?';
-			} else {
-				$tag_end = '>.*<\/' . $tag;
-			}
-
 			// Look for tag in content.
 			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
 				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript );
