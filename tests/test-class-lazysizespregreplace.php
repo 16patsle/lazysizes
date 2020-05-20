@@ -229,6 +229,29 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test filtering images inside noscript tag.
+	 */
+	public function test_preg_replace_img_inside_noscript() {
+		$html     = '
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+			<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
+		</noscript>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$expected = '
+		<noscript>
+			<img src="logo-narrow.png" alt="Logo">
+			<img src="logo-wide.png" alt="Logo">
+			<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
+		</noscript>
+		';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test extracting of classes from the HTML string.
 	 * This test has 4 classes.
 	 */
