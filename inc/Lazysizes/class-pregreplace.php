@@ -173,7 +173,7 @@ class PregReplace {
 					continue;
 				}
 				// Check if inside noscript
-				if ( preg_match( '/<noscript>(?!<\/*noscript>).*' . $escaped . '.*<\/noscript>/', $newcontent, $res ) ) {
+				if ( preg_match( '/<noscript>(?!<\/*noscript>).*' . $escaped . '.*?<\/noscript>/is', $newcontent, $res ) ) {
 					// Continue if inside noscript
 					continue;
 				}
