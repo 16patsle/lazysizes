@@ -4,7 +4,7 @@ Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
 Requires at least: 3.9
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
@@ -56,6 +56,11 @@ There are a couple of reasons:
 This plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
 
 ## Changelog
+
+### 1.2.1
+
+- Improve logic for skipping transforming images inside noscript tags. Should fix compatibility issues with Envira Gallery's noscript fallback.
+- Fix default options not being selected. If you were affected by this bug, see a list of [recommended default options here](https://wordpress.org/support/topic/recommended-starting-settings-perhaps/#post-12886169).
 
 ### 1.2.0
 
