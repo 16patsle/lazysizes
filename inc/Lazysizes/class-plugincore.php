@@ -55,7 +55,7 @@ class PluginCore {
 			require dirname( __FILE__ ) . '/class-settings.php';
 			$settings_class = new Settings();
 			// If this is the first time we've enabled the plugin, setup default settings.
-			register_activation_hook( __FILE__, array( $settings_class, 'first_time_activation' ) );
+			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 		} else {
 
