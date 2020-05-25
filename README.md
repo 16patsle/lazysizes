@@ -59,8 +59,8 @@ This plugin is not affiliated with the lazysizes project. I got permission by aF
 
 ### 1.2.1
 
-- Improve logic for skipping transforming images inside noscript tags. Should fix compatibility issues with Envira Gallery's noscript fallback.
-- Fix default options not being selected. If you were affected by this bug, see a list of [recommended default options here](https://wordpress.org/support/topic/recommended-starting-settings-perhaps/#post-12886169).
+- Improve logic for skipping transforming images inside noscript tags. Should fix compatibility issues with Envira Gallery's noscript fallback. Thanks to snippet24 for reporting.
+- Fix default options not being selected. If you were affected by this bug, see a list of [recommended default options here](https://wordpress.org/support/topic/recommended-starting-settings-perhaps/#post-12886169). Thanks to snippet24 for reporting.
 
 ### 1.2.0
 
