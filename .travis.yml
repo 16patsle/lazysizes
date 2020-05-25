@@ -12,6 +12,9 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+services:
+  - mysql
+
 jobs:
   include:
     - php: 7.4
