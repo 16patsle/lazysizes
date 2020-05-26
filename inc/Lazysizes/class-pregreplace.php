@@ -272,9 +272,10 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string      $replace_markup The HTML markup being processed.
 	 * @param string|bool $tag The tag type used to determine the src attr, or false.
+	 * @param string      $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The HTML markup with attributes replaced.
 	 */
-	public function replace_attr( $replace_markup, $tag = false ) {
+	public function replace_attr( $replace_markup, $tag = false, $skip_src = false ) {
 		if ( ! $tag ) {
 			return $replace_markup;
 		}
@@ -297,7 +298,7 @@ class PregReplace {
 		}
 
 		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
-		if ( ! preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
+		if ( ! $skip_src && ! preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) && $this->get_src_attr( $tag ) !== '' && $had_src ) {
 			// And add in a replacement src attribute if necessary.
 			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
