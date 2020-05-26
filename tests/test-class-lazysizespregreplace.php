@@ -32,6 +32,46 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the filtering of an img tag with empty class attribute.
+	 */
+	public function test_preg_replace_html_img_empty_class() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="">', array( 'img' ) );
+		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=""></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an img tag with blank class attribute.
+	 */
+	public function test_preg_replace_html_img_blank_class() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  ">', array( 'img' ) );
+		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  "></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an img tag with existing classes.
+	 */
+	public function test_preg_replace_html_img_existing_class() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class">', array( 'img' ) );
+		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="existing-class lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class"></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an img tag with existing classes padded with whitespace.
+	 */
+	public function test_preg_replace_html_img_existing_class_whitespace() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class ">', array( 'img' ) );
+		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class=" existing-class  lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class "></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test the filtering of an audio tag with a src atribute.
 	 */
 	public function test_preg_replace_html_audio_src_attr() {
