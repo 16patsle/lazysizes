@@ -294,11 +294,12 @@ class PluginCore {
 		// If there's anything there, replace the 'src' with 'data-src'.
 		if ( strlen( $content ) ) {
 			$newcontent = $content;
-			// Replace 'src' with 'data-src' on images.
-			$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
-			// If enabled, replace 'src' with 'data-src' on extra elements.
+			// If enabled, replace 'src' with 'data-src' on both images and extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
+			} else {
+				// Replace 'src' with 'data-src' on images.
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {
