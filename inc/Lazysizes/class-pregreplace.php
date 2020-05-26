@@ -323,10 +323,10 @@ class PregReplace {
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
 		} elseif ( empty( trim( $classes ) ) ) {
 			// If the attribute is emtpy, just add 'lazyload'.
-			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
+			$replace_markup = str_replace( 'class="' . $classes . '"', 'class="lazyload"', $replace_markup );
 		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
-			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="' . $classes . ' lazyload"', $replace_markup );
+			$replace_markup = str_replace( 'class="' . $classes . '"', 'class="' . $classes . ' lazyload"', $replace_markup );
 		}
 
 		return $replace_markup;
