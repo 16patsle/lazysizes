@@ -151,7 +151,7 @@ class PregReplace {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
-		preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
+		preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>/is', $content, $matches );
 
 		$newcontent = $content;
 
