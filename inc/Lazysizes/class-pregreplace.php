@@ -300,7 +300,7 @@ class PregReplace {
 		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
 		if ( ! $skip_src && $this->get_src_attr( $tag ) !== '' && $had_src && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
 			// And add in a replacement src attribute if necessary.
-			$replace_markup = preg_replace( sprintf( '/<%s/', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
 
 		return $replace_markup;
@@ -360,7 +360,8 @@ class PregReplace {
 			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), '<$1 preload="none">', $replace_markup );
 		} elseif ( array_key_exists( 0, $preload ) && $preload[0] && 'none' !== $preload[1] ) {
 			// If the attribute is wrong, replace it.
-			$replace_markup = preg_replace( sprintf( '/%s/', $preload[0] ), ' preload="none"', $replace_markup );
+			// TODO
+			$replace_markup = str_replace( sprintf( '%s', $preload[0] ), ' preload="none"', $replace_markup );
 		}
 
 		return $replace_markup;
