@@ -85,16 +85,16 @@ class PregReplace {
 		$tag_end = $this->get_tag_end( $tag );
 
 		// Matching with the list of media elements to check.
-		preg_match_all( '/<' . $tag . '\s*[^<]*' . $tag_end . '>(?!<noscript>|<\/noscript>)/is', $content, $matches );
+		preg_match_all( '/<' . $tag . '\s*[^<]*' . $tag_end . '>/is', $content, $matches );
 
 		$newcontent = $content;
 
 		// If tags exist, loop through them and replace stuff.
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
-				$escaped = preg_replace( '/([\\^$.[\]|()?*+{}\/-])/', '\\\\$0', $match );
-				if ( preg_match( '/<noscript[^>]*>(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*(?:' . $escaped . ')(?:[\s]*<[\s]*[^<]*\/?>[\s]*)*[\s]*<\/noscript>/', $newcontent ) ) {
-					// Continue if transforming img tag inside picture tag.
+				$escaped = $this->escape_for_regex( $match );
+				if ( $this->is_inside_tag( 'noscript', $escaped, $newcontent ) ) {
+					// Continue if inside noscript.
 					continue;
 				}
 
@@ -113,11 +113,16 @@ class PregReplace {
 					// Add preload="none" for audio/video.
 					$new_replace = $this->add_preload_attr( $new_replace, $tag );
 
-					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>(?!<noscript>|<\/noscript>)/is', $match, $sources );
+					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>/is', $match, $sources );
 
 					// If tags exist, loop through them and replace stuff.
 					if ( count( $sources[0] ) ) {
 						foreach ( $sources[0] as $source_match ) {
+							$escaped = $this->escape_for_regex( $source_match );
+							if ( $this->is_inside_tag( 'noscript', $escaped, $match ) ) {
+								// Continue if inside noscript.
+								continue;
+							}
 							// Replace attr, add class and similar.
 							$new_replace = $this->get_replace_markup( $new_replace, $source_match, 'source', false );
 						}
