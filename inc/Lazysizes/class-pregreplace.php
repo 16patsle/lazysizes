@@ -272,7 +272,7 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string      $replace_markup The HTML markup being processed.
 	 * @param string|bool $tag The tag type used to determine the src attr, or false.
-	 * @param string      $skip_src If true, skip adding a placeholder src attribute.
+	 * @param bool        $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The HTML markup with attributes replaced.
 	 */
 	public function replace_attr( $replace_markup, $tag = false, $skip_src = false ) {
