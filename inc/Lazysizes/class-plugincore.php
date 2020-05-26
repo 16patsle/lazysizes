@@ -57,6 +57,7 @@ class PluginCore {
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
+			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		} else {
 
 			// Store our settings in memory to reduce mysql calls.
@@ -102,8 +103,6 @@ class PluginCore {
 			if ( $this->settings['attachment_image'] ) {
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
 			}
-
-			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		}
 	}
 
