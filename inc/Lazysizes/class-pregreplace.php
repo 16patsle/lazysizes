@@ -297,7 +297,7 @@ class PregReplace {
 			// If there is no data attribute, turn the regular attribute into one.
 			if ( ! preg_match( sprintf( '/<%1$s[^>]*[\s]data-%2$s=/', $tag, $attr ), $replace_markup ) ) {
 				// Now replace attr with data-attr.
-				$replace_markup = preg_replace( sprintf( '/(<%1$s[^>]*)[\s]%2$s=/', $tag, $attr ), sprintf('$1 data-%s=', $attr), $replace_markup );
+				$replace_markup = preg_replace( sprintf( '/(<%1$s[^>]*)[\s]%2$s=/', $tag, $attr ), sprintf( '$1 data-%s=', $attr ), $replace_markup );
 			}
 		}
 
@@ -364,7 +364,6 @@ class PregReplace {
 			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), '<$1 preload="none">', $replace_markup );
 		} elseif ( array_key_exists( 0, $preload ) && $preload[0] && 'none' !== $preload[1] ) {
 			// If the attribute is wrong, replace it.
-			// TODO
 			$replace_markup = str_replace( sprintf( '%s', $preload[0] ), ' preload="none"', $replace_markup );
 		}
 
