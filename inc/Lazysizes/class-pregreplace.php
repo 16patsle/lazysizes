@@ -160,12 +160,12 @@ class PregReplace {
 			foreach ( $matches[0] as $match ) {
 				// Escape the match and use in regex to check if inside picture tag.
 				$escaped = preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $match );
-				if ( ! $inside_picture && 'img' === $tag && preg_match( '/<picture>(?!<\/*picture>).*' . $escaped . '.*?<\/picture>/is', $newcontent, $res ) ) {
+				if ( ! $inside_picture && 'img' === $tag && $this->is_inside_tag( 'picture', $escaped, $newcontent ) ) {
 					// Continue if transforming img tag inside picture tag.
 					continue;
 				}
 				// Check if inside noscript.
-				if ( preg_match( '/<noscript>(?!<\/*noscript>).*' . $escaped . '.*?<\/noscript>/is', $newcontent, $res ) ) {
+				if ( $this->is_inside_tag( 'noscript', $escaped, $newcontent ) ) {
 					// Continue if inside noscript.
 					continue;
 				}
@@ -381,6 +381,19 @@ class PregReplace {
 			$replace_markup = preg_replace( '/ width="/', ' data-aspectratio="' . absint( $width ) . '/' . absint( $height ) . '" width="', $replace_markup );
 		}
 		return $replace_markup;
+	}
+
+	/**
+	 * Checks if the given search string is inside a tag of the given type
+	 *
+	 * @since 1.3.0
+	 * @param string $tag The tag the search string could be inside.
+	 * @param string $escaped The regex-escaped search string.
+	 * @param string $content The content to search through.
+	 * @return bool If the string matches or not.
+	 */
+	public function is_inside_tag( $tag, $escaped, $content ) {
+		return preg_match( sprintf( '/<%1$s>(?!<\/*%1$s>).*%2$s.*?<\/%1$s>/is', $tag, $escaped ), $content );
 	}
 
 }
