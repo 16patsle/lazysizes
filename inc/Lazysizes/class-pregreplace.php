@@ -52,18 +52,19 @@ class PregReplace {
 	 * @param string   $content HTML content to transform.
 	 * @param string[] $tags Tags to look for in the content.
 	 * @param bool     $noscript If <noscript> fallbacks should be generated.
+	 * @param bool     $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function preg_replace_html( $content, $tags, $noscript = true ) {
+	public function preg_replace_html( $content, $tags, $noscript = true, $skip_src = false ) {
 		$newcontent = $content;
 
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
 			// Look for tag in content.
 			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
-				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript );
+				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript, $skip_src );
 			} else {
-				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript );
+				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, $skip_src );
 			}
 			$newcontent = str_replace( $newcontent, $result, $newcontent );
 		}
@@ -78,9 +79,10 @@ class PregReplace {
 	 * @param string $content HTML content to transform.
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
+	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_picture_video_audio( $content, $tag, $noscript = true ) {
+	public function replace_picture_video_audio( $content, $tag, $noscript = true, $skip_src = false ) {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -105,7 +107,7 @@ class PregReplace {
 					$new_replace = $match;
 
 					// Set replace html and replace attr with data-attr.
-					$new_replace = $this->replace_attr( $new_replace, $tag );
+					$new_replace = $this->replace_attr( $new_replace, $tag, $skip_src );
 
 					// Add lazyload class.
 					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
@@ -129,7 +131,7 @@ class PregReplace {
 					}
 
 					// Replace any img tags inside, needed for picture tags.
-					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
+					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true, $skip_src );
 
 					if ( $noscript ) {
 						// And add the original in as <noscript>.
@@ -150,9 +152,10 @@ class PregReplace {
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @param bool   $inside_picture If tags inside picture tags should be transformed.
+	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false ) {
+	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false, $skip_src = false ) {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -175,7 +178,7 @@ class PregReplace {
 					continue;
 				}
 				// Replace attr, add class and similar.
-				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
+				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript, $skip_src );
 			}
 		}
 		return $newcontent;
@@ -188,9 +191,10 @@ class PregReplace {
 	 * @param string $match HTML content to transform.
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
+	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The new markup.
 	 */
-	public function get_replace_markup( $content, $match, $tag, $noscript = true ) {
+	public function get_replace_markup( $content, $match, $tag, $noscript = true, $skip_src = false ) {
 		$newcontent = $content;
 
 		// If it has assigned classes, extract them.
@@ -198,7 +202,7 @@ class PregReplace {
 		// But first, check that the tag doesn't have any excluded classes.
 		if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 			// Set replace html and replace attr with data-attr.
-			$replace_markup = $this->replace_attr( $match, $tag );
+			$replace_markup = $this->replace_attr( $match, $tag, $skip_src );
 
 			// Add lazyload class.
 			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
