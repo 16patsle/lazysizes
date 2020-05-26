@@ -321,7 +321,7 @@ class PregReplace {
 		if ( ! count( $classes_r ) ) {
 			// If there are no class attribute, add one.
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
-		} elseif ( '' === $classes ) {
+		} elseif ( empty( trim( $classes ) ) ) {
 			// If the attribute is emtpy, just add 'lazyload'.
 			$replace_markup = preg_replace( '/class="' . $classes . '"/', 'class="lazyload"', $replace_markup );
 		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
