@@ -159,7 +159,7 @@ class PregReplace {
 		if ( count( $matches[0] ) ) {
 			foreach ( $matches[0] as $match ) {
 				// Escape the match and use in regex to check if inside picture tag.
-				$escaped = preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $match );
+				$escaped = $this->escape_for_regex( $match );
 				if ( ! $inside_picture && 'img' === $tag && $this->is_inside_tag( 'picture', $escaped, $newcontent ) ) {
 					// Continue if transforming img tag inside picture tag.
 					continue;
@@ -394,6 +394,17 @@ class PregReplace {
 	 */
 	public function is_inside_tag( $tag, $escaped, $content ) {
 		return preg_match( sprintf( '/<%1$s>(?!<\/*%1$s>).*%2$s.*?<\/%1$s>/is', $tag, $escaped ), $content );
+	}
+
+	/**
+	 * Escape the string to be usable in a regex
+	 *
+	 * @since 1.3.0
+	 * @param string $string The string to escape.
+	 * @return string The escaped string.
+	 */
+	public function escape_for_regex( $string ) {
+		return preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $string );
 	}
 
 }
