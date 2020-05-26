@@ -85,7 +85,7 @@ class PregReplace {
 		$tag_end = $this->get_tag_end( $tag );
 
 		// Matching with the list of media elements to check.
-		preg_match_all( '/<' . $tag . '\s*[^<]*' . $tag_end . '>/is', $content, $matches );
+		preg_match_all( sprintf( '/<%1$s\s*[^<]*%2$s>/is', $tag, $tag_end ), $content, $matches );
 
 		$newcontent = $content;
 
@@ -113,7 +113,7 @@ class PregReplace {
 					// Add preload="none" for audio/video.
 					$new_replace = $this->add_preload_attr( $new_replace, $tag );
 
-					preg_match_all( '/<source\s*[^<]*' . $this->get_tag_end( 'source' ) . '>/is', $match, $sources );
+					preg_match_all( sprintf( '/<source\s*[^<]*%s>/is', $this->get_tag_end( 'source' ) ), $match, $sources );
 
 					// If tags exist, loop through them and replace stuff.
 					if ( count( $sources[0] ) ) {
@@ -156,7 +156,7 @@ class PregReplace {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
-		preg_match_all( '/<' . $tag . '[\s]*[^<]*' . $tag_end . '>/is', $content, $matches );
+		preg_match_all( sprintf( '/<%1$s[\s]*[^<]*%2$s>/is', $tag, $tag_end ), $content, $matches );
 
 		$newcontent = $content;
 
@@ -280,7 +280,7 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		$had_src = preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup );
+		$had_src = preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup );
 
 		if ( 'source' === $tag ) {
 			$attrs = array( 'poster', 'srcset' );
@@ -291,16 +291,16 @@ class PregReplace {
 		// Attributes to search for.
 		foreach ( $attrs as $attr ) {
 			// If there is no data attribute, turn the regular attribute into one.
-			if ( ! preg_match( '/<' . $tag . '[^>]*[\s]data-' . $attr . '=/', $replace_markup ) ) {
+			if ( ! preg_match( sprintf( '/<%1$s[^>]*[\s]data-%2$s=/', $tag, $attr ), $replace_markup ) ) {
 				// Now replace attr with data-attr.
-				$replace_markup = preg_replace( '/(<' . $tag . '[^>]*)[\s]' . $attr . '=/', '$1 data-' . $attr . '=', $replace_markup );
+				$replace_markup = preg_replace( sprintf( '/(<%1$s[^>]*)[\s]%2$s=/', $tag, $attr ), sprintf('$1 data-%s=', $attr), $replace_markup );
 			}
 		}
 
 		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
-		if ( ! $skip_src && $this->get_src_attr( $tag ) !== '' && $had_src && ! preg_match( '/<' . $tag . '[^>]*[\s]src=/', $replace_markup ) ) {
+		if ( ! $skip_src && $this->get_src_attr( $tag ) !== '' && $had_src && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
 			// And add in a replacement src attribute if necessary.
-			$replace_markup = preg_replace( '/<' . $tag . '/', '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
+			$replace_markup = preg_replace( sprintf( '/<%s/', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
 
 		return $replace_markup;
@@ -326,13 +326,13 @@ class PregReplace {
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
 			// If there is no class attribute, add one.
-			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
+			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), '<$1 class="lazyload">', $replace_markup );
 		} elseif ( empty( trim( $classes ) ) ) {
 			// If the attribute is emtpy, just add 'lazyload'.
-			$replace_markup = str_replace( 'class="' . $classes . '"', 'class="lazyload"', $replace_markup );
+			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), 'class="lazyload"', $replace_markup );
 		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
-			$replace_markup = str_replace( 'class="' . $classes . '"', 'class="' . $classes . ' lazyload"', $replace_markup );
+			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), sprintf( 'class="%s lazyload"', $classes ), $replace_markup );
 		}
 
 		return $replace_markup;
@@ -357,10 +357,10 @@ class PregReplace {
 		// Here we construct the new preload attribute.
 		if ( ! array_key_exists( 0, $preload ) ) {
 			// If there are no preload attribute, add one.
-			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 preload="none">', $replace_markup );
+			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), '<$1 preload="none">', $replace_markup );
 		} elseif ( array_key_exists( 0, $preload ) && $preload[0] && 'none' !== $preload[1] ) {
 			// If the attribute is wrong, replace it.
-			$replace_markup = preg_replace( '/' . $preload[0] . '/', ' preload="none"', $replace_markup );
+			$replace_markup = preg_replace( sprintf( '/%s/', $preload[0] ), ' preload="none"', $replace_markup );
 		}
 
 		return $replace_markup;
@@ -384,7 +384,7 @@ class PregReplace {
 
 		// If both width and height is set, add data-aspectratio.
 		if ( ! empty( $width ) && ! empty( $height ) ) {
-			$replace_markup = preg_replace( '/ width="/', ' data-aspectratio="' . absint( $width ) . '/' . absint( $height ) . '" width="', $replace_markup );
+			$replace_markup = preg_replace( '/ width="/', sprintf( ' data-aspectratio="%1$s/%2$s" width="', absint( $width ), absint( $height ) ), $replace_markup );
 		}
 		return $replace_markup;
 	}
