@@ -319,7 +319,7 @@ class PregReplace {
 
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
-			// If there are no class attribute, add one.
+			// If there is no class attribute, add one.
 			$replace_markup = preg_replace( '/<(' . $tag . '.*?)>/', '<$1 class="lazyload">', $replace_markup );
 		} elseif ( empty( trim( $classes ) ) ) {
 			// If the attribute is emtpy, just add 'lazyload'.
