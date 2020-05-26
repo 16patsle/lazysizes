@@ -64,7 +64,7 @@ class PregReplace {
 			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
 				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript, $skip_src );
 			} else {
-				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, $skip_src );
+				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, false, $skip_src );
 			}
 			$newcontent = str_replace( $newcontent, $result, $newcontent );
 		}
