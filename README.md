@@ -57,6 +57,11 @@ This plugin is not affiliated with the lazysizes project. I got permission by aF
 
 ## Changelog
 
+### 1.3.0
+
+- Various performance tweaks.
+- Add experimental option for skipping adding a src attribute to images, and letting the browser load the image progressively instead.
+
 ### 1.2.1
 
 - Improve logic for skipping transforming images inside noscript tags. Should fix compatibility issues with Envira Gallery's noscript fallback. Thanks to snippet24 for reporting.
