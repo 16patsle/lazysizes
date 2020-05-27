@@ -222,6 +222,7 @@ class PluginCore {
 
 	/**
 	 * Inject styling in head to hide lazyloaded images when JS is turned off.
+	 * Also add CSS to hide broken image icons when not adding src placeholder.
 	 *
 	 * @since 0.3.0
 	 */
@@ -229,6 +230,12 @@ class PluginCore {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
+
+		if( $this->settings['skip_src'] ) {
+			?>
+				<style>img.lazyload:not([src]) { visibility: hidden; }</style>
+			<?php
+		}
 	}
 
 	/**
