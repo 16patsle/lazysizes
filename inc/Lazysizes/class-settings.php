@@ -332,7 +332,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_skip_src' name='lazysizes_addons[lazysizes_skip_src]' <?php $this->checked_r( $options, 'lazysizes_skip_src', 1 ); ?> value="1">
 				<?php esc_html_e( 'Skip adding a placeholder src and hide broken image icon.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Does not add a placeholder image in the src attribute, allowing the browser to load and render the image progressively. Also adds a small amount of CSS to hide the broken image icon browsers may show when the src is missing.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Experimental. Does not add a placeholder image in the src attribute, allowing the browser to load and render the image progressively. Also adds a small amount of CSS to hide the broken image icon browsers may show when the src is missing.', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>
