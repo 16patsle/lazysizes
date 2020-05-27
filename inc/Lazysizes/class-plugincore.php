@@ -143,8 +143,8 @@ class PluginCore {
 			'spinner',
 			'auto_load',
 			'aspectratio',
-			'native_lazy',
 			'acf_content',
+			'native_lazy',
 			'skip_src',
 		);
 

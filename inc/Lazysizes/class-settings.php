@@ -313,14 +313,6 @@ class Settings {
 				</p>
 			</label>
 			<br />
-			<label for="lazysizes_native_lazy">
-				<input type='checkbox' id='lazysizes_native_lazy' name='lazysizes_addons[lazysizes_native_lazy]' <?php $this->checked_r( $options, 'lazysizes_native_lazy', 1 ); ?> value="1">
-				<?php esc_html_e( 'Use native browser lazy loading when supported.', 'lazysizes' ); ?>
-				<p class="description">
-					<?php esc_html_e( 'Experimental. Chrome 76+ and Firefox 75+ supports native lazy loading, giving the browser control over when to load images and iframes.', 'lazysizes' ); ?>
-				</p>
-			</label>
-			<br />
 			<label for="lazysizes_acf_content">
 				<input type='checkbox' id='lazysizes_acf_content' name='lazysizes_addons[lazysizes_acf_content]' <?php $this->checked_r( $options, 'lazysizes_acf_content', 1 ); ?> value="1">
 				<?php esc_html_e( 'Lazy load images/iframes in WYSIWYG fields from Advanced Custom Fields.', 'lazysizes' ); ?>
@@ -329,6 +321,14 @@ class Settings {
 				</p>
 			</label>
 			<br>
+			<label for="lazysizes_native_lazy">
+				<input type='checkbox' id='lazysizes_native_lazy' name='lazysizes_addons[lazysizes_native_lazy]' <?php $this->checked_r( $options, 'lazysizes_native_lazy', 1 ); ?> value="1">
+				<?php esc_html_e( 'Use native browser lazy loading when supported.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'Experimental. Chrome 76+ and Firefox 75+ supports native lazy loading, giving the browser control over when to load images and iframes.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
 			<label for="lazysizes_skip_src">
 				<input type='checkbox' id='lazysizes_skip_src' name='lazysizes_addons[lazysizes_skip_src]' <?php $this->checked_r( $options, 'lazysizes_skip_src', 1 ); ?> value="1">
 				<?php esc_html_e( 'Skip adding a placeholder src and hide broken image icon.', 'lazysizes' ); ?>
