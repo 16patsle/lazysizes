@@ -333,6 +333,8 @@ class Settings {
 				<?php esc_html_e( 'Skip adding a placeholder src and hide broken image icon.', 'lazysizes' ); ?>
 				<p class="description">
 					<?php esc_html_e( 'Experimental. Does not add a placeholder image in the src attribute, allowing the browser to load and render the image progressively. Also adds a small amount of CSS to hide the broken image icon browsers may show when the src is missing.', 'lazysizes' ); ?>
+					<br>
+					<?php esc_html_e( 'Note: Not compatible with the fade effect.', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>
