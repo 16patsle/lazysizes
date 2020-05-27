@@ -328,6 +328,7 @@ class Settings {
 					<?php esc_html_e( 'Depending on how the WYSIWYG content is shown you might want to change this.', 'lazysizes' ); ?>
 				</p>
 			</label>
+			<br>
 			<label for="lazysizes_skip_src">
 				<input type='checkbox' id='lazysizes_skip_src' name='lazysizes_addons[lazysizes_skip_src]' <?php $this->checked_r( $options, 'lazysizes_skip_src', 1 ); ?> value="1">
 				<?php esc_html_e( 'Skip adding a placeholder src and hide broken image icon.', 'lazysizes' ); ?>
