@@ -61,6 +61,7 @@ This plugin is not affiliated with the lazysizes project. I got permission by aF
 
 - Various performance tweaks.
 - Add experimental option for skipping adding a src attribute to images, and letting the browser load the image progressively instead.
+- Upgrade lazysizes library to 5.2.2.
 
 ### 1.2.1
 
