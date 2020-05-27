@@ -231,7 +231,7 @@ class PluginCore {
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
 
-		if( $this->settings['skip_src'] ) {
+		if ( $this->settings['skip_src'] ) {
 			?>
 				<style>img.lazyload:not([src]) { visibility: hidden; }</style>
 			<?php
