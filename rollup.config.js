@@ -1,9 +1,7 @@
-import resolve from '@rollup/plugin-node-resolve';
-import legacy from '@rollup/plugin-legacy';
 import {terser} from 'rollup-plugin-terser';
 
 export default {
-	input: ['src/core.js'],
+	input: ['js/src/core.js'],
 	output: [
 		{
 			dir: 'js/build',
@@ -16,9 +14,5 @@ export default {
 			format: 'iife',
 			plugins: [terser()]
 		  }
-	],
-	plugins: [
-		resolve(),
-		legacy({ 'lazysizes/lazysizes.js': 'lazysizes' })
 	]
   };

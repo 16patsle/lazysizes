@@ -1,1 +1,1 @@
-import 'lazysizes/lazysizes';
+import './lib/lazysizes';
