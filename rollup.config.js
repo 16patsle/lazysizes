@@ -1,7 +1,7 @@
 import {terser} from 'rollup-plugin-terser';
 
-export default {
-	input: ['js/src/core.js'],
+const defaultConfig = {
+	input: '',
 	output: [
 		{
 			dir: 'js/build',
@@ -15,4 +15,17 @@ export default {
 			plugins: [terser()]
 		}
 	]
-  };
+};
+const configs = [];
+const inputs = [
+	'js/src/core.js',
+	'js/src/core-unveilhooks.js'
+]
+
+inputs.forEach(val => {
+	const config = Object.assign({}, defaultConfig);
+	config.input = val;
+	configs.push(config);
+})
+
+export default configs;

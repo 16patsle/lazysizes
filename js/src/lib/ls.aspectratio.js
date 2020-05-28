@@ -1,4 +1,4 @@
-var factory = function (lazySizes) {
+export default function (lazySizes) {
 	if (!window.addEventListener) {
 		return;
 	}

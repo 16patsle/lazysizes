@@ -1,4 +1,4 @@
-var factory = function (lazySizes) {
+export default function (lazySizes) {
 	var imgSupport = 'loading' in HTMLImageElement.prototype;
 	var iframeSupport = 'loading' in HTMLIFrameElement.prototype;
 	var isConfigSet = false;

@@ -32,7 +32,7 @@ For background images, use data-bg attribute:
  <div class="lazyload" data-require="module-name"></div>
 */
 
-var factory = function (lazySizes) {
+export default function (lazySizes) {
 	var bgLoad, regBgUrlEscape;
 	var uniqueUrls = {};
 
