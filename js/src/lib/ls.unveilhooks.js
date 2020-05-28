@@ -32,33 +32,33 @@ For background images, use data-bg attribute:
  <div class="lazyload" data-require="module-name"></div>
 */
 
-(function(window, factory) {
-	var globalInstall = function(){
+(function (window, factory) {
+	var globalInstall = function () {
 		factory(window.lazySizes);
 		window.removeEventListener('lazyunveilread', globalInstall, true);
 	};
 
 	factory = factory.bind(null, window, window.document);
 
-	if(typeof module == 'object' && module.exports){
+	if (typeof module == 'object' && module.exports) {
 		factory(require('lazysizes'));
 	} else if (typeof define == 'function' && define.amd) {
 		define(['lazysizes'], factory);
-	} else if(window.lazySizes) {
+	} else if (window.lazySizes) {
 		globalInstall();
 	} else {
 		window.addEventListener('lazyunveilread', globalInstall, true);
 	}
-}(window, function(window, document, lazySizes) {
+})(window, function (window, document, lazySizes) {
 	var bgLoad, regBgUrlEscape;
 	var uniqueUrls = {};
 
-	if(document.addEventListener){
+	if (document.addEventListener) {
 		regBgUrlEscape = /\(|\)|\s|'/;
 
-		bgLoad = function (url, cb){
+		bgLoad = function (url, cb) {
 			var img = document.createElement('img');
-			img.onload = function(){
+			img.onload = function () {
 				img.onload = null;
 				img.onerror = null;
 				img = null;
@@ -68,96 +68,102 @@ For background images, use data-bg attribute:
 
 			img.src = url;
 
-			if(img && img.complete && img.onload){
+			if (img && img.complete && img.onload) {
 				img.onload();
 			}
 		};
 
-		addEventListener('lazybeforeunveil', function(e){
-			if(e.detail.instance != lazySizes){return;}
-
-			var tmp, load, bg, poster;
-			if(!e.defaultPrevented) {
-
-				var target = e.target;
-
-				if(target.preload == 'none'){
-					target.preload = target.getAttribute('data-preload') || 'auto';
+		addEventListener(
+			'lazybeforeunveil',
+			function (e) {
+				if (e.detail.instance != lazySizes) {
+					return;
 				}
 
-				if (target.getAttribute('data-autoplay') != null) {
-					if (target.getAttribute('data-expand') && !target.autoplay) {
-						try {
-							target.play();
-						} catch (er) {}
-					} else {
-						requestAnimationFrame(function () {
-							target.setAttribute('data-expand', '-10');
-							lazySizes.aC(target, lazySizes.cfg.lazyClass);
-						});
+				var tmp, load, bg, poster;
+				if (!e.defaultPrevented) {
+					var target = e.target;
+
+					if (target.preload == 'none') {
+						target.preload = target.getAttribute('data-preload') || 'auto';
 					}
-				}
 
-				tmp = target.getAttribute('data-link');
-				if(tmp){
-					addStyleScript(tmp, true);
-				}
+					if (target.getAttribute('data-autoplay') != null) {
+						if (target.getAttribute('data-expand') && !target.autoplay) {
+							try {
+								target.play();
+							} catch (er) {}
+						} else {
+							requestAnimationFrame(function () {
+								target.setAttribute('data-expand', '-10');
+								lazySizes.aC(target, lazySizes.cfg.lazyClass);
+							});
+						}
+					}
 
-				// handle data-script
-				tmp = target.getAttribute('data-script');
-				if(tmp){
-					addStyleScript(tmp);
-				}
+					tmp = target.getAttribute('data-link');
+					if (tmp) {
+						addStyleScript(tmp, true);
+					}
 
-				// handle data-require
-				tmp = target.getAttribute('data-require');
-				if(tmp){
-					if(lazySizes.cfg.requireJs){
-						lazySizes.cfg.requireJs([tmp]);
-					} else {
+					// handle data-script
+					tmp = target.getAttribute('data-script');
+					if (tmp) {
 						addStyleScript(tmp);
 					}
+
+					// handle data-require
+					tmp = target.getAttribute('data-require');
+					if (tmp) {
+						if (lazySizes.cfg.requireJs) {
+							lazySizes.cfg.requireJs([tmp]);
+						} else {
+							addStyleScript(tmp);
+						}
+					}
+
+					// handle data-bg
+					bg = target.getAttribute('data-bg');
+					if (bg) {
+						e.detail.firesLoad = true;
+						load = function () {
+							target.style.backgroundImage =
+								'url(' +
+								(regBgUrlEscape.test(bg) ? JSON.stringify(bg) : bg) +
+								')';
+							e.detail.firesLoad = false;
+							lazySizes.fire(target, '_lazyloaded', {}, true, true);
+						};
+
+						bgLoad(bg, load);
+					}
+
+					// handle data-poster
+					poster = target.getAttribute('data-poster');
+					if (poster) {
+						e.detail.firesLoad = true;
+						load = function () {
+							target.poster = poster;
+							e.detail.firesLoad = false;
+							lazySizes.fire(target, '_lazyloaded', {}, true, true);
+						};
+
+						bgLoad(poster, load);
+					}
 				}
-
-				// handle data-bg
-				bg = target.getAttribute('data-bg');
-				if (bg) {
-					e.detail.firesLoad = true;
-					load = function(){
-						target.style.backgroundImage = 'url(' + (regBgUrlEscape.test(bg) ? JSON.stringify(bg) : bg ) + ')';
-						e.detail.firesLoad = false;
-						lazySizes.fire(target, '_lazyloaded', {}, true, true);
-					};
-
-					bgLoad(bg, load);
-				}
-
-				// handle data-poster
-				poster = target.getAttribute('data-poster');
-				if(poster){
-					e.detail.firesLoad = true;
-					load = function(){
-						target.poster = poster;
-						e.detail.firesLoad = false;
-						lazySizes.fire(target, '_lazyloaded', {}, true, true);
-					};
-
-					bgLoad(poster, load);
-
-				}
-			}
-		}, false);
-
+			},
+			false
+		);
 	}
 
-	function addStyleScript(src, style){
-		if(uniqueUrls[src]){
+	function addStyleScript(src, style) {
+		if (uniqueUrls[src]) {
 			return;
 		}
 		var elem = document.createElement(style ? 'link' : 'script');
 		var insertElem = document.getElementsByTagName('script')[0];
 
-		if(style){
+		if (style) {
 			elem.rel = 'stylesheet';
 			elem.href = src;
 		} else {
@@ -167,4 +173,4 @@ For background images, use data-bg attribute:
 		uniqueUrls[elem.src || elem.href] = true;
 		insertElem.parentNode.insertBefore(elem, insertElem);
 	}
-}));
+});
