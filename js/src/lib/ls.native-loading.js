@@ -1,15 +1,4 @@
-(function (factory) {
-	var globalInstall = function () {
-		factory(window.lazySizes);
-		window.removeEventListener('lazyunveilread', globalInstall, true);
-	};
-
-	if (window.lazySizes) {
-		globalInstall();
-	} else {
-		window.addEventListener('lazyunveilread', globalInstall, true);
-	}
-})(function (lazySizes) {
+var factory = function (lazySizes) {
 	var imgSupport = 'loading' in HTMLImageElement.prototype;
 	var iframeSupport = 'loading' in HTMLIFrameElement.prototype;
 	var isConfigSet = false;
@@ -116,4 +105,15 @@
 			return oldPrematureUnveil(element);
 		}
 	};
-});
+};
+
+var globalInstall = function () {
+	factory(window.lazySizes);
+	window.removeEventListener('lazyunveilread', globalInstall, true);
+};
+
+if (window.lazySizes) {
+	globalInstall();
+} else {
+	window.addEventListener('lazyunveilread', globalInstall, true);
+}

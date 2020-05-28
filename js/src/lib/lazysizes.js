@@ -1,7 +1,4 @@
-(function (factory) {
-	var lazySizes = factory();
-	window.lazySizes = lazySizes;
-})(function l() {
+var factory = function () {
 	// Pass in the windoe Date function also for SSR because the Date class can be lost
 	/*jshint eqnull:true */
 
@@ -875,4 +872,6 @@
 	};
 
 	return lazysizes;
-});
+};
+
+window.lazySizes = factory();

@@ -32,18 +32,7 @@ For background images, use data-bg attribute:
  <div class="lazyload" data-require="module-name"></div>
 */
 
-(function (factory) {
-	var globalInstall = function () {
-		factory(window.lazySizes);
-		window.removeEventListener('lazyunveilread', globalInstall, true);
-	};
-
-	if (window.lazySizes) {
-		globalInstall();
-	} else {
-		window.addEventListener('lazyunveilread', globalInstall, true);
-	}
-})(function (lazySizes) {
+var factory = function (lazySizes) {
 	var bgLoad, regBgUrlEscape;
 	var uniqueUrls = {};
 
@@ -167,4 +156,15 @@ For background images, use data-bg attribute:
 		uniqueUrls[elem.src || elem.href] = true;
 		insertElem.parentNode.insertBefore(elem, insertElem);
 	}
-});
+};
+
+var globalInstall = function () {
+	factory(window.lazySizes);
+	window.removeEventListener('lazyunveilread', globalInstall, true);
+};
+
+if (window.lazySizes) {
+	globalInstall();
+} else {
+	window.addEventListener('lazyunveilread', globalInstall, true);
+}
