@@ -184,8 +184,8 @@ class PluginCore {
 		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre  = $this->dir . 'css/lazysizes';
-		$script_url_pre = $this->dir . 'js/lazysizes';
+		$style_url_pre = $this->dir . 'css/lazysizes';
+		$plugin_script_url_pre = $this->dir . 'js/ls';
 
 		// Enqueue fade-in if enabled.
 		if ( $this->settings['fade_in'] ) {
@@ -198,25 +198,25 @@ class PluginCore {
 
 		// Enqueue auto load if enabled.
 		if ( $this->settings['auto_load'] ) {
-			wp_enqueue_script( 'lazysizes-auto', $script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-auto', $plugin_script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
 		}
 
 		// Enqueue aspectratio if enabled.
 		if ( $this->settings['aspectratio'] ) {
-			wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre . '.aspectratio' . $min . '.js', false, $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-aspectratio', $plugin_script_url_pre . '.aspectratio' . $min . '.js', false, $this->lazysizes_ver, $footer );
 		}
 
-		wp_enqueue_script( 'lazysizes', $script_url_pre . $min . '.js', false, $this->lazysizes_ver, $footer );
+		wp_enqueue_script( 'lazysizes', 'js/lazysizes' . $min . '.js', false, $this->lazysizes_ver, $footer );
 
 		// Enqueue extras enabled.
 		if ( $this->settings['load_extras'] ) {
-			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-unveilhooks', $plugin_script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
 
 		// Enqueue native lazy loading.
 		if ( $this->settings['native_lazy'] ) {
-			wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
-			wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . '.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-native-loading', $plugin_script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-native-loading-attr', $plugin_script_url_pre . '.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
 	}
 
