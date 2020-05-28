@@ -197,4 +197,4 @@ export default function (lazySizes) {
 	imageRatio = new AspectRatio();
 
 	window.imageRatio = imageRatio;
-};
+}

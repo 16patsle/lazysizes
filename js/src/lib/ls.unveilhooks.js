@@ -156,4 +156,4 @@ export default function (lazySizes) {
 		uniqueUrls[elem.src || elem.href] = true;
 		insertElem.parentNode.insertBefore(elem, insertElem);
 	}
-};
+}

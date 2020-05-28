@@ -105,4 +105,4 @@ export default function (lazySizes) {
 			return oldPrematureUnveil(element);
 		}
 	};
-};
+}
