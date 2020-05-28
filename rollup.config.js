@@ -19,7 +19,9 @@ const defaultConfig = {
 const configs = [];
 const inputs = [
 	'js/src/core.js',
-	'js/src/core-unveilhooks.js'
+	'js/src/core-unveilhooks.js',
+	'js/src/core-unveilhooks-aspectratio.js',
+	'js/src/core-unveilhooks-aspectratio-nativeloading.js'
 ]
 
 inputs.forEach(val => {
