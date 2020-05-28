@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
+import {terser} from 'rollup-plugin-terser';
 
 export default {
 	input: [
@@ -17,6 +18,12 @@ export default {
 			dir: 'js',
 			entryFileNames: '[name].js',
 			format: 'cjs'
+		},
+		{
+			dir: 'js',
+			entryFileNames: '[name].min.js',
+			format: 'cjs',
+			plugins: [terser()]
 		}
 	],
 	plugins: [
