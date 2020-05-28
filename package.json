@@ -30,5 +30,8 @@
   "bugs": {
     "url": "https://github.com/16patsle/lazysizes/issues"
   },
-  "homepage": "https://github.com/16patsle/lazysizes#readme"
+  "homepage": "https://github.com/16patsle/lazysizes#readme",
+  "dependencies": {
+    "lazysizes": "^5.2.2"
+  }
 }
