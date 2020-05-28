@@ -12,3 +12,4 @@
 docker-compose.phpunit.yml
 phpunit.xml.dist
 package.json
+js/src
