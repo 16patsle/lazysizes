@@ -13,6 +13,6 @@ export default {
 			entryFileNames: 'lazysizes.[name].min.js',
 			format: 'iife',
 			plugins: [terser()]
-		  }
+		}
 	]
   };
