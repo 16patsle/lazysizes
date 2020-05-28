@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config"
+		"build": "rollup --config",
+		"format-js-src": "prettier --write \"js/src/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -38,7 +39,11 @@
   "devDependencies": {
     "@rollup/plugin-legacy": "^2.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "prettier": "2.0.5",
     "rollup": "^2.11.2",
     "rollup-plugin-terser": "^6.1.0"
-  }
+	},
+	"prettier": {
+		"singleQuote": true
+	}
 }
