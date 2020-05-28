@@ -1,14 +1,7 @@
-(function (window, factory) {
-	var lazySizes = factory(window, window.document, Date);
+(function (factory) {
+	var lazySizes = factory();
 	window.lazySizes = lazySizes;
-	if (typeof module == 'object' && module.exports) {
-		module.exports = lazySizes;
-	}
-})(typeof window != 'undefined' ? window : {}, function l(
-	window,
-	document,
-	Date
-) {
+})(function l() {
 	// Pass in the windoe Date function also for SSR because the Date class can be lost
 	/*jshint eqnull:true */
 

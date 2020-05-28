@@ -1,21 +1,15 @@
-(function (window, factory) {
+(function (factory) {
 	var globalInstall = function () {
 		factory(window.lazySizes);
 		window.removeEventListener('lazyunveilread', globalInstall, true);
 	};
 
-	factory = factory.bind(null, window, window.document);
-
-	if (typeof module == 'object' && module.exports) {
-		factory(require('lazysizes'));
-	} else if (typeof define == 'function' && define.amd) {
-		define(['lazysizes'], factory);
-	} else if (window.lazySizes) {
+	if (window.lazySizes) {
 		globalInstall();
 	} else {
 		window.addEventListener('lazyunveilread', globalInstall, true);
 	}
-})(window, function (window, document, lazySizes) {
+})(function (lazySizes) {
 	var imgSupport = 'loading' in HTMLImageElement.prototype;
 	var iframeSupport = 'loading' in HTMLIFrameElement.prototype;
 	var isConfigSet = false;
