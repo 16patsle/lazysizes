@@ -1,7 +1,8 @@
-import './lib/lazysizes';
 import install from './install';
 import nativeLoading from './lib/ls.native-loading';
-import setLoadingAttribute from './loading-attribute';
 
 install(nativeLoading);
-setLoadingAttribute();
+
+if (window.lazySizes) {
+	window.lazySizes.cfg.nativeLoading.setLoadingAttribute = true;
+}
