@@ -5,12 +5,12 @@ const defaultConfig = {
 	output: [
 		{
 			dir: 'js/build',
-			entryFileNames: 'lazysizes.[name].js',
+			entryFileNames: '[name].js',
 	  		format: 'iife'
 		},
 		{
 			dir: 'js/build',
-			entryFileNames: 'lazysizes.[name].min.js',
+			entryFileNames: '[name].min.js',
 			format: 'iife',
 			plugins: [terser()]
 		}
@@ -18,22 +18,22 @@ const defaultConfig = {
 };
 const configs = [];
 const inputs = [
-	'js/src/core.js',
-	'js/src/core-unveilhooks.js',
-	'js/src/core-unveilhooks-autoload.js',
-	'js/src/core-unveilhooks-autoload-aspectratio.js',
-	'js/src/core-unveilhooks-autoload-aspectratio-nativeloading.js',
-	'js/src/core-unveilhooks-autoload-nativeloading.js',
-	'js/src/core-unveilhooks-aspectratio.js',
-	'js/src/core-unveilhooks-aspectratio-nativeloading.js',
-	'js/src/core-unveilhooks-nativeloading.js',
-	'js/src/core-autoload.js',
-	'js/src/core-autoload-aspectratio.js',
-	'js/src/core-autoload-aspectratio-nativeloading.js',
-	'js/src/core-autoload-nativeloading.js',
-	'js/src/core-aspectratio.js',
-	'js/src/core-aspectratio-nativeloading.js',
-	'js/src/core-nativeloading.js',
+	'js/src/lazysizes.js',
+	'js/src/lazysizes.unveilhooks.js',
+	'js/src/lazysizes.unveilhooks-autoload.js',
+	'js/src/lazysizes.unveilhooks-autoload-aspectratio.js',
+	'js/src/lazysizes.unveilhooks-autoload-aspectratio-nativeloading.js',
+	'js/src/lazysizes.unveilhooks-autoload-nativeloading.js',
+	'js/src/lazysizes.unveilhooks-aspectratio.js',
+	'js/src/lazysizes.unveilhooks-aspectratio-nativeloading.js',
+	'js/src/lazysizes.unveilhooks-nativeloading.js',
+	'js/src/lazysizes.autoload.js',
+	'js/src/lazysizes.autoload-aspectratio.js',
+	'js/src/lazysizes.autoload-aspectratio-nativeloading.js',
+	'js/src/lazysizes.autoload-nativeloading.js',
+	'js/src/lazysizes.aspectratio.js',
+	'js/src/lazysizes.aspectratio-nativeloading.js',
+	'js/src/lazysizes.nativeloading.js',
 ]
 
 inputs.forEach(val => {

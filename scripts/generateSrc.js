@@ -16,7 +16,7 @@ const scriptCombinations = [
 ];
 
 scriptCombinations.forEach(combination => {
-	const fileName = `core-${combination.join('-')}.js`;
+	const fileName = `lazysizes.${combination.join('-')}.js`;
 	const contents = combination.reduce((acc, val) => {
 		return acc += `import './${val}';\n`;
 	}, `import './lib/lazysizes';\n`)
