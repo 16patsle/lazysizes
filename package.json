@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
 		"build": "rollup --config",
 		"build-prepare": "rollup --config rollup.prepare.config.js",
-		"format-js-src": "prettier --write \"js/src/**/*.js\""
+		"format-js-src": "prettier --write \"js/src/**/*.js\"",
+		"generate-combination-src": "node scripts/generateSrc"
   },
   "repository": {
     "type": "git",

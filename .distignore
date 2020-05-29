@@ -3,6 +3,7 @@
 /.github
 /bin
 /tests
+/scripts
 
 .distignore
 .gitignore
