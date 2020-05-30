@@ -15,11 +15,16 @@ const scriptCombinations = [
 	...getCombination(scripts, n, 4)
 ];
 
+const entryPoints = ['js/src/lazysizes.js'];
+
 scriptCombinations.forEach(combination => {
 	const fileName = `lazysizes.${combination.join('-')}.js`;
 	const contents = combination.reduce((acc, val) => {
 		return acc += `import './${val}';\n`;
 	}, `import './lib/lazysizes';\n`)
+	entryPoints.push(`js/src/${fileName}`);
 
 	writeFileAsync('./js/src/' + fileName, contents)
 });
+
+writeFileAsync('./js/src/entrypoints.json', JSON.stringify(entryPoints, null, 2));
