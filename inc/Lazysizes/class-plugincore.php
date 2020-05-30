@@ -131,6 +131,7 @@ class PluginCore {
 		// Set the array of options.
 		$settings_arr = array(
 			'minimize_scripts',
+			'optimized_scripts',
 			'footer',
 			'load_extras',
 			'thumbnails',
