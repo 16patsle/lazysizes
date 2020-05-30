@@ -202,12 +202,12 @@ class PluginCore {
 			wp_enqueue_script( 'lazysizes-auto', $plugin_script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
 		}
 
+		wp_enqueue_script( 'lazysizes', 'js/lazysizes' . $min . '.js', false, $this->lazysizes_ver, $footer );
+
 		// Enqueue aspectratio if enabled.
 		if ( $this->settings['aspectratio'] ) {
-			wp_enqueue_script( 'lazysizes-aspectratio', $plugin_script_url_pre . '.aspectratio' . $min . '.js', false, $this->lazysizes_ver, $footer );
+			wp_enqueue_script( 'lazysizes-aspectratio', $plugin_script_url_pre . '.aspectratio' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 		}
-
-		wp_enqueue_script( 'lazysizes', 'js/lazysizes' . $min . '.js', false, $this->lazysizes_ver, $footer );
 
 		// Enqueue extras enabled.
 		if ( $this->settings['load_extras'] ) {
