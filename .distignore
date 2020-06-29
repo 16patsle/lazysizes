@@ -4,6 +4,7 @@
 /bin
 /tests
 /scripts
+/node_modules
 
 .distignore
 .gitignore
