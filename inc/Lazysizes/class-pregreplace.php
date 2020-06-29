@@ -305,6 +305,35 @@ class PregReplace {
 			$path = $size[0];
 			$width = $size[1];
 			$height = $size[2];
+
+			$pixels = array();
+
+			if ( false /*extension_loaded( 'imagick' )*/ ) {
+
+			} else if ( extension_loaded( 'gd' ) ) {
+				$image = imagecreatefromstring(file_get_contents($path));
+
+				for ($y = 0; $y < $height; ++$y) {
+					$row = array();
+					for ($x = 0; $x < $width; ++$x) {
+						$index = imagecolorat($image, $x, $y);
+						$colors = imagecolorsforindex($image, $index);
+
+						$row[] = [$colors['red'], $colors['green'], $colors['blue']];
+					}
+					$pixels[] = $row;
+				}
+
+				$components_x = 4;
+				$components_y = 3;
+
+				// Blurhash
+				var_dump($image);
+			} else {
+				return; // Image manipulation not supported.
+			}
+
+			echo '<br>';
 		}
 
 		// Attributes to search for.
