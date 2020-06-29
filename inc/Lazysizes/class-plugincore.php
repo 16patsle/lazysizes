@@ -334,10 +334,10 @@ class PluginCore {
 			$newcontent = $content;
 			// If enabled, replace 'src' with 'data-src' on both images and extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'], $this->settings['skip_src'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
 			} else {
 				// Replace 'src' with 'data-src' on images.
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'], $this->settings['skip_src'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {
