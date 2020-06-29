@@ -25,7 +25,7 @@ class Blurhash {
 		$attachment_id = attachment_url_to_postid($url);
 		$metadata = wp_get_attachment_metadata($attachment_id);
 
-		$size = wp_get_attachment_image_src($attachment_id, 'medium');
+		$size = wp_get_attachment_image_src($attachment_id, 'thumbnail');
 		if ( $size === false ) {
 			return false; // Probably not an image, might be video/audio.
 		}
@@ -53,6 +53,8 @@ class Blurhash {
 
 			$components_x = 4;
 			$components_y = 3;
+
+			set_time_limit(60);
 
 			// Blurhash
 			return PhpBlurhash::encode($pixels, $components_x, $components_y);
