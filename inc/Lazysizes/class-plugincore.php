@@ -51,8 +51,8 @@ class PluginCore {
 	public function __construct( $pluginfile ) {
 
 		// Load composer autoloader
-		if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
-			require __DIR__ . '/vendor/autoload.php';
+		if ( is_readable( dirname ($pluginfile) . '/vendor/autoload.php' ) ) {
+			require dirname ($pluginfile) . '/vendor/autoload.php';
 		}
 
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
