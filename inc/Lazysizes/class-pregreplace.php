@@ -15,18 +15,6 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 class PregReplace {
 
 	/**
-	 * The path to the plugin's directory
-	 *
-	 * @var string
-	 */
-	protected $dir;
-	/**
-	 * The version of lazysizes (the script, not this plugin).
-	 *
-	 * @var string
-	 */
-	protected $lazysizes_ver = '4.1.5';
-	/**
 	 * The settings for this plugin.
 	 *
 	 * @var array
@@ -37,12 +25,10 @@ class PregReplace {
 	 * Set up the settings and plugin dir variables
 	 *
 	 * @param array  $settings The settings for this plugin.
-	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct( $settings, $pluginfile ) {
+	public function __construct( $settings ) {
 		// Store our settings in memory to reduce mysql calls.
 		$this->settings = $settings;
-		$this->dir      = plugin_dir_url( $pluginfile );
 	}
 
 	/**

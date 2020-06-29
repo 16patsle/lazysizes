@@ -70,7 +70,7 @@ class PluginCore {
 			$this->dir      = plugin_dir_url( $pluginfile );
 
 			require dirname( __FILE__ ) . '/class-pregreplace.php';
-			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
+			$this->replace_class = new PregReplace( $this->settings );
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
