@@ -284,7 +284,8 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		$had_src = preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup );
+		$src_attr = array();
+		$had_src = preg_match( sprintf( '/<%s[^>]*[\s]src="(.*?(?<!\\\\))"/', $tag ), $replace_markup, $src_attr );
 
 		if ( 'source' === $tag ) {
 			$attrs = array( 'poster', 'srcset' );
