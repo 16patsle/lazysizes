@@ -222,7 +222,11 @@ class PluginCore {
 			if ( $this->settings['native_lazy'] ) {
 				array_push( $scripts, 'nativeloading' );}
 
-			$scriptname = count( $scripts > 0 ) ? 'lazysizes.' . implode( '-', $scripts ) : 'lazysizes';
+			// Enqueue Blurhash.
+			if ( $this->settings['blurhash'] ) {
+				array_push( $scripts, 'blurhash' );}
+
+			$scriptname = count( $scripts ) > 0 ? 'lazysizes.' . implode( '-', $scripts ) : 'lazysizes';
 
 			wp_enqueue_script( 'lazysizes', $script_url_pre . 'build/' . $scriptname . $min . '.js', false, $this->lazysizes_ver, $footer );
 		} else {
@@ -247,6 +251,11 @@ class PluginCore {
 			if ( $this->settings['native_lazy'] ) {
 				wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . 'ls.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 				wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . 'ls.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			}
+
+			// Enqueue Blurhash.
+			if ( $this->settings['blurhash'] ) {
+				wp_enqueue_script( 'lazysizes-blurhash', $script_url_pre . 'build/lazysizes.blurhash' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 			}
 		}
 	}
