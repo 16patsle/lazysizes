@@ -1,0 +1,13 @@
+{
+    "name": "16patsle/lazysizes",
+    "description": "High performance, easy to use and SEO friendly lazy loader for images, iframes and more",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Patrick Sletvold",
+            "email": "patricksletvold@hotmail.com"
+        }
+    ],
+    "require": {}
+}
