@@ -131,6 +131,7 @@ class PluginCore {
 		// Set the array of options.
 		$settings_arr = array(
 			'minimize_scripts',
+			'optimized_scripts',
 			'footer',
 			'load_extras',
 			'thumbnails',
@@ -184,8 +185,8 @@ class PluginCore {
 		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre  = $this->dir . 'css/lazysizes';
-		$script_url_pre = $this->dir . 'js/lazysizes';
+		$style_url_pre = $this->dir . 'css/lazysizes';
+		$script_url_pre = $this->dir . 'js/';
 
 		// Enqueue fade-in if enabled.
 		if ( $this->settings['fade_in'] ) {
@@ -196,27 +197,51 @@ class PluginCore {
 			wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . '.spinner' . $min . '.css', false, $this->lazysizes_ver );
 		}
 
-		// Enqueue auto load if enabled.
-		if ( $this->settings['auto_load'] ) {
-			wp_enqueue_script( 'lazysizes-auto', $script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
-		}
+		if ( $this->settings['optimized_scripts'] ) {
+			$scripts = [];
 
-		// Enqueue aspectratio if enabled.
-		if ( $this->settings['aspectratio'] ) {
-			wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre . '.aspectratio' . $min . '.js', false, $this->lazysizes_ver, $footer );
-		}
+			// Enqueue extras enabled.
+			if ( $this->settings['load_extras'] ) {
+				array_push( $scripts, 'unveilhooks' );}
 
-		wp_enqueue_script( 'lazysizes', $script_url_pre . $min . '.js', false, $this->lazysizes_ver, $footer );
+			// Enqueue auto load if enabled.
+			if ( $this->settings['auto_load'] ) {
+				array_push( $scripts, 'autoload' );}
 
-		// Enqueue extras enabled.
-		if ( $this->settings['load_extras'] ) {
-			wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . '.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
-		}
+			// Enqueue aspectratio if enabled.
+			if ( $this->settings['aspectratio'] ) {
+				array_push( $scripts, 'aspectratio' );}
 
-		// Enqueue native lazy loading.
-		if ( $this->settings['native_lazy'] ) {
-			wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . '.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
-			wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . '.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			// Enqueue native lazy loading.
+			if ( $this->settings['native_lazy'] ) {
+				array_push( $scripts, 'nativeloading' );}
+
+			$scriptname = count( $scripts > 0 ) ? 'lazysizes.' . implode( '-', $scripts ) : 'lazysizes';
+
+			wp_enqueue_script( 'lazysizes', $script_url_pre . 'build/' . $scriptname . $min . '.js', false, $this->lazysizes_ver, $footer );
+		} else {
+			// Enqueue auto load if enabled.
+			if ( $this->settings['auto_load'] ) {
+				wp_enqueue_script( 'lazysizes-auto', $script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
+			}
+
+			wp_enqueue_script( 'lazysizes', $script_url_pre . 'lazysizes' . $min . '.js', false, $this->lazysizes_ver, $footer );
+
+			// Enqueue aspectratio if enabled.
+			if ( $this->settings['aspectratio'] ) {
+				wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre . 'ls.aspectratio' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			}
+
+			// Enqueue extras enabled.
+			if ( $this->settings['load_extras'] ) {
+				wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . 'ls.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			}
+
+			// Enqueue native lazy loading.
+			if ( $this->settings['native_lazy'] ) {
+				wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . 'ls.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . 'ls.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			}
 		}
 	}
 

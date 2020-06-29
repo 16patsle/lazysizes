@@ -1,0 +1,51 @@
+{
+  "name": "lazysizes-wp",
+  "version": "1.3.0",
+  "description": "High performance, easy to use and SEO friendly lazy loader for images, iframes and more",
+  "main": "src/main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+		"build": "rollup --config",
+		"build-prepare": "rollup --config rollup.prepare.config.js",
+		"format-js-src": "prettier --write \"js/src/**/*.js\"",
+		"generate-combination-src": "node scripts/generateSrc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/16patsle/lazysizes.git"
+  },
+  "keywords": [
+    "Lazy",
+    "Load",
+    "lazysizes",
+    "iframe",
+    "image",
+    "media",
+    "video",
+    "YouTube",
+    "Vimeo",
+    "audio"
+  ],
+  "author": "Patrick Sletvold <patricksletvold@hotmail.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/16patsle/lazysizes/issues"
+  },
+  "homepage": "https://github.com/16patsle/lazysizes#readme",
+  "dependencies": {
+    "lazysizes": "^5.2.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-legacy": "^2.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "prettier": "2.0.5",
+    "rollup": "^2.11.2",
+    "rollup-plugin-terser": "^6.1.0"
+	},
+	"prettier": {
+		"singleQuote": true
+	}
+}

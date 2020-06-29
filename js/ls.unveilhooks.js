@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 This plugin extends lazySizes to lazyLoad:
 background images, videos/posters and scripts
@@ -50,8 +52,6 @@ For background images, use data-bg attribute:
 		window.addEventListener('lazyunveilread', globalInstall, true);
 	}
 }(window, function(window, document, lazySizes) {
-	/*jshint eqnull:true */
-	'use strict';
 	var bgLoad, regBgUrlEscape;
 	var uniqueUrls = {};
 

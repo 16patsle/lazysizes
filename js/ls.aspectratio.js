@@ -1,3 +1,5 @@
+'use strict';
+
 (function(window, factory) {
 	var globalInstall = function(){
 		factory(window.lazySizes);
@@ -16,7 +18,6 @@
 		window.addEventListener('lazyunveilread', globalInstall, true);
 	}
 }(window, function(window, document, lazySizes) {
-	'use strict';
 
 	if(!window.addEventListener){return;}
 
