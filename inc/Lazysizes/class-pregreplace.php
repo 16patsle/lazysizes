@@ -293,6 +293,20 @@ class PregReplace {
 			$attrs = array( 'src', 'poster', 'srcset' );
 		}
 
+		// Create blurhash version
+		if ( $had_src === 1 ) {
+			$attachment_id = attachment_url_to_postid($src_attr[1]);
+			$metadata = wp_get_attachment_metadata($attachment_id);
+
+			$size = wp_get_attachment_image_src($attachment_id, 'medium');
+			if ( $size === false ) {
+				return; // Probably not an image, might be video/audio.
+			}
+			$path = $size[0];
+			$width = $size[1];
+			$height = $size[2];
+		}
+
 		// Attributes to search for.
 		foreach ( $attrs as $attr ) {
 			// If there is no data attribute, turn the regular attribute into one.
