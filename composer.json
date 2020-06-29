@@ -9,5 +9,8 @@
             "email": "patricksletvold@hotmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "composer/installers": "~1.0",
+        "kornrunner/blurhash": "^1.1"
+    }
 }
