@@ -295,7 +295,7 @@ class PregReplace {
 
 		$blurhash = false;
 		// Create blurhash version
-		if ( $had_src === 1 ) {
+		if ( $this->settings['blurhash'] && $had_src === 1 ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::get_blurhash( $src_attr[1] );
 		}

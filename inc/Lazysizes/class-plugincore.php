@@ -152,6 +152,7 @@ class PluginCore {
 			'acf_content',
 			'native_lazy',
 			'skip_src',
+			'blurhash',
 		);
 
 		// Start fresh.
