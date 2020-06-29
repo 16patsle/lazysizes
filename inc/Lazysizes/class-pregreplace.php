@@ -293,13 +293,11 @@ class PregReplace {
 			$attrs = array( 'src', 'poster', 'srcset' );
 		}
 
+		$blurhash = false;
 		// Create blurhash version
 		if ( $had_src === 1 ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::get_blurhash( $src_attr[1] );
-
-			var_dump($blurhash);
-			echo '<br>';
 		}
 
 		// Attributes to search for.
@@ -315,6 +313,12 @@ class PregReplace {
 		if ( ! $skip_src && $this->get_src_attr( $tag ) !== '' && $had_src === 1 && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
 			// And add in a replacement src attribute if necessary.
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
+		}
+
+		// Optionally add blurhash
+		if ( $blurhash !== false ) {
+			// And add in a data attribute with blurhash.
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
 		}
 
 		return $replace_markup;
