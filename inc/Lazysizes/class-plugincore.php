@@ -204,7 +204,7 @@ class PluginCore {
 		}
 
 		if ( $this->settings['optimized_scripts'] ) {
-			$scripts = [];
+			$scripts = array();
 
 			// Enqueue extras enabled.
 			if ( $this->settings['load_extras'] ) {
