@@ -99,7 +99,7 @@ class PregReplace {
 					$new_replace = $match;
 
 					// Set replace html and replace attr with data-attr.
-					$new_replace = $this->replace_attr( $new_replace, $tag );
+					$new_replace = $this->replace_attr( $new_replace, $tag )[0];
 
 					// Add lazyload class.
 					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
@@ -192,13 +192,15 @@ class PregReplace {
 		// But first, check that the tag doesn't have any excluded classes.
 		if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 			// Set replace html and replace attr with data-attr.
-			$replace_markup = $this->replace_attr( $match, $tag );
+			$replace_attr_result = $this->replace_attr( $match, $tag );
+			$replace_markup = $replace_attr_result[0];
+			$src_attr = $replace_attr_result[1];
 
 			// Add lazyload class.
 			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
 			// Set aspect ratio.
-			$replace_markup = $this->set_aspect_ratio( $replace_markup );
+			$replace_markup = $this->set_aspect_ratio( $replace_markup, $src_attr );
 
 			if ( $noscript ) {
 				// And add the original in as <noscript>.
@@ -266,7 +268,7 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string      $replace_markup The HTML markup being processed.
 	 * @param string|bool $tag The tag type used to determine the src attr, or false.
-	 * @return string The HTML markup with attributes replaced.
+	 * @return (string|false)[] The HTML markup with attributes replaced, and the contents of the src, or false.
 	 */
 	public function replace_attr( $replace_markup, $tag = false ) {
 		if ( ! $tag ) {
@@ -310,7 +312,7 @@ class PregReplace {
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
 		}
 
-		return $replace_markup;
+		return array( $replace_markup, $had_src === 1 ? $src_attr[1] : false );
 	}
 
 	/**
@@ -378,9 +380,10 @@ class PregReplace {
 	 *
 	 * @since 1.0.0
 	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string $src_attr The contents of the src attribute.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
-	public function set_aspect_ratio( $replace_markup ) {
+	public function set_aspect_ratio( $replace_markup, $src_attr ) {
 		// Extract width.
 		preg_match( '/width="([^"]*)"/i', $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
