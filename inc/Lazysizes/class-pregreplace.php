@@ -21,12 +21,6 @@ class PregReplace {
 	 */
 	protected $dir;
 	/**
-	 * The version of lazysizes (the script, not this plugin).
-	 *
-	 * @var string
-	 */
-	protected $lazysizes_ver = '4.1.5';
-	/**
 	 * The settings for this plugin.
 	 *
 	 * @var array
