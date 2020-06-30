@@ -320,7 +320,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_aspectratio' name='lazysizes_addons[lazysizes_aspectratio]' <?php $this->checked_r( $options, 'lazysizes_aspectratio', 1 ); ?> value="1">
 				<?php esc_html_e( 'Keep original aspect ratio before the object is loaded.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Currently this needs images to have a defined width and height. Make sure to set a size for the images in your posts.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Currently this needs images to either have a defined width or a defined height in the post content. For external images, both width and height are needed. Make sure to set a size for the images in your posts if you wish to use this.', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />
@@ -354,7 +354,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> value="1">
 				<?php esc_html_e( 'Use Blurhash to generate blurry low-res placeholder images.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder. Currently only works on images with set sizes', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder. Currently only works on local images and external images with set sizes. Currently not working with native loading enabled.', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>
