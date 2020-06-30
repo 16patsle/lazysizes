@@ -22,10 +22,10 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function get_blurhash( $url ) {
-		$attachment_id = attachment_url_to_postid($url);
-		$metadata = wp_get_attachment_metadata($attachment_id);
+		$attachment_id = attachment_url_to_postid( $url );
+		$metadata = wp_get_attachment_metadata( $attachment_id );
 
-		$size = wp_get_attachment_image_src($attachment_id, 'thumbnail');
+		$size = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
 		if ( $size === false ) {
 			return false; // Probably not an image, might be video/audio.
 		}
@@ -39,22 +39,22 @@ class Blurhash {
 			$image = new \Imagick( $path );
 			$iterator = $image->getPixelIterator();
 
-			foreach ($iterator as $imagePixels) {
+			foreach ( $iterator as $imagePixels ) {
 				$row = array();
-				foreach ($imagePixels as $pixel) {
+				foreach ( $imagePixels as $pixel ) {
 					$colors = $pixel->getColor();
 					$row[] = [$colors['r'], $colors['g'], $colors['b']];
 				}
 				$pixels[] = $row;
 			}
 		} else if ( extension_loaded( 'gd' ) ) {
-			$image = imagecreatefromstring(file_get_contents($path));
+			$image = imagecreatefromstring( file_get_contents( $path ) );
 
 			for ($y = 0; $y < $height; ++$y) {
 				$row = array();
-				for ($x = 0; $x < $width; ++$x) {
-					$index = imagecolorat($image, $x, $y);
-					$colors = imagecolorsforindex($image, $index);
+				for ( $x = 0; $x < $width; ++$x ) {
+					$index = imagecolorat( $image, $x, $y );
+					$colors = imagecolorsforindex( $image, $index );
 
 					$row[] = [$colors['red'], $colors['green'], $colors['blue']];
 				}
@@ -67,9 +67,9 @@ class Blurhash {
 		$components_x = 4;
 		$components_y = 3;
 
-		set_time_limit(60);
+		set_time_limit( 60 );
 
 		// Blurhash
-		return PhpBlurhash::encode($pixels, $components_x, $components_y);
+		return PhpBlurhash::encode( $pixels, $components_x, $components_y );
 	}
 }
