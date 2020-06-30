@@ -410,7 +410,6 @@ class PregReplace {
 					$height = $size['height'];
 				}
 			}
-			echo $width . ' ' . $height . '<br>';
 		}
 
 		// If both width and height is set, add data-aspectratio.
