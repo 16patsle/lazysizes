@@ -35,8 +35,18 @@ class Blurhash {
 
 		$pixels = array();
 
-		if ( false /*extension_loaded( 'imagick' )*/ ) {
+		if ( extension_loaded( 'imagick' ) ) {
+			$image = new \Imagick( $path );
+			$iterator = $image->getPixelIterator();
 
+			foreach ($iterator as $imagePixels) {
+				$row = array();
+				foreach ($imagePixels as $pixel) {
+					$colors = $pixel->getColor();
+					$row[] = [$colors['r'], $colors['g'], $colors['b']];
+				}
+				$pixels[] = $row;
+			}
 		} else if ( extension_loaded( 'gd' ) ) {
 			$image = imagecreatefromstring(file_get_contents($path));
 
@@ -50,16 +60,16 @@ class Blurhash {
 				}
 				$pixels[] = $row;
 			}
-
-			$components_x = 4;
-			$components_y = 3;
-
-			set_time_limit(60);
-
-			// Blurhash
-			return PhpBlurhash::encode($pixels, $components_x, $components_y);
 		} else {
 			return false; // Image manipulation not supported.
 		}
+
+		$components_x = 4;
+		$components_y = 3;
+
+		set_time_limit(60);
+
+		// Blurhash
+		return PhpBlurhash::encode($pixels, $components_x, $components_y);
 	}
 }
