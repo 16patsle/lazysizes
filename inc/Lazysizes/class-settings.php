@@ -354,7 +354,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> value="1">
 				<?php esc_html_e( 'Use Blurhash to generate blurry low-res placeholder images.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder. Currently only works on images with set sizes', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>
