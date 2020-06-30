@@ -4,11 +4,22 @@ function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
 	blurhashImages.forEach(image => {
-		const width = image.width;
-		const height = image.height;
+		let width = image.width;
+		let height = image.height;
 
 		if(width <= 1 || height <= 1) {
-			return;
+			if(image.dataset.aspectratio) {
+				const aspectratio = image.dataset.aspectratio.split('/');
+				width = parseInt(aspectratio[0], 10);
+				height = parseInt(aspectratio[1], 10);
+
+				if(width <= 25 || height <= 25) {
+					// Probably an actual aspect ratio, we can't handel that yet.
+					return
+				}
+			} else {
+				return;
+			}
 		}
 
 		const pixels = decode(image.dataset.blurhash, width, height);
