@@ -4,6 +4,23 @@ function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
 	blurhashImages.forEach(processImage)
+
+	if (!'MutationObserver' in window) {
+		return;
+	}
+
+	// Prepare MutationObserver
+	const config = { childList: true, subtree: true };
+
+	// Callback to execute when mutations are observed
+	const callback = function(mutationsList) {
+    	for(let mutation of mutationsList) {
+    	    mutation.addedNodes.forEach(processImage);
+    	}
+	};
+
+	const observer = new MutationObserver(callback);
+	observer.observe(document.body, config);
 }
 
 function processImage(image) {
