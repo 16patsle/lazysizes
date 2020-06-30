@@ -200,7 +200,7 @@ class PregReplace {
 			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
 			// Set aspect ratio.
-			$replace_markup = $this->set_aspect_ratio( $replace_markup, $src_attr );
+			$replace_markup = $this->set_aspect_ratio( $replace_markup, $src_attr, $tag );
 
 			if ( $noscript ) {
 				// And add the original in as <noscript>.
@@ -381,9 +381,10 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string $replace_markup The HTML markup being processed.
 	 * @param string $src_attr The contents of the src attribute.
+	 * @param string $tag The current tag type being processed.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
-	public function set_aspect_ratio( $replace_markup, $src_attr ) {
+	public function set_aspect_ratio( $replace_markup, $src_attr, $tag ) {
 		// Extract width.
 		preg_match( '/width="([^"]*)"/i', $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
@@ -392,9 +393,29 @@ class PregReplace {
 		preg_match( '/height="([^"]*)"/i', $replace_markup, $match_height );
 		$height = ! empty( $match_height ) ? $match_height[1] : '';
 
+		// Try figuring out aspect ratio from attachment metadata.
+		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
+			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
+
+			if( !array_key_exists( 'sizes', $metadata ) ) {
+				return; // Not an image
+			}
+
+			$width = $metadata['width'];
+			$height = $metadata['height'];
+
+			foreach ($metadata['sizes'] as $sizeName => $size) {
+				if( strpos( $src_attr, $size['file'] ) !== false ) {
+					$width = $size['width'];
+					$height = $size['height'];
+				}
+			}
+			echo $width . ' ' . $height . '<br>';
+		}
+
 		// If both width and height is set, add data-aspectratio.
 		if ( ! empty( $width ) && ! empty( $height ) ) {
-			$replace_markup = preg_replace( '/ width="/', sprintf( ' data-aspectratio="%1$s/%2$s" width="', absint( $width ), absint( $height ) ), $replace_markup );
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-aspectratio="%1$s/%2$s"', absint( $width ), absint( $height ) ), $replace_markup );
 		}
 		return $replace_markup;
 	}
