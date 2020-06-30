@@ -57,6 +57,11 @@ This plugin is not affiliated with the lazysizes project. I got permission by aF
 
 ## Changelog
 
+### 1.4.0
+
+- Add custom lazysizes script feature, which uses scripts optimized for size and fewer requests.
+- Improve aspectratio calculation. Local images now only need either width or height set, since the aspect ratio can be calculated based on attachment metadata.
+
 ### 1.3.0
 
 - Various performance tweaks.
