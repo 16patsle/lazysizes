@@ -47,6 +47,8 @@ class Blurhash {
 				}
 				$pixels[] = $row;
 			}
+
+			$image->clear();
 		} else if ( extension_loaded( 'gd' ) ) {
 			$image = imagecreatefromstring( file_get_contents( $path ) );
 
@@ -60,6 +62,8 @@ class Blurhash {
 				}
 				$pixels[] = $row;
 			}
+
+			imagedestroy( $image );
 		} else {
 			return false; // Image manipulation not supported.
 		}
