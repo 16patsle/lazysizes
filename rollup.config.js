@@ -1,3 +1,5 @@
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
 import inputs from './js/src/entrypoints.json';
 
@@ -15,6 +17,10 @@ const defaultConfig = {
 			format: 'iife',
 			plugins: [terser()]
 		}
+	],
+	plugins: [
+		commonjs(),
+		resolve()
 	]
 };
 const configs = [];
