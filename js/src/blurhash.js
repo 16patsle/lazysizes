@@ -16,6 +16,8 @@ function blurhashLoad() {
 		image.classList.remove('lazyload');
 
 		const canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
 		const ctx = canvas.getContext('2d');
 		const imageData = ctx.createImageData(width, height);
 		imageData.data.set(pixels);
