@@ -7,7 +7,7 @@ function blurhashLoad() {
 }
 
 function processImage(image) {
-	if(image.classList.contains('blurhashed')) {
+	if(image.nodeName !== 'IMG' || !image.dataset.blurhash || image.classList.contains('blurhashed')) {
 		return;
 	}
 
@@ -22,7 +22,7 @@ function processImage(image) {
 
 			if(width <= 25 || height <= 25) {
 				// Probably an actual aspect ratio, we can't handel that yet.
-				return
+				return;
 			}
 		} else {
 			return;
@@ -31,7 +31,6 @@ function processImage(image) {
 
 	const pixels = decode(image.dataset.blurhash, width, height);
 	console.log(image.dataset.blurhash, width, height);
-	image.classList.remove('lazyload');
 
 	const canvas = document.createElement('canvas');
 	canvas.width = width;
@@ -49,4 +48,3 @@ function processImage(image) {
 }
 
 document.addEventListener('DOMContentLoaded', blurhashLoad);
-addEventListener('load', blurhashLoad);
