@@ -108,6 +108,13 @@ class PluginCore {
 			if ( $this->settings['attachment_image'] ) {
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
 			}
+
+			// Generate blurhash for new images.
+			// Should only fire in admin, but doesn't hurt to add it otherwise.
+			if ( $this->settings['blurhash'] ) {
+				require_once dirname( __FILE__ ) . '/class-blurhash.php';
+				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ) , 10, 2 );
+			}
 		}
 	}
 

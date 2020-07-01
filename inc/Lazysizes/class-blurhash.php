@@ -100,4 +100,17 @@ class Blurhash {
 
 		return $blurhash;
 	}
+
+	/**
+	 * Callback for wp_generate_attachment_metadata.
+	 * @since 1.4.0
+	 * @param array  $metadata An array of attachment metadata.
+	 * @param int    $attachment_id Current attachment ID.
+	 * @return string|false The Blurhash string, or false.
+	 */
+	public static function encode_blurhash_filter( $metadata, $attachment_id ) {
+		self::encode_blurhash( $metadata, $attachment_id );
+
+		return $metadata;
+	}
 }
