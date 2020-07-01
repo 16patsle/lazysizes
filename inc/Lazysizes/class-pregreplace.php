@@ -99,7 +99,14 @@ class PregReplace {
 					$new_replace = $match;
 
 					// Set replace html and replace attr with data-attr.
-					$new_replace = $this->replace_attr( $new_replace, $tag )[0];
+					$replace_attr_result = $this->replace_attr( $new_replace, $tag );
+					$new_replace = $replace_attr_result[0];
+					$src_attr = $replace_attr_result[1];
+
+					if ( $this->settings['blurhash'] && $src_attr !== false ) {
+						// Add blurhash attr
+						$new_replace = $this->set_blurhash_attr( $new_replace, $src_attr, $tag );
+					}
 
 					// Add lazyload class.
 					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
@@ -196,6 +203,11 @@ class PregReplace {
 			$replace_markup = $replace_attr_result[0];
 			$src_attr = $replace_attr_result[1];
 
+			if ( $this->settings['blurhash'] && $src_attr !== false ) {
+				// Add blurhash attr
+				$replace_markup = $this->set_blurhash_attr( $replace_markup, $src_attr, $tag );
+			}
+
 			// Add lazyload class.
 			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
@@ -284,13 +296,6 @@ class PregReplace {
 			$attrs = array( 'src', 'poster', 'srcset' );
 		}
 
-		$blurhash = false;
-		// Create blurhash version
-		if ( $this->settings['blurhash'] && $had_src === 1 ) {
-			require_once dirname( __FILE__ ) . '/class-blurhash.php';
-			$blurhash = Blurhash::get_blurhash( $src_attr[1] );
-		}
-
 		// Attributes to search for.
 		foreach ( $attrs as $attr ) {
 			// If there is no data attribute, turn the regular attribute into one.
@@ -304,12 +309,6 @@ class PregReplace {
 		if ( ! $this->settings['skip_src'] && $this->get_src_attr( $tag ) !== '' && $had_src === 1 && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
 			// And add in a replacement src attribute if necessary.
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
-		}
-
-		// Optionally add blurhash
-		if ( $blurhash !== false ) {
-			// And add in a data attribute with blurhash.
-			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
 		}
 
 		return array( $replace_markup, $had_src === 1 ? $src_attr[1] : false );
@@ -441,6 +440,33 @@ class PregReplace {
 	 */
 	public function escape_for_regex( $string ) {
 		return preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $string );
+	}
+
+	/**
+	 * Sets the data-blurhash attribute
+	 *
+	 * @since 1.4.0
+	 * @param string      $replace_markup The HTML markup being processed.
+	 * @param string      $src_attr The contents of the src attribute.
+	 * @param string|bool $tag The tag type used to determine the src attr, or false.
+	 * @return string The HTML markup with blurhash attribute added.
+	 */
+	public function set_blurhash_attr( $replace_markup, $src_attr, $tag = false ) {
+		if ( ! $tag ) {
+			return $replace_markup;
+		}
+
+		// Create blurhash version
+		require_once dirname( __FILE__ ) . '/class-blurhash.php';
+		$blurhash = Blurhash::get_blurhash( $src_attr );
+
+		// Add blurhash if available
+		if ( $blurhash !== false ) {
+			// And add in a data attribute with blurhash.
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
+		}
+
+		return $replace_markup;
 	}
 
 }
