@@ -281,7 +281,7 @@ class PluginCore {
 		}
 		// Enqueue attachment details extension for Blurhash.
 		if ( $this->settings['blurhash'] ) {
-			wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/lazysizes-attachment-details.js', null, Settings::VER, true );
+			wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/lazysizes-attachment-details.js', array( 'media-views', 'media-grid' ), Settings::VER );
 		}
 	}
 
