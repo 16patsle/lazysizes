@@ -55,6 +55,10 @@ class PluginCore {
 			require dirname ($pluginfile) . '/vendor/autoload.php';
 		}
 
+		// Store our settings in memory to reduce mysql calls.
+		$this->settings = $this->get_settings();
+		$this->dir      = plugin_dir_url( $pluginfile );
+
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			require dirname( __FILE__ ) . '/class-settings.php';
@@ -64,10 +68,6 @@ class PluginCore {
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		} else {
-
-			// Store our settings in memory to reduce mysql calls.
-			$this->settings = $this->get_settings();
-			$this->dir      = plugin_dir_url( $pluginfile );
 
 			require dirname( __FILE__ ) . '/class-pregreplace.php';
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
