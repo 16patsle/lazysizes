@@ -39,7 +39,7 @@ class PluginCore {
 	/**
 	 * The preg_replace class.
 	 *
-	 * @var LazysizesSettings
+	 * @var PregReplace
 	 */
 	protected $replace_class;
 
