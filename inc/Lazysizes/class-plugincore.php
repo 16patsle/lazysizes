@@ -67,8 +67,10 @@ class PluginCore {
 			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
-		} else {
 
+			// Enqueue lazysizes admin scripts and styles.
+			add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin' ) );
+		} else {
 			require dirname( __FILE__ ) . '/class-pregreplace.php';
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
@@ -264,6 +266,22 @@ class PluginCore {
 			if ( $this->settings['blurhash'] ) {
 				wp_enqueue_script( 'lazysizes-blurhash', $script_url_pre . 'build/lazysizes.blurhash' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 			}
+		}
+	}
+
+	/**
+	 * Load all the lazysizes scripts for the admin
+	 *
+	 * @since 1.4.0
+	 * @param string $admin_page The current admin page.
+	 */
+	public function load_scripts_admin( $admin_page ) {
+		if( $admin_page !== 'upload.php' ) {
+			return;
+		}
+		// Enqueue attachment details extension for Blurhash.
+		if ( $this->settings['blurhash'] ) {
+			wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/lazysizes-attachment-details.js', null, Settings::VER, true );
 		}
 	}
 
