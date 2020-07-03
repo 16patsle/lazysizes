@@ -279,7 +279,7 @@ class PluginCore {
 	 * @param string $admin_page The current admin page.
 	 */
 	public function load_scripts_admin_media( $admin_page ) {
-		if( $admin_page !== 'upload.php' ) {
+		if ( $admin_page !== 'upload.php' ) {
 			return;
 		}
 		// Enqueue attachment details extension for Blurhash.
