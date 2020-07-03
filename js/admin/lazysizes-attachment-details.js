@@ -1,6 +1,6 @@
 var templateString = "<span class='setting custom-thing'>" +
-	                        "<span class='name'>Label</span>" +
-	                        "<span class='value'>Value</span>" +
+	                        "<span class='name'>Blurhash</span>" +
+	                        "<span class='value'><%= lazysizesBlurhash %></span>" +
 	                        '</span>';
 
 // Based on code by Thomas Griffin.
