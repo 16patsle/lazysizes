@@ -116,6 +116,7 @@ class PluginCore {
 			if ( $this->settings['blurhash'] ) {
 				require_once dirname( __FILE__ ) . '/class-blurhash.php';
 				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ) , 10, 2 );
+				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
 			}
 		}
 	}
@@ -282,7 +283,22 @@ class PluginCore {
 		// Enqueue attachment details extension for Blurhash.
 		if ( $this->settings['blurhash'] ) {
 			wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/lazysizes-attachment-details.js', array( 'media-views', 'media-grid' ), Settings::VER );
+	}
+
+	/**
+	 * Add Blurhash string to attachment meta exposed to JS.
+	 *
+	 * @since 1.4.0
+	 */
+	public function prepare_attachment_blurhash( $response, $attachment ) {
+		if ( ! isset( $attachment->ID ) ) {
+			return $response;
 		}
+
+		$blurhash = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
+		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
+
+		return $response;
 	}
 
 	/**
