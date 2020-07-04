@@ -48,3 +48,18 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
         return this;
     }
 });
+
+function lazysizesAjax(action, attachmentId, callback) {
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxurl,
+		data: {
+			action: 'lazysizes_blurhash',
+			nonce: '',
+			mode: action,
+			attachmentId
+		},
+		success: callback,
+		error: callback
+	})
+}
