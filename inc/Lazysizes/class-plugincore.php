@@ -346,14 +346,14 @@ class PluginCore {
 			if ( empty($blurhash) ) {
 				wp_send_json_error( new \WP_Error( '500', __('Could not generate blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
-				wp_send_json( array( 'result' => $blurhash, 'attachmentId' => $attachment_id ) );
+				wp_send_json( array( 'success' => true, 'blurhash' => $blurhash, 'attachmentId' => $attachment_id ) );
 			}
 		} else if ( $action === 'delete' ) {
 			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
 			if ( !$result ) {
 				wp_send_json_error( new \WP_Error( '500', __('Could not delete blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
-				wp_send_json( array( 'result' => $result, 'attachmentId' => $attachment_id ) );
+				wp_send_json( array( 'success' => $result, 'attachmentId' => $attachment_id ) );
 			}
 		}
 	}
