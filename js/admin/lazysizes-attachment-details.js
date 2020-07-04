@@ -34,7 +34,36 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
         wp.media.view.Attachment.Details.prototype.initialize.apply(this, arguments);
         // Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
-    },
+	},
+	events: {
+		'click .setting.lazysizes-blurhash .button': function(e) {
+			var action = '';
+			if(e.target.classList.contains('lazysizes-blurhash-generate')) {
+				action = 'generate';
+			} else if(e.target.classList.contains('lazysizes-blurhash-delete')) {
+				action = 'delete';
+			} else {
+				return;
+			}
+
+			var model = this.model
+			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
+				if(status === 'error') {
+					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
+				} else {
+					if (response.success) {
+						if (action === 'generate') {
+							model.set('lazysizesBlurhash', response.blurhash)
+						} else if (action === 'delete') {
+							model.set('lazysizesBlurhash', false)
+						}
+					} else {
+						model.set('lazysizesError', response.data[0].message)
+					}
+				}
+			})
+		}
+	},
     render: function(){
         // Ensure that the main attachment fields are rendered.
 		wp.media.view.Attachment.prototype.render.apply(this, arguments);
@@ -48,36 +77,6 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 		if(this.model.attributes.type === 'image') {
 			this.$el.find( '.settings' ).append(templateFunction(this.model.toJSON()));
 		}
-
-		var model = this.model
-		this.$el.on('click', '.setting.lazysizes-blurhash .button', function(e) {
-			var action = '';
-			if(e.target.classList.contains('lazysizes-blurhash-generate')) {
-				action = 'generate';
-			} else if(e.target.classList.contains('lazysizes-blurhash-delete')) {
-				action = 'delete';
-			} else {
-				return;
-			}
-
-			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
-				if(status === 'error') {
-					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
-				} else {
-					if (response.success) {
-						if (action === 'generate') {
-							model.set('lazysizesBlurhash', response.data.result)
-						} else if (action === 'delete') {
-							model.set('lazysizesBlurhash', false)
-						}
-					} else {
-						model.set('lazysizesError', response.data[0].message)
-					}
-				}
-				console.log(response)
-			})
-		})
-
         this.views.render();
 
         return this;
