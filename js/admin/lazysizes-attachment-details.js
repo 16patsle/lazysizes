@@ -60,7 +60,7 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 				return;
 			}
 
-			lazysizesAjax(action, model.attributes.id, function(response, status, errorCode) {
+			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
 				if(status === 'error') {
 					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
 				} else {
@@ -103,13 +103,13 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
     }
 });
 
-function lazysizesAjax(action, attachmentId, callback) {
+function lazysizesAjax(action, attachmentId, nonce, callback) {
 	jQuery.ajax({
 		type: 'POST',
 		url: ajaxurl,
 		data: {
 			action: 'lazysizes_blurhash',
-			nonce: '',
+			nonce,
 			mode: action,
 			attachmentId
 		},
