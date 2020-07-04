@@ -294,7 +294,8 @@ class PluginCore {
 			'generate' => esc_html__( 'Generate', 'lazysizes' ),
 			'delete' => esc_html__( 'Delete', 'lazysizes' ),
 			'current' => esc_html__( 'Current value: ', 'lazysizes' ),
-			'description' => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' )
+			'description' => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' ),
+			'error' => esc_html__( 'An error occurred.', 'lazysizes' )
 		) );
 	}
 
@@ -310,6 +311,7 @@ class PluginCore {
 
 		$blurhash = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
+		$response['lazysizesError'] = false;
 
 		return $response;
 	}

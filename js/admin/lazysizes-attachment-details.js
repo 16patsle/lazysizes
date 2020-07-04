@@ -13,6 +13,11 @@ var templateString = `
 			</div>
 			<button type="button" class="button lazysizes-blurhash-delete"><%= lazysizesStrings.delete %></button>
 		<%}%>
+		<%if (lazysizesError) {%>
+			<div>
+				<%= lazysizesError %>
+			</div>
+		<%}%>
 	</span>
 </span>
 <p class="description">
@@ -34,13 +39,45 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
         // Ensure that the main attachment fields are rendered.
 		wp.media.view.Attachment.prototype.render.apply(this, arguments);
 
-		this.model.fetch();
+		if(this.model.changedAttributes(['lazysizesBlurhash', 'lazysizesError']) === false) {
+			this.model.fetch();
+		}
 
         // Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
         this.views.detach();
 		if(this.model.attributes.type === 'image') {
 			this.$el.find( '.settings' ).append(templateFunction(this.model.toJSON()));
 		}
+
+		var model = this.model
+		this.$el.on('click', '.setting.lazysizes-blurhash .button', function(e) {
+			var action = '';
+			if(e.target.classList.contains('lazysizes-blurhash-generate')) {
+				action = 'generate';
+			} else if(e.target.classList.contains('lazysizes-blurhash-delete')) {
+				action = 'delete';
+			} else {
+				return;
+			}
+
+			lazysizesAjax(action, model.attributes.id, function(response, status, errorCode) {
+				if(status === 'error') {
+					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
+				} else {
+					if (response.success) {
+						if (action === 'generate') {
+							model.set('lazysizesBlurhash', response.data.result)
+						} else if (action === 'delete') {
+							model.set('lazysizesBlurhash', false)
+						}
+					} else {
+						model.set('lazysizesError', response.data[0].message)
+					}
+				}
+				console.log(response)
+			})
+		})
+
         this.views.render();
 
         return this;
