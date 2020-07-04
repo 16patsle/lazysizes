@@ -119,6 +119,8 @@ class PluginCore {
 				require_once dirname( __FILE__ ) . '/class-blurhash.php';
 				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ) , 10, 2 );
 				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
+
+				add_action( 'wp_ajax_lazysizes_blurhash', array( $this, 'ajax_blurhash_handler' ) );
 			}
 		}
 	}
@@ -306,6 +308,39 @@ class PluginCore {
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
 
 		return $response;
+	}
+
+	/**
+	 * AJAX handler to generate or delete blurhash for an image.
+	 *
+	 * @since 1.4.0
+	 */
+	public function ajax_blurhash_handler() {
+		$nonce = $_REQUEST['nonce'] === '' ? '' : $_REQUEST['nonce'];
+
+		if ( !wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce' ) ) {
+			wp_send_json_error( new \WP_Error( '401', __('Invalid nonce. Reload page and try again.', 'lazysizes') ) );
+		};
+
+		$action = $_REQUEST['mode'];
+		$attachment_id = $_REQUEST['attachmentId'];
+
+		if ( $action === 'generate' ) {
+			require_once dirname( __FILE__ ) . '/class-blurhash.php';
+			$blurhash = Blurhash::get_blurhash( $src_attr );
+			if ( empty($blurhash) ) {
+				wp_send_json_error( new \WP_Error( '500', __('Could not generate blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
+			} else {
+				wp_send_json( array( 'result' => $blurhash, 'attachmentId' => $attachment_id ) );
+			}
+		} else if ( $action === 'delete' ) {
+			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
+			if ( !$result ) {
+				wp_send_json_error( new \WP_Error( '500', __('Could not delete blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
+			} else {
+				wp_send_json( array( 'result' => $result, 'attachmentId' => $attachment_id ) );
+			}
+		}
 	}
 
 	/**
