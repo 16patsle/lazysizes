@@ -312,6 +312,7 @@ class PluginCore {
 		$blurhash = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
 		$response['lazysizesError'] = false;
+		$response['lazysizesLoading'] = false;
 
 		// Add nonces
 		$response['nonces']['lazysizes'] = array(

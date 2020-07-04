@@ -6,13 +6,14 @@ var templateString = `
 			<span>
 				<%= lazysizesStrings.notGenerated %>
 			</span>
-			<button type="button" class="button button-primary lazysizes-blurhash-generate"><%= lazysizesStrings.generate %></button>
+			<button type="button" class="button button-primary lazysizes-blurhash-generate" <%= lazysizesLoading ? 'disabled' : '' %>><%= lazysizesStrings.generate %></button>
 		<%} else {%>
 			<div style="padding-bottom: 8px;">
 				<%= lazysizesStrings.current + lazysizesBlurhash %>
 			</div>
-			<button type="button" class="button lazysizes-blurhash-delete"><%= lazysizesStrings.delete %></button>
+			<button type="button" class="button lazysizes-blurhash-delete" <%= lazysizesLoading ? 'disabled' : '' %>><%= lazysizesStrings.delete %></button>
 		<%}%>
+		<span class="spinner <%= lazysizesLoading ? 'is-active' : '' %>" style="padding-top: 0; float: none; min-width: 20px;"></span>
 		<%if (lazysizesError) {%>
 			<div>
 				<%= lazysizesError %>
@@ -31,7 +32,7 @@ var templateFunction = _.template(templateString);
 // See https://gist.github.com/sunnyratilal/5650341.
 wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.TwoColumn.extend({
     initialize: function(){
-        wp.media.view.Attachment.Details.prototype.initialize.apply(this, arguments);
+		wp.media.view.Attachment.Details.prototype.initialize.apply(this, arguments);
         // Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
 	},
@@ -46,8 +47,12 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 				return;
 			}
 
+			this.model.set('lazysizesLoading', true);
+
 			var model = this.model
 			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
+				model.set('lazysizesLoading', false);
+
 				if(status === 'error') {
 					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
 				} else {
