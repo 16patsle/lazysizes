@@ -323,13 +323,16 @@ class PluginCore {
 	 */
 	public function ajax_blurhash_handler() {
 		$nonce = $_REQUEST['nonce'] === '' ? '' : $_REQUEST['nonce'];
-
-		if ( !wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce' ) ) {
-			wp_send_json_error( new \WP_Error( '401', __('Invalid nonce. Reload page and try again.', 'lazysizes') ) );
-		};
-
 		$action = $_REQUEST['mode'];
 		$attachment_id = $_REQUEST['attachmentId'];
+
+		if ( !in_array( $action, array( 'generate', 'delete' ) ) ) {
+			wp_send_json_error( new \WP_Error( '400', __('Invalid action. If you see this, something is wrong.', 'lazysizes') ) );
+		}
+
+		if ( !wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-' . $action ) ) {
+			wp_send_json_error( new \WP_Error( '401', __('Invalid nonce. Reload page and try again.', 'lazysizes') ) );
+		};
 
 		if ( $action === 'generate' ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
