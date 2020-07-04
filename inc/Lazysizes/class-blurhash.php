@@ -29,8 +29,7 @@ class Blurhash {
 
 		// Or generate if not already saved.
 		if ( $blurhash === '' ) {
-			$metadata = wp_get_attachment_metadata( $attachment_id );
-			$blurhash = self::encode_blurhash( $metadata, $attachment_id );
+			$blurhash = self::encode_blurhash( false, $attachment_id );
 		}
 
 		return $blurhash;
@@ -39,8 +38,8 @@ class Blurhash {
 	/**
 	 * Computes the Blurhash string.
 	 * @since 1.4.0
-	 * @param array $metadata An array of attachment metadata.
-	 * @param int   $attachment_id Current attachment ID.
+	 * @param array|false $metadata An array of attachment metadata.
+	 * @param int         $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
