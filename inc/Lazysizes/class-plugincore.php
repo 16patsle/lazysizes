@@ -290,7 +290,11 @@ class PluginCore {
 		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/lazysizes-attachment-details.js', array( 'media-views', 'media-grid' ), Settings::VER );
 
 		wp_localize_script( 'lazysizes-attachment-details', 'lazysizesStrings', array(
-			'notGenerated' => __( 'Not generated', 'lazysizes' )
+			'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
+			'generate' => esc_html__( 'Generate', 'lazysizes' ),
+			'delete' => esc_html__( 'Delete', 'lazysizes' ),
+			'current' => esc_html__( 'Current value: ', 'lazysizes' ),
+			'description' => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' )
 		) );
 	}
 

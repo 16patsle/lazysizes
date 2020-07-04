@@ -1,7 +1,24 @@
-var templateString = "<span class='setting custom-thing'>" +
-	                        "<span class='name'>Blurhash</span>" +
-	                        "<span class='value'><%= lazysizesBlurhash || lazysizesStrings.notGenerated %></span>" +
-                            '</span>';
+var templateString = `
+<span class="setting lazysizes-blurhash">
+	<span class="name">Lazysizes Blurhash</span>
+	<span class="value" <%= !lazysizesBlurhash ? 'style="padding-top: 0;"' : '' %>>
+		<%if (!lazysizesBlurhash) {%>
+			<span>
+				<%= lazysizesStrings.notGenerated %>
+			</span>
+			<button type="button" class="button button-primary lazysizes-blurhash-generate"><%= lazysizesStrings.generate %></button>
+		<%} else {%>
+			<div style="padding-bottom: 8px;">
+				<%= lazysizesStrings.current + lazysizesBlurhash %>
+			</div>
+			<button type="button" class="button lazysizes-blurhash-delete"><%= lazysizesStrings.delete %></button>
+		<%}%>
+	</span>
+</span>
+<p class="description">
+	<%= lazysizesStrings.description %>
+</p>
+`;
 
 var templateFunction = _.template(templateString);
 
