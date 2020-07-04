@@ -8,7 +8,7 @@ var templateString = "<span class='setting custom-thing'>" +
 var extendObject = {
     initialize: function(){
         // Always make sure that our content is up to date.
-        this.model.on('change', this.render, this);
+        this.listenTo(this.model, 'change', this.render);
     },
     render: function(){
         // Ensure that the main attachment fields are rendered.
@@ -16,12 +16,11 @@ var extendObject = {
 
         // Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
         this.views.detach();
-		this.$el.append(_.template(templateString)(this.model.toJSON()));
+		this.$el.find( '.settings' ).append(_.template(templateString)(this.model.toJSON()));
 		console.log(this.model.toJSON());
         this.model.fetch();
         this.views.render();
 
-        // This is the preferred convention for all render functions.
         return this;
     }
 }
