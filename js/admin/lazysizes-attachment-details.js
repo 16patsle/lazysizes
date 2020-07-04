@@ -1,6 +1,6 @@
 var templateString = "<span class='setting custom-thing'>" +
 	                        "<span class='name'>Blurhash</span>" +
-	                        "<span class='value'><%= lazysizesBlurhash %></span>" +
+	                        "<span class='value'><%= lazysizesBlurhash || lazysizesStrings.notGenerated %></span>" +
                             '</span>';
 
 var templateFunction = _.template(templateString);
@@ -11,7 +11,7 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
     initialize: function(){
         wp.media.view.Attachment.Details.prototype.initialize.apply(this, arguments);
         // Always make sure that our content is up to date.
-        this.listenTo(this.model, 'change', this.render);
+		this.listenTo(this.model, 'change', this.render);
     },
     render: function(){
         // Ensure that the main attachment fields are rendered.
