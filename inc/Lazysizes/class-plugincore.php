@@ -342,7 +342,7 @@ class PluginCore {
 
 		if ( $action === 'generate' ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
-			$blurhash = Blurhash::get_blurhash( $src_attr );
+			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty($blurhash) ) {
 				wp_send_json_error( new \WP_Error( '500', __('Could not generate blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
