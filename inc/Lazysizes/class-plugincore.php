@@ -313,6 +313,12 @@ class PluginCore {
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
 		$response['lazysizesError'] = false;
 
+		// Add nonces
+		$response['nonces']['lazysizes'] = array(
+			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
+			'delete' => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' )
+		);
+
 		return $response;
 	}
 
