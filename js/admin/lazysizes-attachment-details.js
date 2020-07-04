@@ -15,12 +15,15 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
     },
     render: function(){
         // Ensure that the main attachment fields are rendered.
-        wp.media.view.Attachment.prototype.render.apply(this, arguments);
+		wp.media.view.Attachment.prototype.render.apply(this, arguments);
+
+		this.model.fetch();
 
         // Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
         this.views.detach();
-		this.$el.find( '.settings' ).append(templateFunction(this.model.toJSON()));
-        this.model.fetch();
+		if(this.model.attributes.type === 'image') {
+			this.$el.find( '.settings' ).append(templateFunction(this.model.toJSON()));
+		}
         this.views.render();
 
         return this;
@@ -33,12 +36,13 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
     },
     render: function(){
         // Ensure that the main attachment fields are rendered.
-        wp.media.view.Attachment.prototype.render.apply(this, arguments);
+		wp.media.view.Attachment.prototype.render.apply(this, arguments);
+
+		this.model.fetch();
 
         // Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
         this.views.detach();
 		this.$el.append(templateFunction(this.model.toJSON()));
-        this.model.fetch();
         this.views.render();
 
         return this;
