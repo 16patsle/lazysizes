@@ -23,7 +23,20 @@ const defaultConfig = {
 		resolve()
 	]
 };
-const configs = [];
+const configs = [{
+	input: './js/admin/src/lazysizes-attachment-details.js',
+	output: [
+		{
+			file: './js/admin/build/lazysizes-attachment-details.js',
+			format: 'iife'
+		},
+		{
+			file: './js/admin/build/lazysizes-attachment-details.min.js',
+			format: 'iife',
+			plugins: [terser()]
+		}
+	]
+}];
 
 inputs.forEach(val => {
 	const config = Object.assign({}, defaultConfig);
