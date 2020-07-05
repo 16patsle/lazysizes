@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/16patsle/lazysizes#readme",
   "dependencies": {
-    "@babel/polyfill": "^7.10.4",
+    "core-js": "^3.6.5",
     "blurhash": "^1.1.3",
     "lazysizes": "^5.2.2"
   },

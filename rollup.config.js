@@ -37,7 +37,11 @@ const configs = [{
 			plugins: [terser()]
 		}
 	],
-	plugins: [babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' })]
+	plugins: [
+		babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
+		resolve(),
+		commonjs(),
+	]
 }];
 
 inputs.forEach(val => {
