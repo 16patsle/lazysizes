@@ -1,4 +1,4 @@
-var templateString = `
+const templateString = `
 <span class="setting lazysizes-blurhash">
 	<span class="name">Lazysizes Blurhash</span>
 	<span class="value" <%= !lazysizesBlurhash ? 'style="padding-top: 0;"' : '' %>>
@@ -26,7 +26,7 @@ var templateString = `
 </p>
 `;
 
-var templateFunction = _.template(templateString);
+const templateFunction = _.template(templateString);
 
 // Based on code by Thomas Griffin.
 // See https://gist.github.com/sunnyratilal/5650341.
@@ -38,7 +38,7 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 	},
 	events: {
 		'click .setting.lazysizes-blurhash .button': function(e) {
-			var action = '';
+			let action = '';
 			if(e.target.classList.contains('lazysizes-blurhash-generate')) {
 				action = 'generate';
 			} else if(e.target.classList.contains('lazysizes-blurhash-delete')) {
@@ -49,7 +49,7 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 
 			this.model.set('lazysizesLoading', true);
 
-			var model = this.model
+			const model = this.model
 			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
 				model.set('lazysizesLoading', false);
 
