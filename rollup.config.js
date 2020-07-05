@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
+import visualizer from 'rollup-plugin-visualizer';
 import inputs from './js/src/entrypoints.json';
 
 const defaultConfig = {
@@ -41,6 +42,7 @@ const configs = [{
 		babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
 		resolve(),
 		commonjs(),
+		visualizer({ filename: './js/admin/build/stats.html' })
 	]
 }];
 
