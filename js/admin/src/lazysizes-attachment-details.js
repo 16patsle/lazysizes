@@ -49,21 +49,20 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 
 			this.model.set('lazysizesLoading', true);
 
-			const model = this.model
-			lazysizesAjax(action, model.attributes.id, model.attributes.nonces.lazysizes[action], function(response, status, errorCode) {
-				model.set('lazysizesLoading', false);
+			lazysizesAjax(action, this.model.attributes.id, this.model.attributes.nonces.lazysizes[action], (response, status, errorCode) => {
+				this.model.set('lazysizesLoading', false);
 
 				if(status === 'error') {
-					model.set('lazysizesError', lazysizesStrings.error + ' (' + errorCode + ')')
+					this.model.set('lazysizesError', `${lazysizesStrings.error} (${errorCode})`)
 				} else {
 					if (response.success) {
 						if (action === 'generate') {
-							model.set('lazysizesBlurhash', response.blurhash)
+							this.model.set('lazysizesBlurhash', response.blurhash)
 						} else if (action === 'delete') {
-							model.set('lazysizesBlurhash', false)
+							this.model.set('lazysizesBlurhash', false)
 						}
 					} else {
-						model.set('lazysizesError', response.data[0].message)
+						this.model.set('lazysizesError', response.data[0].message)
 					}
 				}
 			})
