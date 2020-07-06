@@ -1,3 +1,21 @@
+// CustomEvent polyfill for IE.
+// Based on https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+if (typeof window.CustomEvent !== 'function') {
+	function CustomEvent(event, params) {
+		params = params || { bubbles: false, cancelable: false, detail: null };
+		var evt = document.createEvent('CustomEvent');
+		evt.initCustomEvent(
+			event,
+			params.bubbles,
+			params.cancelable,
+			params.detail
+		);
+		return evt;
+	}
+
+	window.CustomEvent = CustomEvent;
+}
+
 var factory = function () {
 	// Pass in the windoe Date function also for SSR because the Date class can be lost
 	/*jshint eqnull:true */
@@ -115,17 +133,17 @@ var factory = function () {
 	};
 
 	var triggerEvent = function (elem, name, detail, noBubbles, noCancelable) {
-		var event = document.createEvent('Event');
-
 		if (!detail) {
 			detail = {};
 		}
 
 		detail.instance = lazysizes;
 
-		event.initEvent(name, !noBubbles, !noCancelable);
-
-		event.detail = detail;
+		var event = new CustomEvent(name, {
+			detail: detail,
+			bubbles: !noBubbles,
+			cancelable: !noCancelable,
+		});
 
 		elem.dispatchEvent(event);
 		return event;
