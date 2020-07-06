@@ -69,19 +69,11 @@ var factory = function () {
 
 	var supportPicture = window.HTMLPictureElement;
 
-	var _addEventListener = 'addEventListener';
-
-	var _getAttribute = 'getAttribute';
-
 	/**
 	 * Update to bind to window because 'this' becomes null during SSR
 	 * builds.
 	 */
-	var addEventListener = window[_addEventListener].bind(window);
-
-	var setTimeout = window.setTimeout;
-
-	var requestAnimationFrame = window.requestAnimationFrame || setTimeout;
+	var addEventListener = window.addEventListener.bind(window);
 
 	var requestIdleCallback = window.requestIdleCallback;
 
@@ -123,7 +115,7 @@ var factory = function () {
 	};
 
 	var addRemoveLoadEvents = function (dom, fn, add) {
-		var action = add ? _addEventListener : 'removeEventListener';
+		var action = add ? 'addEventListener' : 'removeEventListener';
 		if (add) {
 			addRemoveLoadEvents(dom, fn);
 		}
@@ -152,7 +144,7 @@ var factory = function () {
 	var updatePolyfill = function (el, full) {
 		var polyfill;
 		if (!supportPicture && (polyfill = window.picturefill || lazySizesCfg.pf)) {
-			if (full && full.src && !el[_getAttribute]('srcset')) {
+			if (full && full.src && !el.getAttribute('srcset')) {
 				el.setAttribute('srcset', full.src);
 			}
 			polyfill({ reevaluate: true, elements: [el] });
@@ -413,7 +405,7 @@ var factory = function () {
 					}
 
 					if (
-						!(elemExpandVal = lazyloadElems[i][_getAttribute]('data-expand')) ||
+						!(elemExpandVal = lazyloadElems[i].getAttribute('data-expand')) ||
 						!(elemExpand = elemExpandVal * 1)
 					) {
 						elemExpand = currentExpand;
@@ -490,7 +482,7 @@ var factory = function () {
 									eLright ||
 									eLleft ||
 									eLtop ||
-									lazyloadElems[i][_getAttribute](lazySizesCfg.sizesAttr) !=
+									lazyloadElems[i].getAttribute(lazySizesCfg.sizesAttr) !=
 										'auto')))
 					) {
 						autoLoadElem = preloadElems[0] || lazyloadElems[i];
@@ -535,13 +527,12 @@ var factory = function () {
 		var handleSources = function (source) {
 			var customMedia;
 
-			var sourceSrcset = source[_getAttribute](lazySizesCfg.srcsetAttr);
+			var sourceSrcset = source.getAttribute(lazySizesCfg.srcsetAttr);
 
 			if (
 				(customMedia =
 					lazySizesCfg.customMedia[
-						source[_getAttribute]('data-media') ||
-							source[_getAttribute]('media')
+						source.getAttribute('data-media') || source.getAttribute('media')
 					])
 			) {
 				source.setAttribute('media', customMedia);
@@ -567,8 +558,8 @@ var factory = function () {
 					}
 				}
 
-				srcset = elem[_getAttribute](lazySizesCfg.srcsetAttr);
-				src = elem[_getAttribute](lazySizesCfg.srcAttr);
+				srcset = elem.getAttribute(lazySizesCfg.srcsetAttr);
+				src = elem.getAttribute(lazySizesCfg.srcAttr);
 
 				if (isImg) {
 					parent = elem.parentNode;
@@ -645,14 +636,14 @@ var factory = function () {
 			//allow using sizes="auto", but don't use. it's invalid. Use data-sizes="auto" or a valid value for sizes instead (i.e.: sizes="80vw")
 			var sizes =
 				isImg &&
-				(elem[_getAttribute](lazySizesCfg.sizesAttr) ||
-					elem[_getAttribute]('sizes'));
+				(elem.getAttribute(lazySizesCfg.sizesAttr) ||
+					elem.getAttribute('sizes'));
 			var isAuto = sizes == 'auto';
 
 			if (
 				(isAuto || !isCompleted) &&
 				isImg &&
-				(elem[_getAttribute]('src') || elem.srcset) &&
+				(elem.getAttribute('src') || elem.srcset) &&
 				!elem.complete &&
 				!hasClass(elem, lazySizesCfg.errorClass) &&
 				hasClass(elem, lazySizesCfg.lazyClass)
@@ -742,12 +733,12 @@ var factory = function () {
 						attributes: true,
 					});
 				} else {
-					docElem[_addEventListener](
+					docElem.addEventListener(
 						'DOMNodeInserted',
 						throttledCheckElements,
 						true
 					);
-					docElem[_addEventListener](
+					docElem.addEventListener(
 						'DOMAttrModified',
 						throttledCheckElements,
 						true
@@ -766,17 +757,14 @@ var factory = function () {
 					'transitionend',
 					'animationend',
 				].forEach(function (name) {
-					document[_addEventListener](name, throttledCheckElements, true);
+					document.addEventListener(name, throttledCheckElements, true);
 				});
 
 				if (/d$|^c/.test(document.readyState)) {
 					onload();
 				} else {
 					addEventListener('load', onload);
-					document[_addEventListener](
-						'DOMContentLoaded',
-						throttledCheckElements
-					);
+					document.addEventListener('DOMContentLoaded', throttledCheckElements);
 					setTimeout(onload, 20000);
 				}
 
