@@ -824,15 +824,6 @@ var factory = function () {
 		loader: loader,
 		init: init,
 		uP: updatePolyfill,
-		aC: function (ele, cls) {
-			ele.classList.add(cls);
-		},
-		rC: function (ele, cls) {
-			ele.classList.remove(cls);
-		},
-		hC: function (ele, cls) {
-			return ele.classList.contains(cls);
-		},
 		fire: triggerEvent,
 		gW: getWidth,
 		rAF: rAF,

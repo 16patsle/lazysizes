@@ -24,8 +24,6 @@ export default function (lazySizes) {
 		return matchesMedia(media);
 	};
 
-	var addClass = lazySizes.aC;
-	var removeClass = lazySizes.rC;
 	var lazySizesConfig = lazySizes.cfg;
 
 	function AspectRatio() {
@@ -146,7 +144,7 @@ export default function (lazySizes) {
 			var height = img.offsetHeight;
 
 			if (!notNew) {
-				addClass(img, 'lazyaspectratio');
+				img.classList.add('lazyaspectratio');
 			}
 
 			if (width < 36 && height <= 0) {
@@ -170,7 +168,7 @@ export default function (lazySizes) {
 			}
 		},
 		removeAspectRatio: function (img) {
-			removeClass(img, 'lazyaspectratio');
+			img.classList.remove('lazyaspectratio');
 			img.style.height = '';
 			img.style.width = '';
 			img.removeAttribute(aspectRatioAttr);
