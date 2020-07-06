@@ -1,4 +1,4 @@
-import decode from 'blurhash/dist/decode';
+import decode from './lib/decode';
 
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
