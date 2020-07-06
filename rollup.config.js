@@ -21,6 +21,19 @@ const defaultConfig = {
 		}
 	],
 	plugins: [
+		babel({
+			babelHelpers: 'bundled',
+			include: ['js/src/blurhash.js', 'js/src/lib/decode.js'],
+			presets: [
+				[
+				  '@babel/env',
+				  {
+					targets: 'extends @wordpress/browserslist-config',
+					bugfixes: true
+				  }
+				]
+			  ]
+		 }),
 		commonjs(),
 		resolve()
 	]
