@@ -67,8 +67,6 @@ var factory = function () {
 
 	var docElem = document.documentElement;
 
-	var supportPicture = window.HTMLPictureElement;
-
 	/**
 	 * Update to bind to window because 'this' becomes null during SSR
 	 * builds.
@@ -124,7 +122,7 @@ var factory = function () {
 
 	var updatePolyfill = function (el, full) {
 		var polyfill;
-		if (!supportPicture && (polyfill = window.picturefill || lazySizesCfg.pf)) {
+		if (!window.HTMLPictureElement && (polyfill = window.picturefill || lazySizesCfg.pf)) {
 			if (full && full.src && !el.getAttribute('srcset')) {
 				el.setAttribute('srcset', full.src);
 			}
