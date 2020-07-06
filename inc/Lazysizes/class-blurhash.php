@@ -17,7 +17,7 @@ class Blurhash {
 	/**
 	 * Fetches the Blurhash string from metadata, or computes it.
 	 *
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 * @param string $url The attachment url, from src attribute.
 	 * @return string|false The Blurhash string, or false.
 	 */
@@ -37,7 +37,7 @@ class Blurhash {
 
 	/**
 	 * Computes the Blurhash string.
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 * @param array|false $metadata An array of attachment metadata.
 	 * @param int         $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.
@@ -102,7 +102,7 @@ class Blurhash {
 
 	/**
 	 * Callback for wp_generate_attachment_metadata.
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 * @param array  $metadata An array of attachment metadata.
 	 * @param int    $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.

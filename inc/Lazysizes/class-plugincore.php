@@ -277,7 +277,7 @@ class PluginCore {
 	/**
 	 * Load all the lazysizes scripts for the admin media pages
 	 *
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 * @param string $admin_page The current admin page.
 	 */
 	public function load_scripts_admin_media( $admin_page ) {
@@ -306,7 +306,7 @@ class PluginCore {
 	/**
 	 * Add Blurhash string to attachment meta exposed to JS.
 	 *
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 */
 	public function prepare_attachment_blurhash( $response, $attachment ) {
 		if ( ! isset( $attachment->ID ) ) {
@@ -330,7 +330,7 @@ class PluginCore {
 	/**
 	 * AJAX handler to generate or delete blurhash for an image.
 	 *
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 */
 	public function ajax_blurhash_handler() {
 		$nonce = $_REQUEST['nonce'] === '' ? '' : $_REQUEST['nonce'];

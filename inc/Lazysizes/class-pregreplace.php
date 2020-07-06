@@ -445,7 +445,7 @@ class PregReplace {
 	/**
 	 * Sets the data-blurhash attribute
 	 *
-	 * @since 1.4.0
+	 * @since 1.3.0
 	 * @param string      $replace_markup The HTML markup being processed.
 	 * @param string      $src_attr The contents of the src attribute.
 	 * @param string|bool $tag The tag type used to determine the src attr, or false.
