@@ -81,37 +81,18 @@ var factory = function () {
 
 	var loadEvents = ['load', 'error', 'lazyincluded', '_lazyloaded'];
 
-	var regClassCache = {};
-
 	var forEach = Array.prototype.forEach;
 
 	var hasClass = function (ele, cls) {
-		if (!regClassCache[cls]) {
-			regClassCache[cls] = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-		}
-		return (
-			regClassCache[cls].test(ele[_getAttribute]('class') || '') &&
-			regClassCache[cls]
-		);
+		return ele.classList.contains(cls);
 	};
 
 	var addClass = function (ele, cls) {
-		if (!hasClass(ele, cls)) {
-			ele.setAttribute(
-				'class',
-				(ele[_getAttribute]('class') || '').trim() + ' ' + cls
-			);
-		}
+		ele.classList.add(cls);
 	};
 
 	var removeClass = function (ele, cls) {
-		var reg;
-		if ((reg = hasClass(ele, cls))) {
-			ele.setAttribute(
-				'class',
-				(ele[_getAttribute]('class') || '').replace(reg, ' ')
-			);
-		}
+		ele.classList.remove(cls);
 	};
 
 	var addRemoveLoadEvents = function (dom, fn, add) {
