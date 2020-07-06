@@ -81,18 +81,6 @@ var factory = function () {
 
 	var forEach = Array.prototype.forEach;
 
-	var hasClass = function (ele, cls) {
-		return ele.classList.contains(cls);
-	};
-
-	var addClass = function (ele, cls) {
-		ele.classList.add(cls);
-	};
-
-	var removeClass = function (ele, cls) {
-		ele.classList.remove(cls);
-	};
-
 	var addRemoveLoadEvents = function (dom, fn, add) {
 		var action = add ? 'addEventListener' : 'removeEventListener';
 		if (add) {
@@ -485,8 +473,8 @@ var factory = function () {
 			}
 
 			resetPreloading(e);
-			addClass(elem, lazySizesCfg.loadedClass);
-			removeClass(elem, lazySizesCfg.loadingClass);
+			elem.classList.add(lazySizesCfg.loadedClass);
+			elem.classList.remove(lazySizesCfg.loadingClass);
 			addRemoveLoadEvents(elem, rafSwitchLoadingClass);
 			triggerEvent(elem, 'lazyloaded');
 		};
@@ -531,7 +519,7 @@ var factory = function () {
 			) {
 				if (sizes) {
 					if (isAuto) {
-						addClass(elem, lazySizesCfg.autosizesClass);
+						elem.classList.add(lazySizesCfg.autosizesClass);
 					} else {
 						elem.setAttribute('sizes', sizes);
 					}
@@ -550,7 +538,7 @@ var factory = function () {
 
 				event = { target: elem };
 
-				addClass(elem, lazySizesCfg.loadingClass);
+				elem.classList.add(lazySizesCfg.loadingClass);
 
 				if (firesLoad) {
 					clearTimeout(resetPreloadingTimer);
@@ -580,7 +568,7 @@ var factory = function () {
 			if (elem._lazyRace) {
 				delete elem._lazyRace;
 			}
-			removeClass(elem, lazySizesCfg.lazyClass);
+			elem.classList.remove(lazySizesCfg.lazyClass);
 
 			rAF(function () {
 				// Part of this can be removed as soon as this fix is older: https://bugs.chromium.org/p/chromium/issues/detail?id=7731 (2015)
@@ -588,7 +576,7 @@ var factory = function () {
 
 				if (!firesLoad || isLoaded) {
 					if (isLoaded) {
-						addClass(elem, 'ls-is-cached');
+						elem.classList.add('ls-is-cached');
 					}
 					switchLoadingClass(event);
 					elem._lazyCache = true;
@@ -624,8 +612,8 @@ var factory = function () {
 				isImg &&
 				(elem.getAttribute('src') || elem.srcset) &&
 				!elem.complete &&
-				!hasClass(elem, lazySizesCfg.errorClass) &&
-				hasClass(elem, lazySizesCfg.lazyClass)
+				!elem.classList.contains(lazySizesCfg.errorClass) &&
+				elem.classList.contains(lazySizesCfg.lazyClass)
 			) {
 				return;
 			}
@@ -836,9 +824,15 @@ var factory = function () {
 		loader: loader,
 		init: init,
 		uP: updatePolyfill,
-		aC: addClass,
-		rC: removeClass,
-		hC: hasClass,
+		aC: function (ele, cls) {
+			ele.classList.add(cls);
+		},
+		rC: function (ele, cls) {
+			ele.classList.remove(cls);
+		},
+		hC: function (ele, cls) {
+			return ele.classList.contains(cls);
+		},
 		fire: triggerEvent,
 		gW: getWidth,
 		rAF: rAF,
