@@ -5,7 +5,7 @@ export default function (lazySizes) {
 
 	var forEach = Array.prototype.forEach;
 
-	var imageRatio, extend$, $;
+	var imageRatio;
 
 	var regPicture = /^picture$/i;
 	var aspectRatioAttr = 'data-aspectratio';
@@ -174,23 +174,6 @@ export default function (lazySizes) {
 			img.removeAttribute(aspectRatioAttr);
 		},
 	};
-
-	extend$ = function () {
-		$ = window.jQuery || window.Zepto || window.shoestring || window.$;
-		if ($ && $.fn && !$.fn.imageRatio && $.fn.filter && $.fn.add && $.fn.find) {
-			$.fn.imageRatio = function () {
-				imageRatio.processImages(
-					this.find(aspectRatioSel).add(this.filter(aspectRatioSel))
-				);
-				return this;
-			};
-		} else {
-			$ = false;
-		}
-	};
-
-	extend$();
-	setTimeout(extend$);
 
 	imageRatio = new AspectRatio();
 
