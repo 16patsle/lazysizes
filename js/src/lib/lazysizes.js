@@ -713,18 +713,6 @@ var factory = function () {
 						subtree: true,
 						attributes: true,
 					});
-				} else {
-					docElem.addEventListener(
-						'DOMNodeInserted',
-						throttledCheckElements,
-						true
-					);
-					docElem.addEventListener(
-						'DOMAttrModified',
-						throttledCheckElements,
-						true
-					);
-					setInterval(throttledCheckElements, 999);
 				}
 
 				addEventListener('hashchange', throttledCheckElements, true);
