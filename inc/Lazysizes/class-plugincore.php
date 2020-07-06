@@ -286,8 +286,12 @@ class PluginCore {
 		if ( empty( $current_screen ) || !in_array( $current_screen->base, array( 'upload', 'post' ) ) ) {
 			return;
 		}
+
+		// Use minified script unless SCRIPT_DEBUG is enabled.
+		$min = defined( SCRIPT_DEBUG ) && SCRIPT_DEBUG === true ? '' : '.min';
+
 		// Enqueue attachment details extension for Blurhash.
-		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details.min.js', array( 'media-views', 'media-grid' ), Settings::VER );
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER );
 
 		wp_localize_script( 'lazysizes-attachment-details', 'lazysizesStrings', array(
 			'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
