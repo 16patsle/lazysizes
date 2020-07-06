@@ -1,25 +1,3 @@
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-	  path: basedir,
-	  exports: {},
-	  require: function (path, base) {
-      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-    }
-	}, fn(module, module.exports), module.exports;
-}
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-}
-
-var base83 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
 var digitCharacters = [
     "0",
     "1",
@@ -105,7 +83,7 @@ var digitCharacters = [
     "}",
     "~"
 ];
-exports.decode83 = function (str) {
+var decode83 = function (str) {
     var value = 0;
     for (var i = 0; i < str.length; i++) {
         var c = str[i];
@@ -114,20 +92,9 @@ exports.decode83 = function (str) {
     }
     return value;
 };
-exports.encode83 = function (n, length) {
-    var result = "";
-    for (var i = 1; i <= length; i++) {
-        var digit = (Math.floor(n) / Math.pow(83, length - i)) % 83;
-        result += digitCharacters[Math.floor(digit)];
-    }
-    return result;
-};
 
-});
-
-var utils = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.sRGBToLinear = function (value) {
+var utils = {};
+utils.sRGBToLinear = function (value) {
     var v = value / 255;
     if (v <= 0.04045) {
         return v / 12.92;
@@ -136,7 +103,7 @@ exports.sRGBToLinear = function (value) {
         return Math.pow((v + 0.055) / 1.055, 2.4);
     }
 };
-exports.linearTosRGB = function (value) {
+utils.linearTosRGB = function (value) {
     var v = Math.max(0, Math.min(1, value));
     if (v <= 0.0031308) {
         return Math.round(v * 12.92 * 255 + 0.5);
@@ -145,15 +112,11 @@ exports.linearTosRGB = function (value) {
         return Math.round((1.055 * Math.pow(v, 1 / 2.4) - 0.055) * 255 + 0.5);
     }
 };
-exports.sign = function (n) { return (n < 0 ? -1 : 1); };
-exports.signPow = function (val, exp) {
-    return exports.sign(val) * Math.pow(Math.abs(val), exp);
+utils.signPow = function (val, exp) {
+    return (val < 0 ? -1 : 1) * Math.pow(Math.abs(val), exp);
 };
 
-});
-
-var error = createCommonjsModule(function (module, exports) {
-var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
+var __extends = (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -166,7 +129,6 @@ var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
 var ValidationError = /** @class */ (function (_super) {
     __extends(ValidationError, _super);
     function ValidationError(message) {
@@ -177,14 +139,6 @@ var ValidationError = /** @class */ (function (_super) {
     }
     return ValidationError;
 }(Error));
-exports.ValidationError = ValidationError;
-
-});
-
-var decode_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
 
 /**
  * Returns an error message if invalid or undefined if valid
@@ -192,23 +146,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var validateBlurhash = function (blurhash) {
     if (!blurhash || blurhash.length < 6) {
-        throw new error.ValidationError("The blurhash string must be at least 6 characters");
+        throw new ValidationError("The blurhash string must be at least 6 characters");
     }
-    var sizeFlag = base83.decode83(blurhash[0]);
+    var sizeFlag = decode83(blurhash[0]);
     var numY = Math.floor(sizeFlag / 9) + 1;
     var numX = (sizeFlag % 9) + 1;
     if (blurhash.length !== 4 + 2 * numX * numY) {
-        throw new error.ValidationError("blurhash length mismatch: length is " + blurhash.length + " but it should be " + (4 + 2 * numX * numY));
+        throw new ValidationError("blurhash length mismatch: length is " + blurhash.length + " but it should be " + (4 + 2 * numX * numY));
     }
-};
-exports.isBlurhashValid = function (blurhash) {
-    try {
-        validateBlurhash(blurhash);
-    }
-    catch (error) {
-        return { result: false, errorReason: error.message };
-    }
-    return { result: true };
 };
 var decodeDC = function (value) {
     var intR = value >> 16;
@@ -230,19 +175,19 @@ var decodeAC = function (value, maximumValue) {
 var decode = function (blurhash, width, height, punch) {
     validateBlurhash(blurhash);
     punch = punch | 1;
-    var sizeFlag = base83.decode83(blurhash[0]);
+    var sizeFlag = decode83(blurhash[0]);
     var numY = Math.floor(sizeFlag / 9) + 1;
     var numX = (sizeFlag % 9) + 1;
-    var quantisedMaximumValue = base83.decode83(blurhash[1]);
+    var quantisedMaximumValue = decode83(blurhash[1]);
     var maximumValue = (quantisedMaximumValue + 1) / 166;
     var colors = new Array(numX * numY);
     for (var i = 0; i < colors.length; i++) {
         if (i === 0) {
-            var value = base83.decode83(blurhash.substring(2, 6));
+            var value = decode83(blurhash.substring(2, 6));
             colors[i] = decodeDC(value);
         }
         else {
-            var value = base83.decode83(blurhash.substring(4 + i * 2, 6 + i * 2));
+            var value = decode83(blurhash.substring(4 + i * 2, 6 + i * 2));
             colors[i] = decodeAC(value, maximumValue * punch);
         }
     }
@@ -274,10 +219,5 @@ var decode = function (blurhash, width, height, punch) {
     }
     return pixels;
 };
-exports.default = decode;
-
-});
-
-var decode = /*@__PURE__*/unwrapExports(decode_1);
 
 export default decode;
