@@ -3,7 +3,7 @@ import decode from './lib/decode';
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
-	blurhashImages.forEach(processImage)
+	blurhashImages.forEach(processImage);
 
 	if (!'MutationObserver' in window) {
 		return;
@@ -13,10 +13,10 @@ function blurhashLoad() {
 	const config = { childList: true, subtree: true };
 
 	// Callback to execute when mutations are observed
-	const callback = function(mutationsList) {
-    	for(let mutation of mutationsList) {
-    	    mutation.addedNodes.forEach(processImage);
-    	}
+	const callback = function (mutationsList) {
+		for (let mutation of mutationsList) {
+			mutation.addedNodes.forEach(processImage);
+		}
 	};
 
 	const observer = new MutationObserver(callback);
@@ -24,20 +24,24 @@ function blurhashLoad() {
 }
 
 function processImage(image) {
-	if(image.nodeName !== 'IMG' || !image.dataset.blurhash || image.classList.contains('blurhashed')) {
+	if (
+		image.nodeName !== 'IMG' ||
+		!image.dataset.blurhash ||
+		image.classList.contains('blurhashed')
+	) {
 		return;
 	}
 
 	let width = image.width;
 	let height = image.height;
 
-	if(width <= 1 || height <= 1) {
-		if(image.dataset.aspectratio) {
+	if (width <= 1 || height <= 1) {
+		if (image.dataset.aspectratio) {
 			const aspectratio = image.dataset.aspectratio.split('/');
 			width = parseInt(aspectratio[0], 10);
 			height = parseInt(aspectratio[1], 10);
 
-			if(width <= 25 || height <= 25) {
+			if (width <= 25 || height <= 25) {
 				// Probably an actual aspect ratio, we can't handel that yet.
 				return;
 			}
@@ -57,10 +61,10 @@ function processImage(image) {
 	imageData.data.set(pixels);
 	ctx.putImageData(imageData, 0, 0);
 
-	canvas.toBlob(blob => {
-	const url = URL.createObjectURL(blob);
 	  image.src = url;
 	  image.classList.add('blurhashed');
+	canvas.toBlob((blob) => {
+		const url = URL.createObjectURL(blob);
 	});
 }
 
