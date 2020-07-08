@@ -211,7 +211,11 @@ class PluginCore {
 
 		// Enqueue fade-in if enabled.
 		if ( $this->settings['fade_in'] ) {
-			wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein' . $min . '.css', false, $this->lazysizes_ver );
+			if( $this->settings['blurhash'] ) {
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein-blurhash' . $min . '.css', false, $this->lazysizes_ver );
+			} else {
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein' . $min . '.css', false, $this->lazysizes_ver );
+			}
 		}
 		// Enqueue spinner if enabled.
 		if ( $this->settings['spinner'] ) {

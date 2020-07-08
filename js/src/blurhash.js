@@ -61,10 +61,31 @@ function processImage(image) {
 	imageData.data.set(pixels);
 	ctx.putImageData(imageData, 0, 0);
 
-	  image.src = url;
-	  image.classList.add('blurhashed');
 	canvas.toBlob((blob) => {
 		const url = URL.createObjectURL(blob);
+		if (image.parentNode.classList.contains('wp-block-image')) {
+			image.parentNode.style.position = 'relative';
+			image.parentNode.classList.add('blurhash-container');
+
+			const newImage = image.cloneNode();
+
+			newImage.src = url;
+			newImage.classList.add('blurhashed');
+			newImage.classList.remove('lazyload');
+			newImage.classList.remove('lazyloading');
+			newImage.removeAttribute('srcset');
+			newImage.style.position = 'absolute';
+
+			const { direction } = getComputedStyle(image);
+			const alignSide = direction === 'ltr' ? 'left' : 'right';
+
+			newImage.style[alignSide] = 0;
+			newImage.style.transition = 'opacity 1s';
+			image.after(newImage);
+		} else {
+			image.src = url;
+			image.classList.add('blurhashed');
+		}
 	});
 }
 

@@ -1,0 +1,8 @@
+.blurhash-container .blurhashed {
+  transition: opacity 0.3s;
+  opacity: 1;
+}
+
+.blurhash-container .lazyloaded+.blurhashed {
+	opacity: 0;
+}
