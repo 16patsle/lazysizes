@@ -167,6 +167,7 @@ class PluginCore {
 			'native_lazy',
 			'skip_src',
 			'blurhash',
+			'blurhash_onload',
 		);
 
 		// Start fresh.

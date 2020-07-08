@@ -357,6 +357,14 @@ class Settings {
 					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder. Currently only works on local images and external images with set sizes. Currently not working with native loading enabled.', 'lazysizes' ); ?>
 				</p>
 			</label>
+			<br />
+			<label for="lazysizes_blurhash_onload">
+				<input type='checkbox' id='lazysizes_blurhash_onload' name='lazysizes_addons[lazysizes_blurhash_onload]' <?php $this->checked_r( $options, 'lazysizes_blurhash_onload', 1 ); ?> value="1">
+				<?php esc_html_e( 'When Blurhash is activated, generate missing Blurhash placeholders on page load.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'WARNING: Only use for debug and setup purposes. Generating Blurhash placeholders can be very computationally expensive, and will add several seconds to the page load time. After the first run, the placeholders will be saved, and will not need to be re-generated, so you can use this option to easily generate Blurhash placeholders for existing images.', 'lazysizes' ); ?>
+				</p>
+			</label>
 		</fieldset>
 		<?php
 	}

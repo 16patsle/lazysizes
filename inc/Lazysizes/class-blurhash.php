@@ -19,16 +19,17 @@ class Blurhash {
 	 *
 	 * @since 1.3.0
 	 * @param string $url The attachment url, from src attribute.
+	 * @param bool   $generate_if_missing Generate a blurhash string if none exists.
 	 * @return string|false The Blurhash string, or false.
 	 */
-	public static function get_blurhash( $url ) {
+	public static function get_blurhash( $url, $generate_if_missing = false ) {
 		$attachment_id = attachment_url_to_postid( $url );
 
 		// Get from attachment post meta.
 		$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
 
 		// Or generate if not already saved.
-		if ( $blurhash === '' ) {
+		if ( $generate_if_missing && $blurhash === '' ) {
 			$blurhash = self::encode_blurhash( false, $attachment_id );
 		}
 

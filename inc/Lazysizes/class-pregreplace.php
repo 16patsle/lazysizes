@@ -458,7 +458,7 @@ class PregReplace {
 
 		// Create blurhash version
 		require_once dirname( __FILE__ ) . '/class-blurhash.php';
-		$blurhash = Blurhash::get_blurhash( $src_attr );
+		$blurhash = Blurhash::get_blurhash( $src_attr, $this->settings['blurhash_onload'] );
 
 		// Add blurhash if available
 		if ( $blurhash !== false ) {
