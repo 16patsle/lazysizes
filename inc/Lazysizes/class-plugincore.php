@@ -150,7 +150,7 @@ class PluginCore {
 		// Set the array of options.
 		$settings_arr = array(
 			'minimize_scripts',
-			'optimized_scripts',
+			'optimized_scripts_styles',
 			'footer',
 			'load_extras',
 			'thumbnails',
@@ -209,7 +209,7 @@ class PluginCore {
 		$style_url_pre = $this->dir . 'css/build/';
 		$script_url_pre = $this->dir . 'js/';
 
-		if ( $this->settings['optimized_scripts'] ) {
+		if ( $this->settings['optimized_scripts_styles'] ) {
 			$styles = array();
 
 			// Enqueue fade-in if enabled.

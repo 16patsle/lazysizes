@@ -25,15 +25,15 @@ class Settings {
 	 */
 	protected $defaults = array(
 		'general' => array(
-			'lazysizes_minimize_scripts'  => 1,
-			'lazysizes_optimized_scripts' => 1,
-			'lazysizes_thumbnails'        => 1,
-			'lazysizes_textwidgets'       => 1,
-			'lazysizes_avatars'           => 1,
-			'lazysizes_add_noscript'      => 1,
-			'lazysizes_load_extras'       => 1,
-			'lazysizes_excludeclasses'    => '',
-			'lazysizes_img'               => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+			'lazysizes_minimize_scripts'         => 1,
+			'lazysizes_optimized_scripts_styles' => 1,
+			'lazysizes_thumbnails'               => 1,
+			'lazysizes_textwidgets'              => 1,
+			'lazysizes_avatars'                  => 1,
+			'lazysizes_add_noscript'             => 1,
+			'lazysizes_load_extras'              => 1,
+			'lazysizes_excludeclasses'           => '',
+			'lazysizes_img'                      => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 		),
 	);
 
@@ -81,7 +81,7 @@ class Settings {
 			}
 			if ( version_compare( $dbver, '1.3.0', '<=' ) ) {
 				$general                                = get_option( 'lazysizes_general' );
-				$general['lazysizes_optimized_scripts'] = $this->defaults['general']['lazysizes_optimized_scripts'];
+				$general['lazysizes_optimized_scripts_styles'] = $this->defaults['general']['lazysizes_optimized_scripts_styles'];
 				update_option( 'lazysizes_general', $general );
 			}
 		}
@@ -206,8 +206,8 @@ class Settings {
 				<?php esc_html_e( 'Load minimized versions of javascript and css files.', 'lazysizes' ); ?>
 			</label>
 			<br />
-			<label for="lazysizes_optimized_scripts">
-				<input type='checkbox' id='lazysizes_optimized_scripts' name='lazysizes_general[lazysizes_optimized_scripts]' <?php $this->checked_r( $options, 'lazysizes_optimized_scripts', 1 ); ?> value="1">
+			<label for="lazysizes_optimized_scripts_styles">
+				<input type='checkbox' id='lazysizes_optimized_scripts_styles' name='lazysizes_general[lazysizes_optimized_scripts_styles]' <?php $this->checked_r( $options, 'lazysizes_optimized_scripts_styles', 1 ); ?> value="1">
 				<?php esc_html_e( 'Load custom lazysizes scripts and styles, optimized for performance.', 'lazysizes' ); ?>
 			</label>
 			<br />
