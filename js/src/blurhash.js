@@ -50,6 +50,31 @@ function processImage(image) {
 		}
 	}
 
+	const useFancySetup = image.parentNode.classList.contains('wp-block-image');
+	let newImage;
+
+	if (useFancySetup) {
+		image.parentNode.style.position = 'relative';
+		image.parentNode.classList.add('blurhash-container');
+
+		newImage = image.cloneNode();
+
+		newImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+		newImage.classList.add('blurhashing');
+		newImage.classList.remove('lazyload');
+		newImage.classList.remove('lazyloading');
+		newImage.removeAttribute('srcset');
+		newImage.style.position = 'absolute';
+
+		const { direction } = getComputedStyle(image);
+		const alignSide = direction === 'ltr' ? 'left' : 'right';
+
+		newImage.style[alignSide] = 0;
+		//newImage.style.transition = 'opacity 1s';
+		image.after(newImage);
+	}
+
 	const pixels = decode(image.dataset.blurhash, width, height);
 	console.log(image.dataset.blurhash, width, height);
 
@@ -63,25 +88,11 @@ function processImage(image) {
 
 	canvas.toBlob((blob) => {
 		const url = URL.createObjectURL(blob);
-		if (image.parentNode.classList.contains('wp-block-image')) {
-			image.parentNode.style.position = 'relative';
-			image.parentNode.classList.add('blurhash-container');
-
-			const newImage = image.cloneNode();
-
+		if (useFancySetup) {
 			newImage.src = url;
+
+			// To trigger fade transition
 			newImage.classList.add('blurhashed');
-			newImage.classList.remove('lazyload');
-			newImage.classList.remove('lazyloading');
-			newImage.removeAttribute('srcset');
-			newImage.style.position = 'absolute';
-
-			const { direction } = getComputedStyle(image);
-			const alignSide = direction === 'ltr' ? 'left' : 'right';
-
-			newImage.style[alignSide] = 0;
-			newImage.style.transition = 'opacity 1s';
-			image.after(newImage);
 		} else {
 			image.src = url;
 			image.classList.add('blurhashed');

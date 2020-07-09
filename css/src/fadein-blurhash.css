@@ -1,3 +1,7 @@
+.blurhash-container .blurhashing {
+  opacity: 0;
+}
+
 .blurhash-container .blurhashed {
   transition: opacity 0.3s;
   opacity: 1;
