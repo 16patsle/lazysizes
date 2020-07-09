@@ -66,12 +66,7 @@ const configs = [
 				plugins: [terser()],
 			},
 		],
-		plugins: [
-			babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
-			resolve(),
-			commonjs(),
-			visualizer({ filename: './js/admin/build/stats.html' }),
-		],
+		plugins: [],
 	},
 ];
 
@@ -90,6 +85,11 @@ const inputsCSS = [
 inputsCSS.forEach((val) => {
 	// Default unmified CSS build
 	const config = Object.assign({}, defaultConfigCSS);
+	config.plugins = [
+		postcss({
+			extract: true,
+		}),
+	];
 	config.input = val;
 	configs.push(config);
 
