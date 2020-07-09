@@ -71,6 +71,9 @@ function processImage(image) {
 
 		newImage.style[alignSide] = 0;
 		image.after(newImage);
+	} else {
+		image.classList.add('blurhash');
+		image.classList.add('blurhashing');
 	}
 
 	const pixels = decode(image.dataset.blurhash, width, height);
@@ -93,6 +96,7 @@ function processImage(image) {
 			newImage.classList.add('blurhashed');
 		} else {
 			image.src = url;
+			image.classList.remove('blurhashing');
 			image.classList.add('blurhashed');
 		}
 	});

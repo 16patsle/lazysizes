@@ -1,4 +1,4 @@
-.lazyload, .lazyloading {
+.lazyload:not(.blurhash), .lazyloading:not(.blurhash) {
   opacity: 0;
 }
 

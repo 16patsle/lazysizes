@@ -1,16 +1,22 @@
+.blurhashing {
+	opacity: 0;
+}
+
+.blurhashed {
+  transition: opacity 0.3s;
+	opacity: 1;
+}
+
 .blurhash-container .lazyloaded {
 	position: relative;
 	z-index: 1;
 }
 
 .blurhash-container .blurhashing {
-	opacity: 0;
 	position: absolute;
 }
 
 .blurhash-container .blurhashed {
-  transition: opacity 0.3s;
-	opacity: 1;
-	position: absolute;
+  position: absolute;
 	z-index: 0;
 }
