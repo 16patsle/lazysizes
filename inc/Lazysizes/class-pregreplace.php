@@ -396,17 +396,16 @@ class PregReplace {
 		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
-			if ( $metadata === false || ! array_key_exists( 'sizes', $metadata ) ) {
-				return; // Not an image.
-			}
+			// Check if src is a local image attachment.
+			if ( $metadata !== false && array_key_exists( 'sizes', $metadata ) ) {
+				$width  = $metadata['width'];
+				$height = $metadata['height'];
 
-			$width  = $metadata['width'];
-			$height = $metadata['height'];
-
-			foreach ( $metadata['sizes'] as $size_name => $size ) {
-				if ( strpos( $src_attr, $size['file'] ) !== false ) {
-					$width  = $size['width'];
-					$height = $size['height'];
+				foreach ( $metadata['sizes'] as $size_name => $size ) {
+					if ( strpos( $src_attr, $size['file'] ) !== false ) {
+						$width  = $size['width'];
+						$height = $size['height'];
+					}
 				}
 			}
 		}
