@@ -18,7 +18,14 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->class_instance = new PregReplace( array( 'excludeclasses' => array() ), dirname( __FILE__ ) );
+		$this->class_instance = new PregReplace(
+			array(
+				'excludeclasses' => array(),
+				'skip_src'       => false,
+				'blurhash'       => false,
+			),
+			dirname( __FILE__ )
+		);
 	}
 
 	/**
