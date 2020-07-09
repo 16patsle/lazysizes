@@ -1,11 +1,12 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
 import visualizer from 'rollup-plugin-visualizer';
 import inputs from './js/src/entrypoints.json';
 
-const defaultConfig = {
+const defaultConfigJS = {
 	input: '',
 	output: [
 		{
@@ -38,31 +39,71 @@ const defaultConfig = {
 		resolve()
 	]
 };
-const configs = [{
-	input: './js/admin/src/lazysizes-attachment-details.js',
+
+const defaultConfigCSS = {
+	input: '',
 	output: [
 		{
-			file: './js/admin/build/lazysizes-attachment-details.js',
-			format: 'iife'
+			dir: 'css/build',
+			entryFileNames: '[name].js',
+			format: 'esm',
 		},
-		{
-			file: './js/admin/build/lazysizes-attachment-details.min.js',
-			format: 'iife',
-			plugins: [terser()]
-		}
 	],
-	plugins: [
-		babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
-		resolve(),
-		commonjs(),
-		visualizer({ filename: './js/admin/build/stats.html' })
-	]
-}];
+	plugins: [postcss({ extract: true })],
+};
 
-inputs.forEach(val => {
-	const config = Object.assign({}, defaultConfig);
+const configs = [
+	{
+		input: './js/admin/src/lazysizes-attachment-details.js',
+		output: [
+			{
+				file: './js/admin/build/lazysizes-attachment-details.js',
+				format: 'iife',
+			},
+			{
+				file: './js/admin/build/lazysizes-attachment-details.min.js',
+				format: 'iife',
+				plugins: [terser()],
+			},
+		],
+		plugins: [
+			babel({ babelHelpers: 'bundled', exclude: 'node_modules/**' }),
+			resolve(),
+			commonjs(),
+			visualizer({ filename: './js/admin/build/stats.html' }),
+		],
+	},
+];
+
+inputs.forEach((val) => {
+	const config = Object.assign({}, defaultConfigJS);
 	config.input = val;
 	configs.push(config);
-})
+});
+
+const inputsCSS = [
+	'css/src/fadein.js',
+	'css/src/fadein-blurhash.js',
+	'css/src/spinner.js',
+];
+
+inputsCSS.forEach((val) => {
+	// Default unmified CSS build
+	const config = Object.assign({}, defaultConfigCSS);
+	config.input = val;
+	configs.push(config);
+
+	// Minified build
+	const configMin = Object.assign({}, defaultConfigCSS);
+	const split = val.split('/');
+	configMin.plugins = [
+		postcss({
+			extract: split[split.length - 1].replace('.js', '.min.css'),
+			minimize: true,
+		}),
+	];
+	configMin.input = val;
+	configs.push(configMin);
+});
 
 export default configs;

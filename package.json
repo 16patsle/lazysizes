@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-		"build": "rollup --config",
-		"dev": "rollup --config --watch",
+    "build": "rollup --config",
+    "dev": "rollup --config --watch",
     "build-prepare": "rollup --config rollup.prepare.config.js",
     "format-js-src": "prettier --write \"js/src/**/*.js\"",
     "generate-combination-src": "node scripts/generateSrc"
@@ -50,13 +50,16 @@
     "@rollup/plugin-legacy": "^2.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
     "@wordpress/browserslist-config": "^2.7.0",
+    "autoprefixer": "^9.8.4",
     "browserslist": "^4.13.0",
     "prettier": "2.0.5",
     "rollup": "^2.11.2",
+    "rollup-plugin-postcss": "^3.1.2",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-visualizer": "^4.0.4"
   },
   "prettier": {
     "singleQuote": true
-  }
+	},
+	"browserslist": "extends @wordpress/browserslist-config"
 }
