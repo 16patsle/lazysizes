@@ -396,7 +396,7 @@ class PregReplace {
 		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
-			if ( ! array_key_exists( 'sizes', $metadata ) ) {
+			if ( $metadata === false || ! array_key_exists( 'sizes', $metadata ) ) {
 				return; // Not an image.
 			}
 
