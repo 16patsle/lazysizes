@@ -346,7 +346,7 @@ class Settings {
 				<p class="description">
 					<?php esc_html_e( 'Experimental. Does not add a placeholder image in the src attribute, allowing the browser to load and render the image progressively. Also adds a small amount of CSS to hide the broken image icon browsers may show when the src is missing.', 'lazysizes' ); ?>
 					<br>
-					<?php esc_html_e( 'Note: Not compatible with the fade effect.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Note: Not compatible with the fade effect due to how browsers handle image loading.', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />
@@ -354,7 +354,9 @@ class Settings {
 				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> value="1">
 				<?php esc_html_e( 'Use Blurhash to generate blurry low-res placeholder images.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Experimental. Placeholders will need to be pregenerated, images without one will show blank placeholder. Currently only works on local images and external images with set sizes. Currently not working with native loading enabled.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Experimental. Currently only works on image attachments. Placeholders will need to be pregenerated, which can be done for each image in the Media Library. Images without a Blurhash string will show the regular blank placeholder.', 'lazysizes' ); ?>
+					<br>
+					<?php esc_html_e( 'Note: Limited compatibility with native loading and the fade in effect for images added through custom HTML or by some plugins.', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />
