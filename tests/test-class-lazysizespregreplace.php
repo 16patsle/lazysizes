@@ -495,7 +495,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_should_add_aspect_ratio() {
 		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" width="100px" height="200px">', 'image.jpg', 'img' );
-		$expected = '<img src="image.jpg" data-aspectratio="100/200" width="100px" height="200px">';
+		$expected = '<img data-aspectratio="100/200" src="image.jpg" width="100px" height="200px">';
 
 		$this->assertEquals( $expected, $markup );
 	}
