@@ -32,8 +32,8 @@ function processImage(image) {
 		return;
 	}
 
-	let width = image.width;
-	let height = image.height;
+	let width = parseInt(image.getAttribute('width'), 10) || 1;
+	let height = parseInt(image.getAttribute('height'), 10) || 1;
 
 	if (width <= 1 || height <= 1) {
 		if (image.dataset.aspectratio) {
