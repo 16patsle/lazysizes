@@ -65,9 +65,8 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs phpcompatibility/php-compatibility phpcompatibility/phpcompatibility-paragonie phpcompatibility/phpcompatibility-wp
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility/php-compatibility,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp
-      phpcs --config-set ignore_warnings_on_exit 1
+      composer install
+      vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
     fi
 
 script:
@@ -78,5 +77,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
+      vendor/bin/phpcs
     fi
