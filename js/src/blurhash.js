@@ -65,13 +65,11 @@ function processImage(image) {
 		newImage.classList.remove('lazyload');
 		newImage.classList.remove('lazyloading');
 		newImage.removeAttribute('srcset');
-		newImage.style.position = 'absolute';
 
 		const { direction } = getComputedStyle(image);
 		const alignSide = direction === 'ltr' ? 'left' : 'right';
 
 		newImage.style[alignSide] = 0;
-		//newImage.style.transition = 'opacity 1s';
 		image.after(newImage);
 	}
 
