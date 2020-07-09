@@ -288,7 +288,7 @@ class PregReplace {
 		}
 
 		$src_attr = array();
-		$had_src = preg_match( sprintf( '/<%s[^>]*[\s]src="(.*?(?<!\\\\))"/', $tag ), $replace_markup, $src_attr );
+		$had_src  = preg_match( sprintf( '/<%s[^>]*[\s]src="(.*?(?<!\\\\))"/', $tag ), $replace_markup, $src_attr );
 
 		if ( 'source' === $tag ) {
 			$attrs = array( 'poster', 'srcset' );
@@ -396,7 +396,7 @@ class PregReplace {
 		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
-			if ( !array_key_exists( 'sizes', $metadata ) ) {
+			if ( ! array_key_exists( 'sizes', $metadata ) ) {
 				return; // Not an image.
 			}
 

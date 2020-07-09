@@ -344,7 +344,7 @@ class PluginCore {
 			return $response;
 		}
 
-		$blurhash = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
+		$blurhash                      = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
 		$response['lazysizesError']    = false;
 		$response['lazysizesLoading']  = false;
@@ -379,17 +379,28 @@ class PluginCore {
 		if ( $action === 'generate' ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
-			if ( empty($blurhash) ) {
+			if ( empty( $blurhash ) ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
-				wp_send_json( array( 'success' => true, 'blurhash' => $blurhash, 'attachmentId' => $attachment_id ) );
+				wp_send_json(
+					array(
+						'success'      => true,
+						'blurhash'     => $blurhash,
+						'attachmentId' => $attachment_id,
+					)
+				);
 			}
 		} elseif ( $action === 'delete' ) {
 			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
 			if ( ! $result ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
-				wp_send_json( array( 'success' => $result, 'attachmentId' => $attachment_id ) );
+				wp_send_json(
+					array(
+						'success'      => $result,
+						'attachmentId' => $attachment_id,
+					)
+				);
 			}
 		}
 	}

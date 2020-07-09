@@ -57,7 +57,7 @@ class Blurhash {
 		$pixels = array();
 
 		if ( extension_loaded( 'imagick' ) ) {
-			$image = new \Imagick( $path );
+			$image    = new \Imagick( $path );
 			$iterator = $image->getPixelIterator();
 
 			foreach ( $iterator as $image_pixels ) {
