@@ -2,7 +2,7 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
-import {terser} from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import visualizer from 'rollup-plugin-visualizer';
 import inputs from './js/src/entrypoints.json';
 
@@ -12,14 +12,14 @@ const defaultConfigJS = {
 		{
 			dir: 'js/build',
 			entryFileNames: '[name].js',
-	  		format: 'iife'
+			format: 'iife',
 		},
 		{
 			dir: 'js/build',
 			entryFileNames: '[name].min.js',
 			format: 'iife',
-			plugins: [terser()]
-		}
+			plugins: [terser()],
+		},
 	],
 	plugins: [
 		babel({
@@ -27,17 +27,17 @@ const defaultConfigJS = {
 			include: ['js/src/blurhash.js', 'js/src/lib/decode.js'],
 			presets: [
 				[
-				  '@babel/env',
-				  {
-					targets: 'extends @wordpress/browserslist-config',
-					bugfixes: true
-				  }
-				]
-			  ]
-		 }),
+					'@babel/env',
+					{
+						targets: 'extends @wordpress/browserslist-config',
+						bugfixes: true,
+					},
+				],
+			],
+		}),
 		commonjs(),
-		resolve()
-	]
+		resolve(),
+	],
 };
 
 const defaultConfigCSS = {
