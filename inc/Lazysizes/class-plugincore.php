@@ -206,20 +206,20 @@ class PluginCore {
 		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre = $this->dir . 'css/lazysizes';
+		$style_url_pre = $this->dir . 'css/build/';
 		$script_url_pre = $this->dir . 'js/';
 
 		// Enqueue fade-in if enabled.
 		if ( $this->settings['fade_in'] ) {
 			if( $this->settings['blurhash'] ) {
-				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein-blurhash' . $min . '.css', false, $this->lazysizes_ver );
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'fadein-blurhash' . $min . '.css', false, $this->lazysizes_ver );
 			} else {
-				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein' . $min . '.css', false, $this->lazysizes_ver );
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'fadein' . $min . '.css', false, $this->lazysizes_ver );
 			}
 		}
 		// Enqueue spinner if enabled.
 		if ( $this->settings['spinner'] ) {
-			wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . '.spinner' . $min . '.css', false, $this->lazysizes_ver );
+			wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . 'spinner' . $min . '.css', false, $this->lazysizes_ver );
 		}
 
 		if ( $this->settings['optimized_scripts'] ) {
