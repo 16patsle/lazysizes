@@ -46,7 +46,7 @@ styleCombinations.forEach(combination => {
 	const fileName = `lazysizes.${combination.join('-')}.js`;
 	const contents = combination.reduce((acc, val) => {
 		return acc += `import './${val}.css';\n`;
-	}, '')
+	}, '// This file is only used as a fake entrypoint for the css\n')
 	styleEntryPoints.push(`css/src/${fileName}`);
 
 	writeFileAsync('./css/src/' + fileName, contents)
