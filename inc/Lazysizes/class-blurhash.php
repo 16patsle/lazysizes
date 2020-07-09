@@ -46,6 +46,11 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
+		if ( version_compare( phpversion(), '7.2', '<' ) ) {
+			// Blurhash library requires PHP 7.2.
+			return false;
+		}
+
 		$size = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
 		if ( $size === false ) {
 			return false; // Probably not an image, might be video/audio.

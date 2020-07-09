@@ -307,7 +307,7 @@ class PluginCore {
 	public function load_scripts_admin_media( $admin_page ) {
 		$current_screen = get_current_screen();
 
-		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) ) {
+		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) || version_compare( phpversion(), '7.2', '<' ) ) {
 			return;
 		}
 
