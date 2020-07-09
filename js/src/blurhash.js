@@ -66,6 +66,10 @@ function processImage(image) {
 		newImage.classList.remove('lazyloading');
 		newImage.removeAttribute('srcset');
 
+		if('loading' in newImage) {
+			newImage.loading = 'eager';
+		}
+
 		const { direction } = getComputedStyle(image);
 		const alignSide = direction === 'ltr' ? 'left' : 'right';
 
