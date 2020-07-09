@@ -1,0 +1,9 @@
+[
+  "css/src/lazysizes.fadein.js",
+  "css/src/lazysizes.fadeblurhash.js",
+  "css/src/lazysizes.spinner.js",
+  "css/src/lazysizes.fadein-fadeblurhash.js",
+  "css/src/lazysizes.fadein-spinner.js",
+  "css/src/lazysizes.fadeblurhash-spinner.js",
+  "css/src/lazysizes.fadein-fadeblurhash-spinner.js"
+]

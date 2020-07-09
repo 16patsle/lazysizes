@@ -208,7 +208,7 @@ class Settings {
 			<br />
 			<label for="lazysizes_optimized_scripts">
 				<input type='checkbox' id='lazysizes_optimized_scripts' name='lazysizes_general[lazysizes_optimized_scripts]' <?php $this->checked_r( $options, 'lazysizes_optimized_scripts', 1 ); ?> value="1">
-				<?php esc_html_e( 'Load custom lazysizes scripts optimized for performance.', 'lazysizes' ); ?>
+				<?php esc_html_e( 'Load custom lazysizes scripts and styles, optimized for performance.', 'lazysizes' ); ?>
 			</label>
 			<br />
 			<label for="lazysizes_footer">

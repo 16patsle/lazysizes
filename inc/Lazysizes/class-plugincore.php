@@ -209,19 +209,26 @@ class PluginCore {
 		$style_url_pre = $this->dir . 'css/build/';
 		$script_url_pre = $this->dir . 'js/';
 
-		// Enqueue fade-in if enabled.
-		if ( $this->settings['fade_in'] ) {
-			wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'fadein' . $min . '.css', false, $this->lazysizes_ver );
-			if( $this->settings['blurhash'] ) {
-				wp_enqueue_style( 'lazysizes-fadein-blurhash-style', $style_url_pre . 'fadein-blurhash' . $min . '.css', false, $this->lazysizes_ver );
-			}
-		}
-		// Enqueue spinner if enabled.
-		if ( $this->settings['spinner'] ) {
-			wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . 'spinner' . $min . '.css', false, $this->lazysizes_ver );
-		}
-
 		if ( $this->settings['optimized_scripts'] ) {
+			$styles = array();
+
+			// Enqueue fade-in if enabled.
+			if ( $this->settings['fade_in'] ) {
+				array_push( $styles, 'fadein' );
+				if( $this->settings['blurhash'] ) {
+					array_push( $styles, 'fadeblurhash' );
+				}
+			}
+
+			// Enqueue spinner if enabled.
+			if ( $this->settings['spinner'] ) {
+				array_push( $styles, 'spinner' );
+			}
+
+			$stylename = 'lazysizes.' . implode( '-', $styles );
+
+			wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+
 			$scripts = array();
 
 			// Enqueue extras enabled.
@@ -248,6 +255,19 @@ class PluginCore {
 
 			wp_enqueue_script( 'lazysizes', $script_url_pre . 'build/' . $scriptname . $min . '.js', false, $this->lazysizes_ver, $footer );
 		} else {
+			// Enqueue fade-in if enabled.
+			if ( $this->settings['fade_in'] ) {
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'lazysizes.fadein' . $min . '.css', false, $this->lazysizes_ver );
+				if( $this->settings['blurhash'] ) {
+					wp_enqueue_style( 'lazysizes-fadein-blurhash-style', $style_url_pre . 'lazysizes.fadeblurhash' . $min . '.css', false, $this->lazysizes_ver );
+				}
+			}
+
+			// Enqueue spinner if enabled.
+			if ( $this->settings['spinner'] ) {
+				wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . 'lazysizes.spinner' . $min . '.css', false, $this->lazysizes_ver );
+			}
+
 			// Enqueue auto load if enabled.
 			if ( $this->settings['auto_load'] ) {
 				wp_enqueue_script( 'lazysizes-auto', $script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );

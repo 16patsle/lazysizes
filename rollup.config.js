@@ -3,8 +3,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
-import visualizer from 'rollup-plugin-visualizer';
-import inputs from './js/src/entrypoints.json';
+import inputsJS from './js/src/entrypoints.json';
+import inputsCSS from './css/src/entrypoints.json';
 
 const defaultConfigJS = {
 	input: '',
@@ -70,17 +70,11 @@ const configs = [
 	},
 ];
 
-inputs.forEach((val) => {
+inputsJS.forEach((val) => {
 	const config = Object.assign({}, defaultConfigJS);
 	config.input = val;
 	configs.push(config);
 });
-
-const inputsCSS = [
-	'css/src/fadein.js',
-	'css/src/fadein-blurhash.js',
-	'css/src/spinner.js',
-];
 
 inputsCSS.forEach((val) => {
 	// Default unmified CSS build
