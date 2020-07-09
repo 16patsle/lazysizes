@@ -81,7 +81,6 @@ function processImage(image) {
 	}
 
 	const pixels = decode(image.dataset.blurhash, width, height);
-	console.log(image.dataset.blurhash, width, height);
 
 	const canvas = document.createElement('canvas');
 	canvas.width = width;
