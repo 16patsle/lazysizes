@@ -100,11 +100,11 @@ class PregReplace {
 
 					// Set replace html and replace attr with data-attr.
 					$replace_attr_result = $this->replace_attr( $new_replace, $tag );
-					$new_replace = $replace_attr_result[0];
-					$src_attr = $replace_attr_result[1];
+					$new_replace         = $replace_attr_result[0];
+					$src_attr            = $replace_attr_result[1];
 
 					if ( $this->settings['blurhash'] && $src_attr !== false ) {
-						// Add blurhash attr
+						// Add blurhash attr.
 						$new_replace = $this->set_blurhash_attr( $new_replace, $src_attr, $tag );
 					}
 
@@ -200,11 +200,11 @@ class PregReplace {
 		if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 			// Set replace html and replace attr with data-attr.
 			$replace_attr_result = $this->replace_attr( $match, $tag );
-			$replace_markup = $replace_attr_result[0];
-			$src_attr = $replace_attr_result[1];
+			$replace_markup      = $replace_attr_result[0];
+			$src_attr            = $replace_attr_result[1];
 
 			if ( $this->settings['blurhash'] && $src_attr !== false ) {
-				// Add blurhash attr
+				// Add blurhash attr.
 				$replace_markup = $this->set_blurhash_attr( $replace_markup, $src_attr, $tag );
 			}
 
@@ -396,16 +396,16 @@ class PregReplace {
 		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
-			if( !array_key_exists( 'sizes', $metadata ) ) {
-				return; // Not an image
+			if ( !array_key_exists( 'sizes', $metadata ) ) {
+				return; // Not an image.
 			}
 
-			$width = $metadata['width'];
+			$width  = $metadata['width'];
 			$height = $metadata['height'];
 
-			foreach ($metadata['sizes'] as $sizeName => $size) {
-				if( strpos( $src_attr, $size['file'] ) !== false ) {
-					$width = $size['width'];
+			foreach ( $metadata['sizes'] as $size_name => $size ) {
+				if ( strpos( $src_attr, $size['file'] ) !== false ) {
+					$width  = $size['width'];
 					$height = $size['height'];
 				}
 			}
@@ -456,7 +456,7 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		// Create blurhash version
+		// Create blurhash version.
 		require_once dirname( __FILE__ ) . '/class-blurhash.php';
 		$blurhash = Blurhash::get_blurhash( $src_attr, $this->settings['blurhash_onload'] );
 

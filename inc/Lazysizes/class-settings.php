@@ -80,7 +80,7 @@ class Settings {
 				update_option( 'lazysizes_general', $general );
 			}
 			if ( version_compare( $dbver, '1.3.0', '<=' ) ) {
-				$general                                = get_option( 'lazysizes_general' );
+				$general                                       = get_option( 'lazysizes_general' );
 				$general['lazysizes_optimized_scripts_styles'] = $this->defaults['general']['lazysizes_optimized_scripts_styles'];
 				update_option( 'lazysizes_general', $general );
 			}

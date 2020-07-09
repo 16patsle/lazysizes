@@ -6,6 +6,7 @@
  */
 
 namespace Lazysizes;
+
 use kornrunner\Blurhash\Blurhash as PhpBlurhash;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -38,6 +39,7 @@ class Blurhash {
 
 	/**
 	 * Computes the Blurhash string.
+	 *
 	 * @since 1.3.0
 	 * @param array|false $metadata An array of attachment metadata.
 	 * @param int         $attachment_id Current attachment ID.
@@ -48,8 +50,8 @@ class Blurhash {
 		if ( $size === false ) {
 			return false; // Probably not an image, might be video/audio.
 		}
-		$path = $size[0];
-		$width = $size[1];
+		$path   = $size[0];
+		$width  = $size[1];
 		$height = $size[2];
 
 		$pixels = array();
@@ -58,26 +60,26 @@ class Blurhash {
 			$image = new \Imagick( $path );
 			$iterator = $image->getPixelIterator();
 
-			foreach ( $iterator as $imagePixels ) {
+			foreach ( $iterator as $image_pixels ) {
 				$row = array();
-				foreach ( $imagePixels as $pixel ) {
+				foreach ( $image_pixels as $pixel ) {
 					$colors = $pixel->getColor();
-					$row[] = [$colors['r'], $colors['g'], $colors['b']];
+					$row[]  = array( $colors['r'], $colors['g'], $colors['b'] );
 				}
 				$pixels[] = $row;
 			}
 
 			$image->clear();
-		} else if ( extension_loaded( 'gd' ) ) {
+		} elseif ( extension_loaded( 'gd' ) ) {
 			$image = imagecreatefromstring( file_get_contents( $path ) );
 
-			for ($y = 0; $y < $height; ++$y) {
+			for ( $y = 0; $y < $height; ++$y ) {
 				$row = array();
 				for ( $x = 0; $x < $width; ++$x ) {
-					$index = imagecolorat( $image, $x, $y );
+					$index  = imagecolorat( $image, $x, $y );
 					$colors = imagecolorsforindex( $image, $index );
 
-					$row[] = [$colors['red'], $colors['green'], $colors['blue']];
+					$row[] = array( $colors['red'], $colors['green'], $colors['blue'] );
 				}
 				$pixels[] = $row;
 			}
@@ -103,9 +105,10 @@ class Blurhash {
 
 	/**
 	 * Callback for wp_generate_attachment_metadata.
+	 *
 	 * @since 1.3.0
-	 * @param array  $metadata An array of attachment metadata.
-	 * @param int    $attachment_id Current attachment ID.
+	 * @param array $metadata An array of attachment metadata.
+	 * @param int   $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash_filter( $metadata, $attachment_id ) {

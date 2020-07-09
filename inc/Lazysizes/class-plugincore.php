@@ -50,9 +50,9 @@ class PluginCore {
 	 */
 	public function __construct( $pluginfile ) {
 
-		// Load composer autoloader
-		if ( is_readable( dirname ($pluginfile) . '/vendor/autoload.php' ) ) {
-			require dirname ($pluginfile) . '/vendor/autoload.php';
+		// Load composer autoloader.
+		if ( is_readable( dirname( $pluginfile ) . '/vendor/autoload.php' ) ) {
+			require dirname( $pluginfile ) . '/vendor/autoload.php';
 		}
 
 		// Store our settings in memory to reduce mysql calls.
@@ -117,7 +117,7 @@ class PluginCore {
 			// Should only fire in admin, but doesn't hurt to add it otherwise.
 			if ( $this->settings['blurhash'] ) {
 				require_once dirname( __FILE__ ) . '/class-blurhash.php';
-				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ) , 10, 2 );
+				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ), 10, 2 );
 				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
 
 				add_action( 'wp_ajax_lazysizes_blurhash', array( $this, 'ajax_blurhash_handler' ) );
@@ -206,7 +206,7 @@ class PluginCore {
 		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre = $this->dir . 'css/build/';
+		$style_url_pre  = $this->dir . 'css/build/';
 		$script_url_pre = $this->dir . 'js/';
 
 		if ( $this->settings['optimized_scripts_styles'] ) {
@@ -215,7 +215,7 @@ class PluginCore {
 			// Enqueue fade-in if enabled.
 			if ( $this->settings['fade_in'] ) {
 				array_push( $styles, 'fadein' );
-				if( $this->settings['blurhash'] ) {
+				if ( $this->settings['blurhash'] ) {
 					array_push( $styles, 'fadeblurhash' );
 				}
 			}
@@ -258,7 +258,7 @@ class PluginCore {
 			// Enqueue fade-in if enabled.
 			if ( $this->settings['fade_in'] ) {
 				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'lazysizes.fadein' . $min . '.css', false, $this->lazysizes_ver );
-				if( $this->settings['blurhash'] ) {
+				if ( $this->settings['blurhash'] ) {
 					wp_enqueue_style( 'lazysizes-fadein-blurhash-style', $style_url_pre . 'lazysizes.fadeblurhash' . $min . '.css', false, $this->lazysizes_ver );
 				}
 			}
@@ -307,7 +307,7 @@ class PluginCore {
 	public function load_scripts_admin_media( $admin_page ) {
 		$current_screen = get_current_screen();
 
-		if ( empty( $current_screen ) || !in_array( $current_screen->base, array( 'upload', 'post' ) ) ) {
+		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) ) {
 			return;
 		}
 
@@ -315,22 +315,29 @@ class PluginCore {
 		$min = defined( SCRIPT_DEBUG ) && SCRIPT_DEBUG === true ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
-		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER );
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );
 
-		wp_localize_script( 'lazysizes-attachment-details', 'lazysizesStrings', array(
-			'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
-			'generate' => esc_html__( 'Generate', 'lazysizes' ),
-			'delete' => esc_html__( 'Delete', 'lazysizes' ),
-			'current' => esc_html__( 'Current value: ', 'lazysizes' ),
-			'description' => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' ),
-			'error' => esc_html__( 'An error occurred.', 'lazysizes' )
-		) );
+		wp_localize_script(
+			'lazysizes-attachment-details',
+			'lazysizesStrings',
+			array(
+				'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
+				'generate'     => esc_html__( 'Generate', 'lazysizes' ),
+				'delete'       => esc_html__( 'Delete', 'lazysizes' ),
+				'current'      => esc_html__( 'Current value: ', 'lazysizes' ),
+				'description'  => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' ),
+				'error'        => esc_html__( 'An error occurred.', 'lazysizes' ),
+			)
+		);
 	}
 
 	/**
 	 * Add Blurhash string to attachment meta exposed to JS.
 	 *
 	 * @since 1.3.0
+	 * @param array   $response Array of attachment details.
+	 * @param WP_Post $Response Attachment object.
+	 * @return array Array of modified attachment details.
 	 */
 	public function prepare_attachment_blurhash( $response, $attachment ) {
 		if ( ! isset( $attachment->ID ) ) {
@@ -339,13 +346,13 @@ class PluginCore {
 
 		$blurhash = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
 		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
-		$response['lazysizesError'] = false;
-		$response['lazysizesLoading'] = false;
+		$response['lazysizesError']    = false;
+		$response['lazysizesLoading']  = false;
 
 		// Add nonces
 		$response['nonces']['lazysizes'] = array(
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
-			'delete' => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' )
+			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
 		);
 
 		return $response;
@@ -357,30 +364,30 @@ class PluginCore {
 	 * @since 1.3.0
 	 */
 	public function ajax_blurhash_handler() {
-		$nonce = $_REQUEST['nonce'] === '' ? '' : $_REQUEST['nonce'];
-		$action = $_REQUEST['mode'];
+		$nonce         = empty( $_REQUEST['nonce'] ) ? '' : $_REQUEST['nonce'];
+		$action        = $_REQUEST['mode'];
 		$attachment_id = $_REQUEST['attachmentId'];
 
-		if ( !in_array( $action, array( 'generate', 'delete' ) ) ) {
-			wp_send_json_error( new \WP_Error( '400', __('Invalid action. If you see this, something is wrong.', 'lazysizes') ) );
+		if ( ! in_array( $action, array( 'generate', 'delete' ), true ) ) {
+			wp_send_json_error( new \WP_Error( '400', __( 'Invalid action. If you see this, something is wrong.', 'lazysizes' ) ) );
 		}
 
-		if ( !wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-' . $action ) ) {
-			wp_send_json_error( new \WP_Error( '401', __('Invalid nonce. Reload page and try again.', 'lazysizes') ) );
+		if ( ! wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-' . $action ) ) {
+			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
 		};
 
 		if ( $action === 'generate' ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty($blurhash) ) {
-				wp_send_json_error( new \WP_Error( '500', __('Could not generate blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
 				wp_send_json( array( 'success' => true, 'blurhash' => $blurhash, 'attachmentId' => $attachment_id ) );
 			}
-		} else if ( $action === 'delete' ) {
+		} elseif ( $action === 'delete' ) {
 			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
-			if ( !$result ) {
-				wp_send_json_error( new \WP_Error( '500', __('Could not delete blurhash string.', 'lazysizes'), array( 'attachmentId' => $attachment_id ) ) );
+			if ( ! $result ) {
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
 			} else {
 				wp_send_json( array( 'success' => $result, 'attachmentId' => $attachment_id ) );
 			}
