@@ -25,6 +25,12 @@ class Blurhash {
 	 */
 	public static function get_blurhash( $url, $generate_if_missing = false ) {
 		$attachment_id = attachment_url_to_postid( $url );
+		$metadata      = wp_get_attachment_metadata( $attachment_id );
+
+		// Return if not image attachment.
+		if ( ! isset( $metadata ) || ( isset( $metadata['mime-type'] ) && strpos( $metadata['mime-type'], 'image' ) !== 0 ) ) {
+			return false;
+		}
 
 		// Get from attachment post meta.
 		$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
@@ -51,13 +57,16 @@ class Blurhash {
 			return false;
 		}
 
-		$size = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
-		if ( $size === false ) {
-			return false; // Probably not an image, might be video/audio.
+		$size       = image_get_intermediate_size( $attachment_id );
+		$upload_dir = wp_get_upload_dir();
+
+		if ( $size === false || $upload_dir['error'] !== false ) {
+			return false; // Something went wrong.
 		}
-		$path   = $size[0];
-		$width  = $size[1];
-		$height = $size[2];
+
+		$path   = $upload_dir['basedir'] . '/' . $size['path'];
+		$width  = $size['width'];
+		$height = $size['height'];
 
 		$pixels = array();
 
