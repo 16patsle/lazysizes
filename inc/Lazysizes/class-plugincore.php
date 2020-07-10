@@ -336,7 +336,7 @@ class PluginCore {
 	 *
 	 * @since 1.3.0
 	 * @param array   $response Array of attachment details.
-	 * @param WP_Post $Response Attachment object.
+	 * @param WP_Post $attachment Attachment object.
 	 * @return array Array of modified attachment details.
 	 */
 	public function prepare_attachment_blurhash( $response, $attachment ) {
@@ -349,7 +349,7 @@ class PluginCore {
 		$response['lazysizesError']    = false;
 		$response['lazysizesLoading']  = false;
 
-		// Add nonces
+		// Add nonces.
 		$response['nonces']['lazysizes'] = array(
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
 			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
@@ -364,19 +364,30 @@ class PluginCore {
 	 * @since 1.3.0
 	 */
 	public function ajax_blurhash_handler() {
-		$nonce         = empty( $_REQUEST['nonce'] ) ? '' : $_REQUEST['nonce'];
-		$action        = $_REQUEST['mode'];
-		$attachment_id = $_REQUEST['attachmentId'];
-
-		if ( ! in_array( $action, array( 'generate', 'delete' ), true ) ) {
-			wp_send_json_error( new \WP_Error( '400', __( 'Invalid action. If you see this, something is wrong.', 'lazysizes' ) ) );
-		}
-
-		if ( ! wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-' . $action ) ) {
-			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
+		$action = '';
+		if ( ! isset( $_REQUEST['nonce'] ) || ! isset( $_REQUEST['mode'] ) ) {
+			wp_send_json_error( new \WP_Error( '401', __( 'Missing nonce or action. If you see this, something is wrong.', 'lazysizes' ) ) );
 		};
 
-		if ( $action === 'generate' ) {
+		$nonce                = sanitize_key( wp_unslash( $_REQUEST['nonce'] ) );
+		$nonce_valid_generate = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-generate' );
+		$nonce_valid_delete   = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-delete' );
+
+		if ( ! $nonce_valid_generate && ! $nonce_valid_delete ) {
+			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
+		}
+
+		$action = sanitize_key( wp_unslash( $_REQUEST['mode'] ) );
+
+		$attachment_id = '';
+
+		if ( ! isset( $_REQUEST['attachmentId'] ) ) {
+			wp_send_json_error( new \WP_Error( '400', __( 'Missing attachment ID. If you see this, something is wrong.', 'lazysizes' ) ) );
+		} else {
+			$attachment_id = sanitize_key( wp_unslash( $_REQUEST['attachmentId'] ) );
+		}
+
+		if ( $action === 'generate' && $nonce_valid_generate ) {
 			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty( $blurhash ) ) {
@@ -390,7 +401,7 @@ class PluginCore {
 					)
 				);
 			}
-		} elseif ( $action === 'delete' ) {
+		} elseif ( $action === 'delete' && $nonce_valid_delete ) {
 			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
 			if ( ! $result ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
@@ -402,6 +413,8 @@ class PluginCore {
 					)
 				);
 			}
+		} else {
+			wp_send_json_error( new \WP_Error( '400', __( 'Invalid nonce or action. If you see this, something is wrong.', 'lazysizes' ) ) );
 		}
 	}
 
