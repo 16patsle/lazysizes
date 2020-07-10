@@ -79,6 +79,16 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the filtering of an img tag with a class containing the regex delimiter.
+	 */
+	public function test_preg_replace_html_img_regex_delimiter_class() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//">', array( 'img' ) );
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="// lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//"></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
 	 * Test the filtering of an audio tag with a src atribute.
 	 */
 	public function test_preg_replace_html_audio_src_attr() {
