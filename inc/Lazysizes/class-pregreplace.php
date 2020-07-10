@@ -459,7 +459,7 @@ class PregReplace {
 		require_once dirname( __FILE__ ) . '/class-blurhash.php';
 		$blurhash = Blurhash::get_blurhash( $src_attr, $this->settings['blurhash_onload'] );
 
-		// Add blurhash if available
+		// Add blurhash if available.
 		if ( $blurhash !== false ) {
 			// And add in a data attribute with blurhash.
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
