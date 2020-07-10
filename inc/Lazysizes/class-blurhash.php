@@ -35,8 +35,13 @@ class Blurhash {
 		// Get from attachment post meta.
 		$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
 
+		// get_post_meta returns empty string if meta not found.
+		if ( $blurhash === '' ) {
+			$blurhash = false;
+		}
+
 		// Or generate if not already saved.
-		if ( $generate_if_missing && $blurhash === '' ) {
+		if ( $generate_if_missing && ! $blurhash ) {
 			$blurhash = self::encode_blurhash( false, $attachment_id );
 		}
 
@@ -110,6 +115,11 @@ class Blurhash {
 
 		// Generate Blurhash.
 		$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
+
+		// When no blurhash can be generated, it may return an empty string.
+		if ( $blurhash === '' ) {
+			return false;
+		}
 
 		// Save in post meta for later.
 		add_post_meta( $attachment_id, '_lazysizes_blurhash', $blurhash, true );
