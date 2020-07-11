@@ -117,7 +117,7 @@ class Blurhash {
 			// Load LegacyBlurhash, the regular library requires PHP 7.2.
 			require_once dirname( __FILE__ ) . '/LegacyBlurhash/class-blurhash.php';
 
-			$blurhash = Lazysizes\LegacyBlurhash\Blurhash::encode( $pixels, $components_x, $components_y );
+			$blurhash = LegacyBlurhash\Blurhash::encode( $pixels, $components_x, $components_y );
 		} else {
 			// Generate Blurhash.
 			$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
