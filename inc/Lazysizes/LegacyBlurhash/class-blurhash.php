@@ -84,7 +84,7 @@ class Blurhash {
 		}
 
 		$shifted_array = array_shift( $components );
-		$dc_value = DC::encode( $shifted_array ? $shifted_array : array() );
+		$dc_value      = DC::encode( $shifted_array ? $shifted_array : array() );
 
 		$max_ac_component = 0;
 		foreach ( $components as $component ) {
