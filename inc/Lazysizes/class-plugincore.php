@@ -221,9 +221,11 @@ class PluginCore {
 			// Enqueue fade-in if enabled.
 			if ( $this->settings['fade_in'] ) {
 				array_push( $styles, 'fadein' );
-				if ( $this->settings['blurhash'] ) {
-					array_push( $styles, 'fadeblurhash' );
-				}
+			}
+
+			// Enqueue blurhash if enabled.
+			if ( $this->settings['blurhash'] ) {
+				array_push( $styles, 'blurhash' );
 			}
 
 			// Enqueue spinner if enabled.
