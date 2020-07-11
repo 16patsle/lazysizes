@@ -29,7 +29,7 @@ class Blurhash {
 			require_once dirname( __FILE__ ) . '/attachment-url-to-postid.php';
 		}
 
-		$attachment_id = attachment_url_to_postid( $url );
+		$attachment_id = \attachment_url_to_postid( $url );
 		$metadata      = wp_get_attachment_metadata( $attachment_id );
 
 		// Return if not image attachment.
