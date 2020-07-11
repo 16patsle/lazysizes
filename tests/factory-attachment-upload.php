@@ -5,6 +5,8 @@
  * @package WP_UnitTest
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
 /**
  * Saves an attachment.
  *
@@ -36,7 +38,7 @@ function create_upload_object( $file ) {
 		'guid'           => $upload['url'],
 	);
 
-	// Save the data
+	// Save the data.
 	$id = wp_insert_attachment( $attachment, $upload['file'], 0 );
 	wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
 
