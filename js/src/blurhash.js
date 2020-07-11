@@ -50,12 +50,37 @@ function processImage(image) {
 		}
 	}
 
-	const useFancySetup = image.parentNode.classList.contains('wp-block-image');
+	const { position: parentPosition } = getComputedStyle(image.parentNode);
+	const { position: imagePosition } = getComputedStyle(image);
+
+	let useFancySetup = true;
+	if (
+		parentPosition === 'fixed' ||
+		parentPosition === 'sticky' ||
+		imagePosition === 'fixed' ||
+		imagePosition === 'sticky' ||
+		// Check if length of parent is more than 1
+		Array.prototype.slice
+			.call(image.parentNode)
+			.filter((val) => val.nodeName !== 'NOSCRIPT').length > 1
+	) {
+		useFancySetup = false;
+	}
+
 	let newImage;
 
 	if (useFancySetup) {
-		image.parentNode.style.position = 'relative';
 		image.parentNode.classList.add('blurhash-container');
+
+		// Make sure parent is either relative or absolute
+		if (parentPosition !== 'absolute') {
+			image.parentNode.classList.add('blurhash-container-relative');
+		}
+
+		// Make sure image is either relative or absolute
+		if (imagePosition !== 'absolute') {
+			image.classList.add('blurhash-relative');
+		}
 
 		newImage = image.cloneNode();
 

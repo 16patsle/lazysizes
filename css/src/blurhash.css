@@ -7,8 +7,11 @@
 }
 
 .blurhash-container .lazyloaded {
-	position: relative;
 	z-index: 1;
+}
+
+.blurhash-container .lazyloaded.blurhash-relative {
+	position: relative;
 }
 
 .blurhash-container .blurhashing,
@@ -29,4 +32,8 @@
 
 .blurhash-container .blurhashed {
 	z-index: 0;
+}
+
+.blurhash-container-relative {
+	position: relative;
 }
