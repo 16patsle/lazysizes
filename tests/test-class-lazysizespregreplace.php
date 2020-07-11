@@ -565,10 +565,6 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
 		$expected = '<img data-aspectratio="300/400" data-blurhash="LSE#Hk_OrCF}kEx]n$aLr;odWXR," src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
 
-		if ( version_compare( phpversion(), '7.2', '<' ) ) {
-			$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
-		}
-
 		$this->assertEquals( $expected, $markup );
 	}
 
