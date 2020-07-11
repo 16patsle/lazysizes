@@ -51,7 +51,8 @@ function processImage(image) {
 	}
 
 	const { position: parentPosition } = getComputedStyle(image.parentNode);
-	const { position: imagePosition } = getComputedStyle(image);
+	const imageStyles = getComputedStyle(image);
+	const { position: imagePosition } = imageStyles;
 
 	let useFancySetup = true;
 	if (
@@ -106,10 +107,19 @@ function processImage(image) {
 			newImage.loading = 'eager';
 		}
 
-		const { direction } = getComputedStyle(image);
+		const { direction, top } = imageStyles;
 		const alignSide = direction === 'ltr' ? 'left' : 'right';
 
-		newImage.classList.add(alignSide);
+		if (imageStyles[alignSide] === '0px') {
+			newImage.classList.add(alignSide);
+		} else {
+			newImage.style[alignSide] = imageStyles[alignSide];
+		}
+
+		if (top !== '0px') {
+			newImage.style.top = top;
+		}
+
 		image.after(newImage);
 	} else {
 		image.classList.add('blurhash');
