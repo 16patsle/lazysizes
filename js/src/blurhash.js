@@ -96,6 +96,7 @@ function processImage(image) {
 			newImage.src = url;
 
 			// To trigger fade transition
+			newImage.classList.remove('blurhashing');
 			newImage.classList.add('blurhashed');
 		} else {
 			image.src = url;
