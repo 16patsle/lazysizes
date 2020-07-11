@@ -62,8 +62,12 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
-		$size       = image_get_intermediate_size( $attachment_id );
-		$upload_dir = wp_get_upload_dir();
+		$size = image_get_intermediate_size( $attachment_id );
+		if ( function_exists( 'wp_get_upload_dir' ) ) {
+			$upload_dir = wp_get_upload_dir();
+		} else {
+			$upload_dir = wp_upload_dir();
+		}
 
 		if ( $size === false || $upload_dir['error'] !== false ) {
 			return false; // Something went wrong.
