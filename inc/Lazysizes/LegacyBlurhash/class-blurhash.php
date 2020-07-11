@@ -9,6 +9,11 @@ namespace Lazysizes\LegacyBlurhash;
 
 use InvalidArgumentException;
 
+require_once dirname( __FILE__ ) . '/class-color.php';
+require_once dirname( __FILE__ ) . '/class-dc.php';
+require_once dirname( __FILE__ ) . '/class-ac.php';
+require_once dirname( __FILE__ ) . '/class-base83.php';
+
 /**
  * Class for encoding images to Blurhash strings.
  */

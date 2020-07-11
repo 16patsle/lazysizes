@@ -7,6 +7,8 @@
 
 namespace Lazysizes\LegacyBlurhash;
 
+require_once dirname( __FILE__ ) . '/class-color.php';
+
 /**
  * Class for DC encoding.
  */
