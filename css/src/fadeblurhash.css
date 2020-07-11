@@ -3,7 +3,7 @@
 }
 
 .blurhashed {
-  transition: opacity 0.3s;
+	transition: opacity 0.3s;
 	opacity: 1;
 }
 
@@ -17,6 +17,6 @@
 }
 
 .blurhash-container .blurhashed {
-  position: absolute;
+	position: absolute;
 	z-index: 0;
 }
