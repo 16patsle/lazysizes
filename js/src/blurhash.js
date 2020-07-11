@@ -84,7 +84,8 @@ function processImage(image) {
 
 		newImage = image.cloneNode();
 
-		newImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+		newImage.src =
+			'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 		newImage.classList.add('blurhashing');
 		newImage.classList.remove('lazyload');
@@ -101,7 +102,7 @@ function processImage(image) {
 		newImage.removeAttribute('data-aspectratio');
 		newImage.removeAttribute('data-blurhash');
 
-		if('loading' in newImage) {
+		if ('loading' in newImage) {
 			newImage.loading = 'eager';
 		}
 
