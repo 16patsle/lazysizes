@@ -62,10 +62,6 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
-		if ( version_compare( phpversion(), '7.2', '<' ) ) {
-			// Blurhash library requires PHP 7.2.
-			return false;
-		}
 
 		$size       = image_get_intermediate_size( $attachment_id );
 		$upload_dir = wp_get_upload_dir();
@@ -118,8 +114,15 @@ class Blurhash {
 
 		set_time_limit( 60 );
 
-		// Generate Blurhash.
-		$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
+		if ( version_compare( phpversion(), '7.2', '<' ) ) {
+			// Load LegacyBlurhash, the regular library requires PHP 7.2.
+			require_once dirname( __FILE__ ) . '/LegacyBlurhash/class-blurhash.php';
+
+			$blurhash = Lazysizes\LegacyBlurhash\Blurhash::encode( $pixels, $components_x, $components_y );
+		} else {
+			// Generate Blurhash.
+			$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
+		}
 
 		// When no blurhash can be generated, it may return an empty string.
 		if ( $blurhash === '' ) {
