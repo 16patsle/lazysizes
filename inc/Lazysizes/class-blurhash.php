@@ -24,6 +24,11 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function get_blurhash( $url, $generate_if_missing = false ) {
+		if ( ! function_exists( 'attachment_url_to_postid' ) ) {
+			// WordPress version 3.9 does not support attachment_url_to_postid, load custom implementation.
+			require_once dirname( __FILE__ ) . '/attachment-url-to-postid.php';
+		}
+
 		$attachment_id = attachment_url_to_postid( $url );
 		$metadata      = wp_get_attachment_metadata( $attachment_id );
 
