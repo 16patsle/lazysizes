@@ -1,11 +1,19 @@
 <?php
+/**
+ * Base83 class file, legacy support version.
+ *
+ * @package Lazysizes\LegacyBlurhash
+ */
 
 namespace Lazysizes\LegacyBlurhash;
 
 use InvalidArgumentException;
 
+/**
+ * Class for encoding to Base83.
+ */
 class Base83 {
-	private const ALPHABET = array(
+	const ALPHABET = array(
 		'0',
 		'1',
 		'2',
@@ -91,9 +99,18 @@ class Base83 {
 		'~',
 	);
 
-	private const BASE = 83;
+	const BASE = 83;
 
-	public static function encode( int $value, int $length ): string {
+	/**
+	 * Encode value as Base83.
+	 *
+	 * @throws InvalidArgumentException If length is too short.
+	 *
+	 * @param int $value The value to encode.
+	 * @param int $length The length to use.
+	 * @return string Encoded Base64 string.
+	 */
+	public static function encode( $value, $length ) {
 		if ( floor( $value / ( self::BASE ** $length ) ) != 0 ) {
 			throw new InvalidArgumentException( 'Specified length is too short to encode given value.' );
 		}

@@ -1,12 +1,31 @@
 <?php
+/**
+ * Blurhash class file, legacy support version.
+ *
+ * @package Lazysizes\LegacyBlurhash
+ */
 
 namespace Lazysizes\LegacyBlurhash;
 
 use InvalidArgumentException;
 
+/**
+ * Class for encoding images to Blurhash strings.
+ */
 class Blurhash {
 
-	public static function encode( array $image, int $components_x = 4, int $components_y = 4, bool $linear = false ): string {
+	/**
+	 * Encode Blurhash from image pixels.
+	 *
+	 * @throws InvalidArgumentException If x or y components are smaller than 1 or bigger than 9.
+	 *
+	 * @param array $image Array of image pixels.
+	 * @param int   $components_x Amount of components of x axis.
+	 * @param int   $components_y Amount of components of y axis.
+	 * @param bool  $linear Is linear encode.
+	 * @return string Encoded Blurhash string.
+	 */
+	public static function encode( array $image, $components_x = 4, $components_y = 4, $linear = false ) {
 		if ( ( $components_x < 1 || $components_x > 9 ) || ( $components_y < 1 || $components_y > 9 ) ) {
 			throw new InvalidArgumentException( 'x and y component counts must be between 1 and 9 inclusive.' );
 		}
@@ -21,9 +40,9 @@ class Blurhash {
 				for ( $x = 0; $x < $width; $x++ ) {
 					$pixel  = $image[ $y ][ $x ];
 					$line[] = array(
-						Color::toLinear( $pixel[0] ),
-						Color::toLinear( $pixel[1] ),
-						Color::toLinear( $pixel[2] ),
+						Color::to_linear( $pixel[0] ),
+						Color::to_linear( $pixel[1] ),
+						Color::to_linear( $pixel[2] ),
 					);
 				}
 				$image_linear[] = $line;
@@ -35,7 +54,9 @@ class Blurhash {
 		for ( $y = 0; $y < $components_y; $y++ ) {
 			for ( $x = 0; $x < $components_x; $x++ ) {
 				$normalisation = $x == 0 && $y == 0 ? 1 : 2;
-				$r             = $g = $b = 0;
+				$r             = 0;
+				$g             = 0;
+				$b             = 0;
 				for ( $i = 0; $i < $width; $i++ ) {
 					for ( $j = 0; $j < $height; $j++ ) {
 						$color = $image_linear[ $j ][ $i ];
@@ -57,7 +78,7 @@ class Blurhash {
 			}
 		}
 
-		$dc_value = DC::encode( array_shift( $components ) ?: array() );
+		$dc_value = DC::encode( array_shift( $components ) ? array_shift( $components ) : array() );
 
 		$max_ac_component = 0;
 		foreach ( $components as $component ) {

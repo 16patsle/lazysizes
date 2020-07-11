@@ -1,22 +1,50 @@
 <?php
+/**
+ * AC class file, legacy support version.
+ *
+ * @package Lazysizes\LegacyBlurhash
+ */
 
-namespace kornrunner\Blurhash;
+namespace Lazysizes\LegacyBlurhash;
 
+/**
+ * Class for AC encoding.
+ */
 final class AC {
 
-	public static function encode( array $value, float $max_value ): float {
+	/**
+	 * Encode with AC encoding.
+	 *
+	 * @param array $value Value to encode.
+	 * @param float $max_value The max value.
+	 * @return float The encoded result.
+	 */
+	public static function encode( array $value, $max_value ) {
 		$quant_r = static::quantise( $value[0] / $max_value );
 		$quant_g = static::quantise( $value[1] / $max_value );
 		$quant_b = static::quantise( $value[2] / $max_value );
 		return $quant_r * 19 * 19 + $quant_g * 19 + $quant_b;
 	}
 
-	private static function quantise( float $value ): float {
-		return floor( max( 0, min( 18, floor( static::signPow( $value, 0.5 ) * 9 + 9.5 ) ) ) );
+	/**
+	 * Quantize value.
+	 *
+	 * @param float $value Value to quantize.
+	 * @return float The quantized result.
+	 */
+	private static function quantise( $value ) {
+		return floor( max( 0, min( 18, floor( static::sign_pow( $value, 0.5 ) * 9 + 9.5 ) ) ) );
 	}
 
-	private static function signPow( float $base, float $exp ): float {
-		$sign = $base <=> 0;
+	/**
+	 * Raises $base to the power of $exp, but keep the sign.
+	 *
+	 * @param float $base The base number.
+	 * @param float $exp The exponent.
+	 * @return float $base^$exp, with original sign.
+	 */
+	private static function sign_pow( $base, $exp ) {
+		$sign = $base < 0 ? -1 : 1;
 		return $sign * pow( abs( $base ), $exp );
 	}
 }
