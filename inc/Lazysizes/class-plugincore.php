@@ -78,7 +78,13 @@ class PluginCore {
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
-				add_action( 'wp_head', array( $this, 'wp_head' ) );
+				add_action( 'wp_head', array( $this, 'wp_head_noscript' ) );
+			}
+
+			// Also add CSS to hide broken image icons when not adding src placeholder.
+			// If optimize scripts/styles is enabled, it is bundled instead.
+			if ( $this->settings['skip_src'] && ! $this->settings['optimized_scripts_styles'] ) {
+				add_action( 'wp_head', array( $this, 'wp_head_skip_src' ) );
 			}
 
 			// Enqueue lazysizes scripts and styles.
@@ -420,20 +426,25 @@ class PluginCore {
 
 	/**
 	 * Inject styling in head to hide lazyloaded images when JS is turned off.
-	 * Also add CSS to hide broken image icons when not adding src placeholder.
 	 *
-	 * @since 0.3.0
+	 * @since 1.3.0
 	 */
-	public function wp_head() {
+	public function wp_head_noscript() {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
+	}
 
-		if ( $this->settings['skip_src'] ) {
-			?>
-				<style>img.lazyload:not([src]) { visibility: hidden; }</style>
-			<?php
-		}
+	/**
+	 * Add CSS to hide broken image icons when not adding src placeholder.
+	 * Only used when optimize scripts/styles is disabled.
+	 *
+	 * @since 1.3.0
+	 */
+	public function wp_head_skip_src() {
+		?>
+			<style>img.lazyload:not([src]) { visibility: hidden; }</style>
+		<?php
 	}
 
 	/**
