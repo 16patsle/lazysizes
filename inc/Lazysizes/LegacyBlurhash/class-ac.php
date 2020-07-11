@@ -44,7 +44,12 @@ final class AC {
 	 * @return float $base^$exp, with original sign.
 	 */
 	private static function sign_pow( $base, $exp ) {
-		$sign = $base < 0 ? -1 : 1;
+		$sign = 0;
+		if ( $base < 0 ) {
+			$sign = -1;
+		} else {
+			$sign = 1;
+		}
 		return $sign * pow( abs( $base ), $exp );
 	}
 }
