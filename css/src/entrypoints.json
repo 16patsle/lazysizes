@@ -2,8 +2,16 @@
   "css/src/lazysizes.fadein.js",
   "css/src/lazysizes.fadeblurhash.js",
   "css/src/lazysizes.spinner.js",
+  "css/src/lazysizes.skipsrc.js",
   "css/src/lazysizes.fadein-fadeblurhash.js",
   "css/src/lazysizes.fadein-spinner.js",
+  "css/src/lazysizes.fadein-skipsrc.js",
   "css/src/lazysizes.fadeblurhash-spinner.js",
-  "css/src/lazysizes.fadein-fadeblurhash-spinner.js"
+  "css/src/lazysizes.fadeblurhash-skipsrc.js",
+  "css/src/lazysizes.spinner-skipsrc.js",
+  "css/src/lazysizes.fadein-fadeblurhash-spinner.js",
+  "css/src/lazysizes.fadein-fadeblurhash-skipsrc.js",
+  "css/src/lazysizes.fadein-spinner-skipsrc.js",
+  "css/src/lazysizes.fadeblurhash-spinner-skipsrc.js",
+  "css/src/lazysizes.fadein-fadeblurhash-spinner-skipsrc.js"
 ]

@@ -31,13 +31,14 @@ scriptCombinations.forEach(combination => {
 writeFileAsync('./js/src/entrypoints.json', JSON.stringify(scriptEntryPoints, null, 2));
 
 // Style combinations
-const styles = ['fadein', 'fadeblurhash', 'spinner'];
+const styles = ['fadein', 'fadeblurhash', 'spinner', 'skipsrc'];
 const m = styles.length;
 
 const styleCombinations = [
 	...getCombination(styles, m, 1),
 	...getCombination(styles, m, 2),
-	...getCombination(styles, m, 3)
+	...getCombination(styles, m, 3),
+	...getCombination(styles, m, 4)
 ];
 
 const styleEntryPoints = [];

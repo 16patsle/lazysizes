@@ -231,6 +231,11 @@ class PluginCore {
 				array_push( $styles, 'spinner' );
 			}
 
+			// Enqueue CSS to hide broken image icons when not adding src placeholder.
+			if ( $this->settings['skip_src'] ) {
+				array_push( $styles, 'skipsrc' );
+			}
+
 			$stylename = 'lazysizes.' . implode( '-', $styles );
 
 			wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
