@@ -64,7 +64,17 @@ function processImage(image) {
 		newImage.classList.add('blurhashing');
 		newImage.classList.remove('lazyload');
 		newImage.classList.remove('lazyloading');
+
+		// Cleanup attributes
 		newImage.removeAttribute('srcset');
+		newImage.removeAttribute('data-srcset');
+		newImage.removeAttribute('data-src');
+		newImage.removeAttribute('itemprop');
+		newImage.removeAttribute('id');
+		newImage.alt = '';
+
+		newImage.removeAttribute('data-aspectratio');
+		newImage.removeAttribute('data-blurhash');
 
 		if('loading' in newImage) {
 			newImage.loading = 'eager';
