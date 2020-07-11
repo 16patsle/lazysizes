@@ -10,15 +10,4 @@ final class DC {
         $rounded_b = Color::tosRGB($value[2]);
         return ($rounded_r << 16) + ($rounded_g << 8) + $rounded_b;
     }
-
-    public static function decode(int $value): array {
-        $r = $value >> 16;
-        $g = ($value >> 8) & 255;
-        $b = $value & 255;
-        return [
-            Color::toLinear($r),
-            Color::toLinear($g),
-            Color::toLinear($b)
-        ];
-    }
 }

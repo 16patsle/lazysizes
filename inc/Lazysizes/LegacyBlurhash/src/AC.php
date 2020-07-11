@@ -11,18 +11,6 @@ final class AC {
         return $quant_r * 19 * 19 + $quant_g * 19 + $quant_b;
     }
 
-    public static function decode(int $value, float $max_value): array {
-        $quant_r = floor($value / (19 * 19));
-        $quant_g = floor($value / 19) % 19;
-        $quant_b = $value % 19;
-
-        return [
-            static::signPow(($quant_r - 9) / 9, 2) * $max_value,
-            static::signPow(($quant_g - 9) / 9, 2) * $max_value,
-            static::signPow(($quant_b - 9) / 9, 2) * $max_value
-        ];
-    }
-
     private static function quantise(float $value): float {
         return floor(max(0, min(18, floor(static::signPow($value, 0.5) * 9 + 9.5))));
     }
