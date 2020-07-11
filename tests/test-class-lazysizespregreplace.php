@@ -552,7 +552,13 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 			dirname( __FILE__ )
 		);
 
-		$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
+			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		} else {
+			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
+			require_once dirname( __FILE__ ) . '/factory-attachment-upload.php';
+			$attachment_id = create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		}
 
 		$url = wp_get_attachment_url( $attachment_id );
 
@@ -581,7 +587,13 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 			dirname( __FILE__ )
 		);
 
-		$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
+			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		} else {
+			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
+			require_once dirname( __FILE__ ) . '/factory-attachment-upload.php';
+			$attachment_id = create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		}
 
 		$url = wp_get_attachment_url( $attachment_id );
 
