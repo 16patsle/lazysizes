@@ -1,2 +1,3 @@
 // This file is only used as a fake entrypoint for the css
-import './fadeblurhash.css';
+import './blurhash.css';
+import './skipsrc.css';

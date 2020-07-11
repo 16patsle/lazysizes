@@ -3,7 +3,7 @@
 	opacity: 0;
 }
 
-.lazyloaded {
+.lazyloaded, .blurhashed {
 	transition: opacity 0.3s;
 	opacity: 1;
 }
