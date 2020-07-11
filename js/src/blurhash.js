@@ -73,7 +73,7 @@ function processImage(image) {
 		const { direction } = getComputedStyle(image);
 		const alignSide = direction === 'ltr' ? 'left' : 'right';
 
-		newImage.style[alignSide] = 0;
+		newImage.classList.add(alignSide);
 		image.after(newImage);
 	} else {
 		image.classList.add('blurhash');
