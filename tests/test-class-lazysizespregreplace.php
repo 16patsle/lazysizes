@@ -560,14 +560,18 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 			$attachment_id = create_upload_object( __DIR__ . '/test-pineapple.jpg' );
 		}
 
-		$url = wp_get_attachment_url( $attachment_id );
+		$url      = wp_get_attachment_url( $attachment_id );
+		$blurhash = 'LSE#Hk_OrCF}kEx]n$aLr;odWXR,';
+
+		global $wp_version;
+		if ( version_compare( $wp_version, '4.5', '<' ) ) {
+			// WordPress 4.5 introduced improvements to Imagick resizing.
+			// Versions before that have slightly different thumbnail images, which gives different Blurhash strings.
+			$blurhash = 'LTE#Hk_OrCF#kEx[n~aer;odWXR,';
+		}
 
 		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
-		$expected = '<img data-aspectratio="300/400" data-blurhash="LSE#Hk_OrCF}kEx]n$aLr;odWXR," src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
-
-		if ( version_compare( phpversion(), '7.2', '<' ) ) {
-			$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
-		}
+		$expected = '<img data-aspectratio="300/400" data-blurhash="' . $blurhash . '" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
