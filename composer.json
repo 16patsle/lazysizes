@@ -23,5 +23,8 @@
         "humbug/php-scoper": "^0.13.2"
 	},
     "minimum-stability": "dev",
-    "prefer-stable": true
+	"prefer-stable": true,
+	"autoload": {
+		"psr-4": {"Lazysizes\\": "inc/Lazysizes"}
+	}
 }

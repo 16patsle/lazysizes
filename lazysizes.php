@@ -18,8 +18,11 @@ Text Domain: lazysizes
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
+// Load composer autoloader.
+if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
+	require __DIR__ . '/vendor/autoload.php';
+}
 // Init.
-require dirname( __FILE__ ) . '/inc/Lazysizes/class-plugincore.php';
 use Lazysizes\PluginCore;
 
 $lazysizes = new PluginCore( __FILE__ );
