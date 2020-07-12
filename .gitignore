@@ -1,2 +1,5 @@
 /node_modules
 /js/build
+/js/admin/build
+/css/build
+/vendor/

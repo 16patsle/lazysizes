@@ -1,0 +1,13 @@
+{
+	"presets": [
+	  [
+		"@babel/env",
+		{
+		  "targets": "extends @wordpress/browserslist-config",
+		  "useBuiltIns": "usage",
+		  "corejs": "3",
+		  "bugfixes": true
+		}
+	  ]
+	]
+  }

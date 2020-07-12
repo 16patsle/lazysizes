@@ -1,0 +1,17 @@
+[
+  "css/src/lazysizes.fadein.js",
+  "css/src/lazysizes.blurhash.js",
+  "css/src/lazysizes.spinner.js",
+  "css/src/lazysizes.skipsrc.js",
+  "css/src/lazysizes.fadein-blurhash.js",
+  "css/src/lazysizes.fadein-spinner.js",
+  "css/src/lazysizes.fadein-skipsrc.js",
+  "css/src/lazysizes.blurhash-spinner.js",
+  "css/src/lazysizes.blurhash-skipsrc.js",
+  "css/src/lazysizes.spinner-skipsrc.js",
+  "css/src/lazysizes.fadein-blurhash-spinner.js",
+  "css/src/lazysizes.fadein-blurhash-skipsrc.js",
+  "css/src/lazysizes.fadein-spinner-skipsrc.js",
+  "css/src/lazysizes.blurhash-spinner-skipsrc.js",
+  "css/src/lazysizes.fadein-blurhash-spinner-skipsrc.js"
+]

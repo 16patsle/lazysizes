@@ -25,15 +25,15 @@ class Settings {
 	 */
 	protected $defaults = array(
 		'general' => array(
-			'lazysizes_minimize_scripts'  => 1,
-			'lazysizes_optimized_scripts' => 1,
-			'lazysizes_thumbnails'        => 1,
-			'lazysizes_textwidgets'       => 1,
-			'lazysizes_avatars'           => 1,
-			'lazysizes_add_noscript'      => 1,
-			'lazysizes_load_extras'       => 1,
-			'lazysizes_excludeclasses'    => '',
-			'lazysizes_img'               => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+			'lazysizes_minimize_scripts'         => 1,
+			'lazysizes_optimized_scripts_styles' => 1,
+			'lazysizes_thumbnails'               => 1,
+			'lazysizes_textwidgets'              => 1,
+			'lazysizes_avatars'                  => 1,
+			'lazysizes_add_noscript'             => 1,
+			'lazysizes_load_extras'              => 1,
+			'lazysizes_excludeclasses'           => '',
+			'lazysizes_img'                      => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 		),
 	);
 
@@ -80,8 +80,8 @@ class Settings {
 				update_option( 'lazysizes_general', $general );
 			}
 			if ( version_compare( $dbver, '1.3.0', '<=' ) ) {
-				$general                                = get_option( 'lazysizes_general' );
-				$general['lazysizes_optimized_scripts'] = $this->defaults['general']['lazysizes_optimized_scripts'];
+				$general                                       = get_option( 'lazysizes_general' );
+				$general['lazysizes_optimized_scripts_styles'] = $this->defaults['general']['lazysizes_optimized_scripts_styles'];
 				update_option( 'lazysizes_general', $general );
 			}
 		}
@@ -206,9 +206,9 @@ class Settings {
 				<?php esc_html_e( 'Load minimized versions of javascript and css files.', 'lazysizes' ); ?>
 			</label>
 			<br />
-			<label for="lazysizes_optimized_scripts">
-				<input type='checkbox' id='lazysizes_optimized_scripts' name='lazysizes_general[lazysizes_optimized_scripts]' <?php $this->checked_r( $options, 'lazysizes_optimized_scripts', 1 ); ?> value="1">
-				<?php esc_html_e( 'Load custom lazysizes scripts optimized for performance.', 'lazysizes' ); ?>
+			<label for="lazysizes_optimized_scripts_styles">
+				<input type='checkbox' id='lazysizes_optimized_scripts_styles' name='lazysizes_general[lazysizes_optimized_scripts_styles]' <?php $this->checked_r( $options, 'lazysizes_optimized_scripts_styles', 1 ); ?> value="1">
+				<?php esc_html_e( 'Load custom lazysizes scripts and styles, optimized for performance.', 'lazysizes' ); ?>
 			</label>
 			<br />
 			<label for="lazysizes_footer">
@@ -320,7 +320,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_aspectratio' name='lazysizes_addons[lazysizes_aspectratio]' <?php $this->checked_r( $options, 'lazysizes_aspectratio', 1 ); ?> value="1">
 				<?php esc_html_e( 'Keep original aspect ratio before the object is loaded.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Currently this needs images to have a defined width and height. Make sure to set a size for the images in your posts.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Currently this needs images to either have a defined width or a defined height in the post content. For external images, both width and height are needed. Make sure to set a size for the images in your posts if you wish to use this.', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />
@@ -346,7 +346,41 @@ class Settings {
 				<p class="description">
 					<?php esc_html_e( 'Experimental. Does not add a placeholder image in the src attribute, allowing the browser to load and render the image progressively. Also adds a small amount of CSS to hide the broken image icon browsers may show when the src is missing.', 'lazysizes' ); ?>
 					<br>
-					<?php esc_html_e( 'Note: Not compatible with the fade effect.', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Note: Not compatible with the fade effect due to how browsers handle image loading.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
+			<label for="lazysizes_blurhash">
+				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> <?php
+				if ( version_compare( phpversion(), '7.2', '<' ) ) {
+					echo 'disabled';}
+				?>
+				 value="1">
+				<?php esc_html_e( 'Use Blurhash to generate blurry low-res placeholder images.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'Experimental. Requires PHP 7.2+. Currently only works on image attachments. Placeholders will need to be pregenerated, which can be done for each image in the Media Library. Images without a Blurhash string will show the regular blank placeholder.', 'lazysizes' ); ?>
+					<br>
+					<?php esc_html_e( 'Note: Limited compatibility with native loading and the fade in effect for images added through custom HTML or by some plugins.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
+			<label for="lazysizes_blurhash_onload">
+				<input type='checkbox' id='lazysizes_blurhash_onload' name='lazysizes_addons[lazysizes_blurhash_onload]' <?php $this->checked_r( $options, 'lazysizes_blurhash_onload', 1 ); ?> <?php
+				if ( version_compare( phpversion(), '7.2', '<' ) ) {
+					echo 'disabled';}
+				?>
+				 value="1">
+				<?php esc_html_e( 'When Blurhash is activated, generate missing Blurhash placeholders on page load.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'WARNING: Only use for debug and setup purposes. Generating Blurhash placeholders can be very computationally expensive, and will add several seconds to the page load time. After the first run, the placeholders will be saved, and will not need to be re-generated, so you can use this option to easily generate Blurhash placeholders for existing images.', 'lazysizes' ); ?>
+				</p>
+			</label>
+			<br />
+			<label for="lazysizes_blurhash_never_fancy">
+				<input type='checkbox' id='lazysizes_blurhash_never_fancy' name='lazysizes_addons[lazysizes_blurhash_never_fancy]' <?php $this->checked_r( $options, 'lazysizes_blurhash_never_fancy', 1 ); ?> value="1">
+				<?php esc_html_e( 'Never use the advanced Blurhash reveal effect, even when supported.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'The advanced Blurhash reveal effect creates an additional image element positioned under the regular image. This gives the best result in combination with the fade effect, but might not support all WordPress themes. Safeguards exist to prevent using the advanced effect when not supported, but in some cases problems may still occur. This setting lets you override the advanced reveal, and never use it.', 'lazysizes' ); ?>
 				</p>
 			</label>
 		</fieldset>

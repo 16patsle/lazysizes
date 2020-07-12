@@ -21,12 +21,6 @@ class PregReplace {
 	 */
 	protected $dir;
 	/**
-	 * The version of lazysizes (the script, not this plugin).
-	 *
-	 * @var string
-	 */
-	protected $lazysizes_ver = '4.1.5';
-	/**
 	 * The settings for this plugin.
 	 *
 	 * @var array
@@ -52,19 +46,18 @@ class PregReplace {
 	 * @param string   $content HTML content to transform.
 	 * @param string[] $tags Tags to look for in the content.
 	 * @param bool     $noscript If <noscript> fallbacks should be generated.
-	 * @param bool     $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function preg_replace_html( $content, $tags, $noscript = true, $skip_src = false ) {
+	public function preg_replace_html( $content, $tags, $noscript = true ) {
 		$newcontent = $content;
 
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
 			// Look for tag in content.
 			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
-				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript, $skip_src );
+				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript );
 			} else {
-				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, false, $skip_src );
+				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, false );
 			}
 			$newcontent = str_replace( $newcontent, $result, $newcontent );
 		}
@@ -79,10 +72,9 @@ class PregReplace {
 	 * @param string $content HTML content to transform.
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
-	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_picture_video_audio( $content, $tag, $noscript = true, $skip_src = false ) {
+	public function replace_picture_video_audio( $content, $tag, $noscript = true ) {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -107,7 +99,14 @@ class PregReplace {
 					$new_replace = $match;
 
 					// Set replace html and replace attr with data-attr.
-					$new_replace = $this->replace_attr( $new_replace, $tag, $skip_src );
+					$replace_attr_result = $this->replace_attr( $new_replace, $tag );
+					$new_replace         = $replace_attr_result[0];
+					$src_attr            = $replace_attr_result[1];
+
+					if ( $this->settings['blurhash'] && $src_attr !== false ) {
+						// Add blurhash attr.
+						$new_replace = $this->set_blurhash_attr( $new_replace, $src_attr, $tag );
+					}
 
 					// Add lazyload class.
 					$new_replace = $this->add_lazyload_class( $new_replace, $tag, $classes_r );
@@ -131,7 +130,7 @@ class PregReplace {
 					}
 
 					// Replace any img tags inside, needed for picture tags.
-					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true, $skip_src );
+					$new_replace = $this->replace_generic_tag( $new_replace, 'img', false, true );
 
 					if ( $noscript ) {
 						// And add the original in as <noscript>.
@@ -152,10 +151,9 @@ class PregReplace {
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @param bool   $inside_picture If tags inside picture tags should be transformed.
-	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false, $skip_src = false ) {
+	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false ) {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -178,7 +176,7 @@ class PregReplace {
 					continue;
 				}
 				// Replace attr, add class and similar.
-				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript, $skip_src );
+				$newcontent = $this->get_replace_markup( $newcontent, $match, $tag, $noscript );
 			}
 		}
 		return $newcontent;
@@ -191,10 +189,9 @@ class PregReplace {
 	 * @param string $match HTML content to transform.
 	 * @param string $tag Tag currently being processed.
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
-	 * @param bool   $skip_src If true, skip adding a placeholder src attribute.
 	 * @return string The new markup.
 	 */
-	public function get_replace_markup( $content, $match, $tag, $noscript = true, $skip_src = false ) {
+	public function get_replace_markup( $content, $match, $tag, $noscript = true ) {
 		$newcontent = $content;
 
 		// If it has assigned classes, extract them.
@@ -202,13 +199,20 @@ class PregReplace {
 		// But first, check that the tag doesn't have any excluded classes.
 		if ( count( array_intersect( $classes_r, $this->settings['excludeclasses'] ) ) === 0 ) {
 			// Set replace html and replace attr with data-attr.
-			$replace_markup = $this->replace_attr( $match, $tag, $skip_src );
+			$replace_attr_result = $this->replace_attr( $match, $tag );
+			$replace_markup      = $replace_attr_result[0];
+			$src_attr            = $replace_attr_result[1];
+
+			if ( $this->settings['blurhash'] && $src_attr !== false ) {
+				// Add blurhash attr.
+				$replace_markup = $this->set_blurhash_attr( $replace_markup, $src_attr, $tag );
+			}
 
 			// Add lazyload class.
 			$replace_markup = $this->add_lazyload_class( $replace_markup, $tag, $classes_r );
 
 			// Set aspect ratio.
-			$replace_markup = $this->set_aspect_ratio( $replace_markup );
+			$replace_markup = $this->set_aspect_ratio( $replace_markup, $src_attr, $tag );
 
 			if ( $noscript ) {
 				// And add the original in as <noscript>.
@@ -276,15 +280,15 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string      $replace_markup The HTML markup being processed.
 	 * @param string|bool $tag The tag type used to determine the src attr, or false.
-	 * @param bool        $skip_src If true, skip adding a placeholder src attribute.
-	 * @return string The HTML markup with attributes replaced.
+	 * @return (string|false)[] The HTML markup with attributes replaced, and the contents of the src, or false.
 	 */
-	public function replace_attr( $replace_markup, $tag = false, $skip_src = false ) {
+	public function replace_attr( $replace_markup, $tag = false ) {
 		if ( ! $tag ) {
 			return $replace_markup;
 		}
 
-		$had_src = preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup );
+		$src_attr = array();
+		$had_src  = preg_match( sprintf( '/<%s[^>]*[\s]src="(.*?(?<!\\\\))"/', $tag ), $replace_markup, $src_attr );
 
 		if ( 'source' === $tag ) {
 			$attrs = array( 'poster', 'srcset' );
@@ -302,12 +306,12 @@ class PregReplace {
 		}
 
 		// If there is no src attribute (i.e. because we made it into data-src) and the element previously had one, we add a placeholder.
-		if ( ! $skip_src && $this->get_src_attr( $tag ) !== '' && $had_src && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
+		if ( ! $this->settings['skip_src'] && $this->get_src_attr( $tag ) !== '' && $had_src === 1 && ! preg_match( sprintf( '/<%s[^>]*[\s]src=/', $tag ), $replace_markup ) ) {
 			// And add in a replacement src attribute if necessary.
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . $this->get_src_attr( $tag ), $replace_markup );
 		}
 
-		return $replace_markup;
+		return array( $replace_markup, $had_src === 1 ? $src_attr[1] : false );
 	}
 
 	/**
@@ -375,9 +379,11 @@ class PregReplace {
 	 *
 	 * @since 1.0.0
 	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string $src_attr The contents of the src attribute.
+	 * @param string $tag The current tag type being processed.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
-	public function set_aspect_ratio( $replace_markup ) {
+	public function set_aspect_ratio( $replace_markup, $src_attr, $tag ) {
 		// Extract width.
 		preg_match( '/width="([^"]*)"/i', $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
@@ -386,9 +392,32 @@ class PregReplace {
 		preg_match( '/height="([^"]*)"/i', $replace_markup, $match_height );
 		$height = ! empty( $match_height ) ? $match_height[1] : '';
 
+		// Try figuring out aspect ratio from attachment metadata.
+		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
+			if ( ! function_exists( 'attachment_url_to_postid' ) ) {
+				// WordPress version 3.9 does not support attachment_url_to_postid, load custom implementation.
+				require_once dirname( __FILE__ ) . '/attachment-url-to-postid.php';
+			}
+
+			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
+
+			// Check if src is a local image attachment.
+			if ( $metadata !== false && array_key_exists( 'sizes', $metadata ) ) {
+				$width  = $metadata['width'];
+				$height = $metadata['height'];
+
+				foreach ( $metadata['sizes'] as $size_name => $size ) {
+					if ( strpos( $src_attr, $size['file'] ) !== false ) {
+						$width  = $size['width'];
+						$height = $size['height'];
+					}
+				}
+			}
+		}
+
 		// If both width and height is set, add data-aspectratio.
 		if ( ! empty( $width ) && ! empty( $height ) ) {
-			$replace_markup = preg_replace( '/ width="/', sprintf( ' data-aspectratio="%1$s/%2$s" width="', absint( $width ), absint( $height ) ), $replace_markup );
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-aspectratio="%1$s/%2$s"', absint( $width ), absint( $height ) ), $replace_markup );
 		}
 		return $replace_markup;
 	}
@@ -415,6 +444,33 @@ class PregReplace {
 	 */
 	public function escape_for_regex( $string ) {
 		return preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $string );
+	}
+
+	/**
+	 * Sets the data-blurhash attribute
+	 *
+	 * @since 1.3.0
+	 * @param string      $replace_markup The HTML markup being processed.
+	 * @param string      $src_attr The contents of the src attribute.
+	 * @param string|bool $tag The tag type used to determine the src attr, or false.
+	 * @return string The HTML markup with blurhash attribute added.
+	 */
+	public function set_blurhash_attr( $replace_markup, $src_attr, $tag = false ) {
+		if ( ! $tag ) {
+			return $replace_markup;
+		}
+
+		// Create blurhash version.
+		require_once dirname( __FILE__ ) . '/class-blurhash.php';
+		$blurhash = Blurhash::get_blurhash( $src_attr, $this->settings['blurhash_onload'] );
+
+		// Add blurhash if available.
+		if ( $blurhash !== false ) {
+			// And add in a data attribute with blurhash.
+			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . sprintf( ' data-blurhash="%s"', htmlspecialchars( $blurhash ) ), $replace_markup );
+		}
+
+		return $replace_markup;
 	}
 
 }

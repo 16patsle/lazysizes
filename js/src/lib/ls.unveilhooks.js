@@ -79,7 +79,7 @@ export default function (lazySizes) {
 						} else {
 							requestAnimationFrame(function () {
 								target.setAttribute('data-expand', '-10');
-								lazySizes.aC(target, lazySizes.cfg.lazyClass);
+								target.classList.add(lazySizes.cfg.lazyClass);
 							});
 						}
 					}

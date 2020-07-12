@@ -39,7 +39,7 @@ class PluginCore {
 	/**
 	 * The preg_replace class.
 	 *
-	 * @var LazysizesSettings
+	 * @var PregReplace
 	 */
 	protected $replace_class;
 
@@ -50,6 +50,15 @@ class PluginCore {
 	 */
 	public function __construct( $pluginfile ) {
 
+		// Load composer autoloader.
+		if ( is_readable( dirname( $pluginfile ) . '/vendor/autoload.php' ) ) {
+			require dirname( $pluginfile ) . '/vendor/autoload.php';
+		}
+
+		// Store our settings in memory to reduce mysql calls.
+		$this->settings = $this->get_settings();
+		$this->dir      = plugin_dir_url( $pluginfile );
+
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			require dirname( __FILE__ ) . '/class-settings.php';
@@ -58,18 +67,24 @@ class PluginCore {
 			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+
+			if ( $this->settings['blurhash'] ) {
+				// Enqueue blurhash lazysizes admin scripts and styles.
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 15 );
+			}
 		} else {
-
-			// Store our settings in memory to reduce mysql calls.
-			$this->settings = $this->get_settings();
-			$this->dir      = plugin_dir_url( $pluginfile );
-
 			require dirname( __FILE__ ) . '/class-pregreplace.php';
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
-				add_action( 'wp_head', array( $this, 'wp_head' ) );
+				add_action( 'wp_head', array( $this, 'wp_head_noscript' ) );
+			}
+
+			// Also add CSS to hide broken image icons when not adding src placeholder.
+			// If optimize scripts/styles is enabled, it is bundled instead.
+			if ( $this->settings['skip_src'] && ! $this->settings['optimized_scripts_styles'] ) {
+				add_action( 'wp_head', array( $this, 'wp_head_skip_src' ) );
 			}
 
 			// Enqueue lazysizes scripts and styles.
@@ -103,6 +118,20 @@ class PluginCore {
 			if ( $this->settings['attachment_image'] ) {
 				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
 			}
+
+			// Generate blurhash for new images.
+			// Should only fire in admin, but doesn't hurt to add it otherwise.
+			if ( $this->settings['blurhash'] ) {
+				require_once dirname( __FILE__ ) . '/class-blurhash.php';
+				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ), 10, 2 );
+				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
+
+				add_action( 'wp_ajax_lazysizes_blurhash', array( $this, 'ajax_blurhash_handler' ) );
+
+				if ( $this->settings['blurhash_never_fancy'] ) {
+					add_filter( 'body_class', array( $this, 'body_class_blurhash_never_fancy' ) );
+				}
+			}
 		}
 	}
 
@@ -131,7 +160,7 @@ class PluginCore {
 		// Set the array of options.
 		$settings_arr = array(
 			'minimize_scripts',
-			'optimized_scripts',
+			'optimized_scripts_styles',
 			'footer',
 			'load_extras',
 			'thumbnails',
@@ -147,6 +176,9 @@ class PluginCore {
 			'acf_content',
 			'native_lazy',
 			'skip_src',
+			'blurhash',
+			'blurhash_onload',
+			'blurhash_never_fancy',
 		);
 
 		// Start fresh.
@@ -185,20 +217,37 @@ class PluginCore {
 		$footer = $this->settings['footer'];
 
 		// Set the URLs.
-		$style_url_pre = $this->dir . 'css/lazysizes';
+		$style_url_pre  = $this->dir . 'css/build/';
 		$script_url_pre = $this->dir . 'js/';
 
-		// Enqueue fade-in if enabled.
-		if ( $this->settings['fade_in'] ) {
-			wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . '.fadein' . $min . '.css', false, $this->lazysizes_ver );
-		}
-		// Enqueue spinner if enabled.
-		if ( $this->settings['spinner'] ) {
-			wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . '.spinner' . $min . '.css', false, $this->lazysizes_ver );
-		}
+		if ( $this->settings['optimized_scripts_styles'] ) {
+			$styles = array();
 
-		if ( $this->settings['optimized_scripts'] ) {
-			$scripts = [];
+			// Enqueue fade-in if enabled.
+			if ( $this->settings['fade_in'] ) {
+				array_push( $styles, 'fadein' );
+			}
+
+			// Enqueue blurhash if enabled.
+			if ( $this->settings['blurhash'] ) {
+				array_push( $styles, 'blurhash' );
+			}
+
+			// Enqueue spinner if enabled.
+			if ( $this->settings['spinner'] ) {
+				array_push( $styles, 'spinner' );
+			}
+
+			// Enqueue CSS to hide broken image icons when not adding src placeholder.
+			if ( $this->settings['skip_src'] ) {
+				array_push( $styles, 'skipsrc' );
+			}
+
+			$stylename = 'lazysizes.' . implode( '-', $styles );
+
+			wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+
+			$scripts = array();
 
 			// Enqueue extras enabled.
 			if ( $this->settings['load_extras'] ) {
@@ -216,10 +265,27 @@ class PluginCore {
 			if ( $this->settings['native_lazy'] ) {
 				array_push( $scripts, 'nativeloading' );}
 
-			$scriptname = count( $scripts > 0 ) ? 'lazysizes.' . implode( '-', $scripts ) : 'lazysizes';
+			// Enqueue Blurhash.
+			if ( $this->settings['blurhash'] ) {
+				array_push( $scripts, 'blurhash' );}
+
+			$scriptname = count( $scripts ) > 0 ? 'lazysizes.' . implode( '-', $scripts ) : 'lazysizes';
 
 			wp_enqueue_script( 'lazysizes', $script_url_pre . 'build/' . $scriptname . $min . '.js', false, $this->lazysizes_ver, $footer );
 		} else {
+			// Enqueue fade-in if enabled.
+			if ( $this->settings['fade_in'] ) {
+				wp_enqueue_style( 'lazysizes-fadein-style', $style_url_pre . 'lazysizes.fadein' . $min . '.css', false, $this->lazysizes_ver );
+				if ( $this->settings['blurhash'] ) {
+					wp_enqueue_style( 'lazysizes-fadein-blurhash-style', $style_url_pre . 'lazysizes.fadeblurhash' . $min . '.css', false, $this->lazysizes_ver );
+				}
+			}
+
+			// Enqueue spinner if enabled.
+			if ( $this->settings['spinner'] ) {
+				wp_enqueue_style( 'lazysizes-spinner-style', $style_url_pre . 'lazysizes.spinner' . $min . '.css', false, $this->lazysizes_ver );
+			}
+
 			// Enqueue auto load if enabled.
 			if ( $this->settings['auto_load'] ) {
 				wp_enqueue_script( 'lazysizes-auto', $script_url_pre . '.auto' . $min . '.js', false, $this->lazysizes_ver, $footer );
@@ -242,25 +308,165 @@ class PluginCore {
 				wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . 'ls.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 				wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . 'ls.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
 			}
+
+			// Enqueue Blurhash.
+			if ( $this->settings['blurhash'] ) {
+				wp_enqueue_script( 'lazysizes-blurhash', $script_url_pre . 'build/lazysizes.blurhash' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+			}
+		}
+	}
+
+	/**
+	 * Load all the lazysizes scripts for the admin media pages
+	 *
+	 * @since 1.3.0
+	 * @param string $admin_page The current admin page.
+	 */
+	public function load_scripts_admin_media( $admin_page ) {
+		$current_screen = get_current_screen();
+
+		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) || version_compare( phpversion(), '7.2', '<' ) ) {
+			return;
+		}
+
+		// Use minified script unless SCRIPT_DEBUG is enabled.
+		$min = defined( SCRIPT_DEBUG ) && SCRIPT_DEBUG === true ? '' : '.min';
+
+		// Enqueue attachment details extension for Blurhash.
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );
+
+		wp_localize_script(
+			'lazysizes-attachment-details',
+			'lazysizesStrings',
+			array(
+				'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
+				'generate'     => esc_html__( 'Generate', 'lazysizes' ),
+				'delete'       => esc_html__( 'Delete', 'lazysizes' ),
+				'current'      => esc_html__( 'Current value: ', 'lazysizes' ),
+				'description'  => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' ),
+				'error'        => esc_html__( 'An error occurred.', 'lazysizes' ),
+			)
+		);
+	}
+
+	/**
+	 * Add Blurhash string to attachment meta exposed to JS.
+	 *
+	 * @since 1.3.0
+	 * @param array   $response Array of attachment details.
+	 * @param WP_Post $attachment Attachment object.
+	 * @return array Array of modified attachment details.
+	 */
+	public function prepare_attachment_blurhash( $response, $attachment ) {
+		if ( ! isset( $attachment->ID ) ) {
+			return $response;
+		}
+
+		$blurhash                      = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
+		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
+		$response['lazysizesError']    = false;
+		$response['lazysizesLoading']  = false;
+
+		// Add nonces.
+		$response['nonces']['lazysizes'] = array(
+			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
+			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
+		);
+
+		return $response;
+	}
+
+	/**
+	 * AJAX handler to generate or delete blurhash for an image.
+	 *
+	 * @since 1.3.0
+	 */
+	public function ajax_blurhash_handler() {
+		$action = '';
+		if ( ! isset( $_REQUEST['nonce'] ) || ! isset( $_REQUEST['mode'] ) ) {
+			wp_send_json_error( new \WP_Error( '401', __( 'Missing nonce or action. If you see this, something is wrong.', 'lazysizes' ) ) );
+		};
+
+		$nonce                = sanitize_key( wp_unslash( $_REQUEST['nonce'] ) );
+		$nonce_valid_generate = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-generate' );
+		$nonce_valid_delete   = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-delete' );
+
+		if ( ! $nonce_valid_generate && ! $nonce_valid_delete ) {
+			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
+		}
+
+		$action = sanitize_key( wp_unslash( $_REQUEST['mode'] ) );
+
+		$attachment_id = '';
+
+		if ( ! isset( $_REQUEST['attachmentId'] ) ) {
+			wp_send_json_error( new \WP_Error( '400', __( 'Missing attachment ID. If you see this, something is wrong.', 'lazysizes' ) ) );
+		} else {
+			$attachment_id = sanitize_key( wp_unslash( $_REQUEST['attachmentId'] ) );
+		}
+
+		if ( $action === 'generate' && $nonce_valid_generate ) {
+			require_once dirname( __FILE__ ) . '/class-blurhash.php';
+			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
+			if ( empty( $blurhash ) ) {
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
+			} else {
+				wp_send_json(
+					array(
+						'success'      => true,
+						'blurhash'     => $blurhash,
+						'attachmentId' => $attachment_id,
+					)
+				);
+			}
+		} elseif ( $action === 'delete' && $nonce_valid_delete ) {
+			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
+			if ( ! $result ) {
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
+			} else {
+				wp_send_json(
+					array(
+						'success'      => $result,
+						'attachmentId' => $attachment_id,
+					)
+				);
+			}
+		} else {
+			wp_send_json_error( new \WP_Error( '400', __( 'Invalid nonce or action. If you see this, something is wrong.', 'lazysizes' ) ) );
 		}
 	}
 
 	/**
 	 * Inject styling in head to hide lazyloaded images when JS is turned off.
-	 * Also add CSS to hide broken image icons when not adding src placeholder.
 	 *
-	 * @since 0.3.0
+	 * @since 1.3.0
 	 */
-	public function wp_head() {
+	public function wp_head_noscript() {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
+	}
 
-		if ( $this->settings['skip_src'] ) {
-			?>
-				<style>img.lazyload:not([src]) { visibility: hidden; }</style>
-			<?php
-		}
+	/**
+	 * Add CSS to hide broken image icons when not adding src placeholder.
+	 * Only used when optimize scripts/styles is disabled.
+	 *
+	 * @since 1.3.0
+	 */
+	public function wp_head_skip_src() {
+		?>
+			<style>img.lazyload:not([src]) { visibility: hidden; }</style>
+		<?php
+	}
+
+	/**
+	 * Add body class blurhash-no-fancy.
+	 * This is used to disable the advanced/fancy blurhash reveal effect.
+	 *
+	 * @since 1.3.0
+	 */
+	public function body_class_blurhash_never_fancy( $classes ) {
+		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
 	}
 
 	/**
@@ -328,10 +534,10 @@ class PluginCore {
 			$newcontent = $content;
 			// If enabled, replace 'src' with 'data-src' on both images and extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'], $this->settings['skip_src'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
 			} else {
 				// Replace 'src' with 'data-src' on images.
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'], $this->settings['skip_src'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {

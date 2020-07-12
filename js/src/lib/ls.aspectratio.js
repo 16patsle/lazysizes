@@ -5,7 +5,7 @@ export default function (lazySizes) {
 
 	var forEach = Array.prototype.forEach;
 
-	var imageRatio, extend$, $;
+	var imageRatio;
 
 	var regPicture = /^picture$/i;
 	var aspectRatioAttr = 'data-aspectratio';
@@ -24,8 +24,6 @@ export default function (lazySizes) {
 		return matchesMedia(media);
 	};
 
-	var addClass = lazySizes.aC;
-	var removeClass = lazySizes.rC;
 	var lazySizesConfig = lazySizes.cfg;
 
 	function AspectRatio() {
@@ -146,7 +144,7 @@ export default function (lazySizes) {
 			var height = img.offsetHeight;
 
 			if (!notNew) {
-				addClass(img, 'lazyaspectratio');
+				img.classList.add('lazyaspectratio');
 			}
 
 			if (width < 36 && height <= 0) {
@@ -170,29 +168,12 @@ export default function (lazySizes) {
 			}
 		},
 		removeAspectRatio: function (img) {
-			removeClass(img, 'lazyaspectratio');
+			img.classList.remove('lazyaspectratio');
 			img.style.height = '';
 			img.style.width = '';
 			img.removeAttribute(aspectRatioAttr);
 		},
 	};
-
-	extend$ = function () {
-		$ = window.jQuery || window.Zepto || window.shoestring || window.$;
-		if ($ && $.fn && !$.fn.imageRatio && $.fn.filter && $.fn.add && $.fn.find) {
-			$.fn.imageRatio = function () {
-				imageRatio.processImages(
-					this.find(aspectRatioSel).add(this.filter(aspectRatioSel))
-				);
-				return this;
-			};
-		} else {
-			$ = false;
-		}
-	};
-
-	extend$();
-	setTimeout(extend$);
 
 	imageRatio = new AspectRatio();
 

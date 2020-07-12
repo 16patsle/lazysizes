@@ -59,6 +59,9 @@ This plugin is not affiliated with the lazysizes project. I got permission by aF
 
 ### 1.3.0
 
+- Add support for generating low-res placeholder images using [Blurhash](https://blurha.sh/) (PHP 7.2+), which stores the placeholder as a short text string. Computing this string does not happen on page load, as it's rather expensive, but when the blurhash placeholder option is enabled it can be controlled individually for each attachment, and new attachments will have a placeholder generated automatically.
+- Add custom lazysizes script and styles feature, which uses scripts and styles optimized for size and fewer requests.
+- Improve aspectratio calculation. Local images no longer need both width and height set, only one of them, since the aspect ratio can be calculated based on attachment metadata.
 - Various performance tweaks.
 - Add experimental option for skipping adding a src attribute to images, and letting the browser load the image progressively instead.
 - Upgrade lazysizes library to 5.2.2.

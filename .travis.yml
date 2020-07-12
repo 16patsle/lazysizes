@@ -45,7 +45,7 @@ jobs:
       env: WP_VERSION=trunk
       dist: xenial
       name: PHPUnit tests (PHP 5.6, WP trunk)
-    - php: 5.6
+    - php: 7.2
       env: WP_TRAVISCI=phpcs
       dist: precise
       name: PHP CodeSniffer
@@ -62,12 +62,12 @@ before_script:
     if [[ ! -z "$WP_VERSION" ]] ; then
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
       composer global require "phpunit/phpunit=4.8.*|5.7.*"
+      composer install --ignore-platform-reqs
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs phpcompatibility/php-compatibility phpcompatibility/phpcompatibility-paragonie phpcompatibility/phpcompatibility-wp
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility/php-compatibility,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp
-      phpcs --config-set ignore_warnings_on_exit 1
+      composer install
+      vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
     fi
 
 script:
@@ -78,5 +78,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
+      vendor/bin/phpcs
     fi

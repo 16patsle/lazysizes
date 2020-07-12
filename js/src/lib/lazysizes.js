@@ -1,3 +1,21 @@
+// CustomEvent polyfill for IE.
+// Based on https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+if (typeof window.CustomEvent !== 'function') {
+	function CustomEvent(event, params) {
+		params = params || { bubbles: false, cancelable: false, detail: null };
+		var evt = document.createEvent('CustomEvent');
+		evt.initCustomEvent(
+			event,
+			params.bubbles,
+			params.cancelable,
+			params.detail
+		);
+		return evt;
+	}
+
+	window.CustomEvent = CustomEvent;
+}
+
 var factory = function () {
 	// Pass in the windoe Date function also for SSR because the Date class can be lost
 	/*jshint eqnull:true */
@@ -49,21 +67,11 @@ var factory = function () {
 
 	var docElem = document.documentElement;
 
-	var supportPicture = window.HTMLPictureElement;
-
-	var _addEventListener = 'addEventListener';
-
-	var _getAttribute = 'getAttribute';
-
 	/**
 	 * Update to bind to window because 'this' becomes null during SSR
 	 * builds.
 	 */
-	var addEventListener = window[_addEventListener].bind(window);
-
-	var setTimeout = window.setTimeout;
-
-	var requestAnimationFrame = window.requestAnimationFrame || setTimeout;
+	var addEventListener = window.addEventListener.bind(window);
 
 	var requestIdleCallback = window.requestIdleCallback;
 
@@ -71,41 +79,10 @@ var factory = function () {
 
 	var loadEvents = ['load', 'error', 'lazyincluded', '_lazyloaded'];
 
-	var regClassCache = {};
-
 	var forEach = Array.prototype.forEach;
 
-	var hasClass = function (ele, cls) {
-		if (!regClassCache[cls]) {
-			regClassCache[cls] = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-		}
-		return (
-			regClassCache[cls].test(ele[_getAttribute]('class') || '') &&
-			regClassCache[cls]
-		);
-	};
-
-	var addClass = function (ele, cls) {
-		if (!hasClass(ele, cls)) {
-			ele.setAttribute(
-				'class',
-				(ele[_getAttribute]('class') || '').trim() + ' ' + cls
-			);
-		}
-	};
-
-	var removeClass = function (ele, cls) {
-		var reg;
-		if ((reg = hasClass(ele, cls))) {
-			ele.setAttribute(
-				'class',
-				(ele[_getAttribute]('class') || '').replace(reg, ' ')
-			);
-		}
-	};
-
 	var addRemoveLoadEvents = function (dom, fn, add) {
-		var action = add ? _addEventListener : 'removeEventListener';
+		var action = add ? 'addEventListener' : 'removeEventListener';
 		if (add) {
 			addRemoveLoadEvents(dom, fn);
 		}
@@ -115,17 +92,17 @@ var factory = function () {
 	};
 
 	var triggerEvent = function (elem, name, detail, noBubbles, noCancelable) {
-		var event = document.createEvent('Event');
-
 		if (!detail) {
 			detail = {};
 		}
 
 		detail.instance = lazysizes;
 
-		event.initEvent(name, !noBubbles, !noCancelable);
-
-		event.detail = detail;
+		var event = new CustomEvent(name, {
+			detail: detail,
+			bubbles: !noBubbles,
+			cancelable: !noCancelable,
+		});
 
 		elem.dispatchEvent(event);
 		return event;
@@ -133,8 +110,8 @@ var factory = function () {
 
 	var updatePolyfill = function (el, full) {
 		var polyfill;
-		if (!supportPicture && (polyfill = window.picturefill || lazySizesCfg.pf)) {
-			if (full && full.src && !el[_getAttribute]('srcset')) {
+		if (!window.HTMLPictureElement && (polyfill = window.picturefill || lazySizesCfg.pf)) {
+			if (full && full.src && !el.getAttribute('srcset')) {
 				el.setAttribute('srcset', full.src);
 			}
 			polyfill({ reevaluate: true, elements: [el] });
@@ -395,7 +372,7 @@ var factory = function () {
 					}
 
 					if (
-						!(elemExpandVal = lazyloadElems[i][_getAttribute]('data-expand')) ||
+						!(elemExpandVal = lazyloadElems[i].getAttribute('data-expand')) ||
 						!(elemExpand = elemExpandVal * 1)
 					) {
 						elemExpand = currentExpand;
@@ -472,7 +449,7 @@ var factory = function () {
 									eLright ||
 									eLleft ||
 									eLtop ||
-									lazyloadElems[i][_getAttribute](lazySizesCfg.sizesAttr) !=
+									lazyloadElems[i].getAttribute(lazySizesCfg.sizesAttr) !=
 										'auto')))
 					) {
 						autoLoadElem = preloadElems[0] || lazyloadElems[i];
@@ -496,8 +473,8 @@ var factory = function () {
 			}
 
 			resetPreloading(e);
-			addClass(elem, lazySizesCfg.loadedClass);
-			removeClass(elem, lazySizesCfg.loadingClass);
+			elem.classList.add(lazySizesCfg.loadedClass);
+			elem.classList.remove(lazySizesCfg.loadingClass);
 			addRemoveLoadEvents(elem, rafSwitchLoadingClass);
 			triggerEvent(elem, 'lazyloaded');
 		};
@@ -517,13 +494,12 @@ var factory = function () {
 		var handleSources = function (source) {
 			var customMedia;
 
-			var sourceSrcset = source[_getAttribute](lazySizesCfg.srcsetAttr);
+			var sourceSrcset = source.getAttribute(lazySizesCfg.srcsetAttr);
 
 			if (
 				(customMedia =
 					lazySizesCfg.customMedia[
-						source[_getAttribute]('data-media') ||
-							source[_getAttribute]('media')
+						source.getAttribute('data-media') || source.getAttribute('media')
 					])
 			) {
 				source.setAttribute('media', customMedia);
@@ -543,14 +519,14 @@ var factory = function () {
 			) {
 				if (sizes) {
 					if (isAuto) {
-						addClass(elem, lazySizesCfg.autosizesClass);
+						elem.classList.add(lazySizesCfg.autosizesClass);
 					} else {
 						elem.setAttribute('sizes', sizes);
 					}
 				}
 
-				srcset = elem[_getAttribute](lazySizesCfg.srcsetAttr);
-				src = elem[_getAttribute](lazySizesCfg.srcAttr);
+				srcset = elem.getAttribute(lazySizesCfg.srcsetAttr);
+				src = elem.getAttribute(lazySizesCfg.srcAttr);
 
 				if (isImg) {
 					parent = elem.parentNode;
@@ -562,7 +538,7 @@ var factory = function () {
 
 				event = { target: elem };
 
-				addClass(elem, lazySizesCfg.loadingClass);
+				elem.classList.add(lazySizesCfg.loadingClass);
 
 				if (firesLoad) {
 					clearTimeout(resetPreloadingTimer);
@@ -592,7 +568,7 @@ var factory = function () {
 			if (elem._lazyRace) {
 				delete elem._lazyRace;
 			}
-			removeClass(elem, lazySizesCfg.lazyClass);
+			elem.classList.remove(lazySizesCfg.lazyClass);
 
 			rAF(function () {
 				// Part of this can be removed as soon as this fix is older: https://bugs.chromium.org/p/chromium/issues/detail?id=7731 (2015)
@@ -600,7 +576,7 @@ var factory = function () {
 
 				if (!firesLoad || isLoaded) {
 					if (isLoaded) {
-						addClass(elem, 'ls-is-cached');
+						elem.classList.add('ls-is-cached');
 					}
 					switchLoadingClass(event);
 					elem._lazyCache = true;
@@ -627,17 +603,17 @@ var factory = function () {
 			//allow using sizes="auto", but don't use. it's invalid. Use data-sizes="auto" or a valid value for sizes instead (i.e.: sizes="80vw")
 			var sizes =
 				isImg &&
-				(elem[_getAttribute](lazySizesCfg.sizesAttr) ||
-					elem[_getAttribute]('sizes'));
+				(elem.getAttribute(lazySizesCfg.sizesAttr) ||
+					elem.getAttribute('sizes'));
 			var isAuto = sizes == 'auto';
 
 			if (
 				(isAuto || !isCompleted) &&
 				isImg &&
-				(elem[_getAttribute]('src') || elem.srcset) &&
+				(elem.getAttribute('src') || elem.srcset) &&
 				!elem.complete &&
-				!hasClass(elem, lazySizesCfg.errorClass) &&
-				hasClass(elem, lazySizesCfg.lazyClass)
+				!elem.classList.contains(lazySizesCfg.errorClass) &&
+				elem.classList.contains(lazySizesCfg.lazyClass)
 			) {
 				return;
 			}
@@ -723,18 +699,6 @@ var factory = function () {
 						subtree: true,
 						attributes: true,
 					});
-				} else {
-					docElem[_addEventListener](
-						'DOMNodeInserted',
-						throttledCheckElements,
-						true
-					);
-					docElem[_addEventListener](
-						'DOMAttrModified',
-						throttledCheckElements,
-						true
-					);
-					setInterval(throttledCheckElements, 999);
 				}
 
 				addEventListener('hashchange', throttledCheckElements, true);
@@ -748,17 +712,14 @@ var factory = function () {
 					'transitionend',
 					'animationend',
 				].forEach(function (name) {
-					document[_addEventListener](name, throttledCheckElements, true);
+					document.addEventListener(name, throttledCheckElements, true);
 				});
 
 				if (/d$|^c/.test(document.readyState)) {
 					onload();
 				} else {
 					addEventListener('load', onload);
-					document[_addEventListener](
-						'DOMContentLoaded',
-						throttledCheckElements
-					);
+					document.addEventListener('DOMContentLoaded', throttledCheckElements);
 					setTimeout(onload, 20000);
 				}
 
@@ -863,9 +824,6 @@ var factory = function () {
 		loader: loader,
 		init: init,
 		uP: updatePolyfill,
-		aC: addClass,
-		rC: removeClass,
-		hC: hasClass,
 		fire: triggerEvent,
 		gW: getWidth,
 		rAF: rAF,

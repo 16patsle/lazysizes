@@ -1,6 +1,4 @@
 export default function (lazySizes) {
-	var imgSupport = 'loading' in HTMLImageElement.prototype;
-	var iframeSupport = 'loading' in HTMLIFrameElement.prototype;
 	var isConfigSet = false;
 	var oldPrematureUnveil = lazySizes.prematureUnveil;
 	var cfg = lazySizes.cfg;
@@ -22,7 +20,7 @@ export default function (lazySizes) {
 	if (
 		!window.addEventListener ||
 		!window.MutationObserver ||
-		(!imgSupport && !iframeSupport)
+		(!'loading' in HTMLImageElement.prototype && !'loading' in HTMLIFrameElement.prototype)
 	) {
 		return;
 	}
@@ -64,7 +62,7 @@ export default function (lazySizes) {
 		}
 		isConfigSet = true;
 
-		if (imgSupport && iframeSupport && cfg.nativeLoading.disableListeners) {
+		if ('loading' in HTMLImageElement.prototype && 'loading' in HTMLIFrameElement.prototype && cfg.nativeLoading.disableListeners) {
 			if (cfg.nativeLoading.disableListeners === true) {
 				cfg.nativeLoading.setLoadingAttribute = true;
 			}

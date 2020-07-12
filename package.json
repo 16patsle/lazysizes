@@ -8,10 +8,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-		"build": "rollup --config",
-		"build-prepare": "rollup --config rollup.prepare.config.js",
-		"format-js-src": "prettier --write \"js/src/**/*.js\"",
-		"generate-combination-src": "node scripts/generateSrc"
+    "build": "rollup --config",
+    "dev": "rollup --config --watch",
+    "build-prepare": "rollup --config rollup.prepare.config.js",
+    "format-js-src": "prettier --write \"js/src/**/*.js\"",
+    "generate-combination-src": "node scripts/generateSrc"
   },
   "repository": {
     "type": "git",
@@ -36,16 +37,30 @@
   },
   "homepage": "https://github.com/16patsle/lazysizes#readme",
   "dependencies": {
+    "core-js": "^3.6.5",
+    "blurhash": "^1.1.3",
     "lazysizes": "^5.2.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@rollup/plugin-babel": "^5.0.4",
+    "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-legacy": "^2.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "@wordpress/browserslist-config": "^2.7.0",
+    "autoprefixer": "^9.8.4",
+    "browserslist": "^4.13.0",
+    "postcss-assets": "^5.0.0",
     "prettier": "2.0.5",
     "rollup": "^2.11.2",
-    "rollup-plugin-terser": "^6.1.0"
-	},
-	"prettier": {
-		"singleQuote": true
-	}
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-visualizer": "^4.0.4"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "browserslist": "extends @wordpress/browserslist-config"
 }

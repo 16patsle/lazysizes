@@ -18,7 +18,14 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->class_instance = new PregReplace( array( 'excludeclasses' => array() ), dirname( __FILE__ ) );
+		$this->class_instance = new PregReplace(
+			array(
+				'excludeclasses' => array(),
+				'skip_src'       => false,
+				'blurhash'       => false,
+			),
+			dirname( __FILE__ )
+		);
 	}
 
 	/**
@@ -26,7 +33,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_img() {
 		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
-		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -36,7 +43,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_img_empty_class() {
 		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="">', array( 'img' ) );
-		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=""></noscript>';
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=""></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -46,7 +53,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_img_blank_class() {
 		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  ">', array( 'img' ) );
-		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  "></noscript>';
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  "></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -56,7 +63,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_img_existing_class() {
 		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class">', array( 'img' ) );
-		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="existing-class lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class"></noscript>';
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="existing-class lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -66,7 +73,17 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 */
 	public function test_preg_replace_html_img_existing_class_whitespace() {
 		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class ">', array( 'img' ) );
-		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class=" existing-class  lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class "></noscript>';
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class=" existing-class  lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class "></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test the filtering of an img tag with a class containing the regex delimiter.
+	 */
+	public function test_preg_replace_html_img_regex_delimiter_class() {
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//">', array( 'img' ) );
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="// lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -308,7 +325,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 			<img src="logo-narrow.png" alt="Logo">
 			<img src="logo-wide.png" alt="Logo">
 		</noscript>
-		<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
+		<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
 		';
 
 		$this->assertEquals( $expected, $markup );
@@ -327,7 +344,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 		';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
 		$expected = '
-		<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" data-aspectratio="300/400" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
+		<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
 		<noscript>
 			<img src="logo-narrow.png" alt="Logo">
 			<img src="logo-wide.png" alt="Logo">
@@ -418,7 +435,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * Test replacing attributes with the equivalent data-attribute.
 	 */
 	public function test_should_replace_with_data_attr() {
-		$markup   = $this->class_instance->replace_attr( '<img src="image.jpg" poster="image.jpg" srcset="something" alt="Should not be replaced" attribute="hello">', 'img' );
+		$markup   = $this->class_instance->replace_attr( '<img src="image.jpg" poster="image.jpg" srcset="something" alt="Should not be replaced" attribute="hello">', 'img' )[0];
 		$expected = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-poster="image.jpg" data-srcset="something" alt="Should not be replaced" attribute="hello">';
 
 		$this->assertEquals( $expected, $markup );
@@ -494,8 +511,8 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * Test if the right aspect ratio is added.
 	 */
 	public function test_should_add_aspect_ratio() {
-		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" width="100px" height="200px">' );
-		$expected = '<img src="image.jpg" data-aspectratio="100/200" width="100px" height="200px">';
+		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" width="100px" height="200px">', 'image.jpg', 'img' );
+		$expected = '<img data-aspectratio="100/200" src="image.jpg" width="100px" height="200px">';
 
 		$this->assertEquals( $expected, $markup );
 	}
@@ -504,7 +521,7 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * Test if no aspect ratio is added because of missing width.
 	 */
 	public function test_should_not_add_aspect_ratio_width_missing() {
-		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" height="200px">' );
+		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" height="200px">', 'image.jpg', 'img' );
 		$expected = '<img src="image.jpg" height="200px">';
 
 		$this->assertEquals( $expected, $markup );
@@ -514,11 +531,96 @@ class Tests_LazysizesPregReplace extends WP_UnitTestCase {
 	 * Test if no aspect ratio is added because of missing height.
 	 */
 	public function test_should_not_add_aspect_ratio_height_missing() {
-		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" width="100px">' );
+		$markup   = $this->class_instance->set_aspect_ratio( '<img src="image.jpg" width="100px">', 'image.jpg', 'img' );
 		$expected = '<img src="image.jpg" width="100px">';
 
 		$this->assertEquals( $expected, $markup );
 	}
 
+	/**
+	 * Test that a Blurhash string is added in the data-blurhash attribute when the src is an attachment.
+	 */
+	public function test_should_add_blurhash_attribute() {
+		// Create custom class instance with blurhash on load enabled.
+		$class_instance = new PregReplace(
+			array(
+				'excludeclasses'  => array(),
+				'skip_src'        => false,
+				'blurhash'        => true,
+				'blurhash_onload' => true,
+			),
+			dirname( __FILE__ )
+		);
 
+		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
+			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		} else {
+			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
+			require_once dirname( __FILE__ ) . '/factory-attachment-upload.php';
+			$attachment_id = create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		}
+
+		$url = wp_get_attachment_url( $attachment_id );
+
+		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
+		$expected = '<img data-aspectratio="300/400" data-blurhash="LSE#Hk_OrCF}kEx]n$aLr;odWXR," src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+
+		if ( version_compare( phpversion(), '7.2', '<' ) ) {
+			$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+		}
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test that a Blurhash string is not added in the data-blurhash attribute when the src is an attachment, but on load is disabled.
+	 */
+	public function test_should_add_blurhash_attribute_onload_disabled() {
+		// Create custom class instance with blurhash on load disabled.
+		$class_instance = new PregReplace(
+			array(
+				'excludeclasses'  => array(),
+				'skip_src'        => false,
+				'blurhash'        => true,
+				'blurhash_onload' => false,
+			),
+			dirname( __FILE__ )
+		);
+
+		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
+			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		} else {
+			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
+			require_once dirname( __FILE__ ) . '/factory-attachment-upload.php';
+			$attachment_id = create_upload_object( __DIR__ . '/test-pineapple.jpg' );
+		}
+
+		$url = wp_get_attachment_url( $attachment_id );
+
+		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
+
+	/**
+	 * Test that no data-blurhash attribute is added when the src is not an attachment.
+	 */
+	public function test_should_not_add_blurhash_attribute_no_attachment() {
+		// Create custom class instance with blurhash on load enabled.
+		$class_instance = new PregReplace(
+			array(
+				'excludeclasses'  => array(),
+				'skip_src'        => false,
+				'blurhash'        => true,
+				'blurhash_onload' => true,
+			),
+			dirname( __FILE__ )
+		);
+
+		$markup   = $class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
+		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+
+		$this->assertEquals( $expected, $markup );
+	}
 }
