@@ -110,13 +110,13 @@ function processImage(image) {
 		const { direction, top } = imageStyles;
 		const alignSide = direction === 'ltr' ? 'left' : 'right';
 
-		if (imageStyles[alignSide] === '0px') {
+		if (imageStyles[alignSide] === '0px' || imageStyles[alignSide] === 'auto') {
 			newImage.classList.add(alignSide);
 		} else {
 			newImage.style[alignSide] = imageStyles[alignSide];
 		}
 
-		if (top !== '0px') {
+		if (top !== '0px' && top !== 'auto') {
 			newImage.style.top = top;
 		}
 
