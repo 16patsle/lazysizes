@@ -7,7 +7,7 @@
 
 namespace Lazysizes;
 
-use Vendor\kornrunner\Blurhash\Blurhash as PhpBlurhash;
+use Lazysizes\Vendor\kornrunner\Blurhash\Blurhash as PhpBlurhash;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
