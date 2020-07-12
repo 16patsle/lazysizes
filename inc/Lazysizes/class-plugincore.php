@@ -51,8 +51,8 @@ class PluginCore {
 	public function __construct( $pluginfile ) {
 
 		// Load composer autoloader.
-		if ( is_readable( dirname( $pluginfile ) . '/build/vendor/autoload.php' ) ) {
-			require dirname( $pluginfile ) . '/build/vendor/autoload.php';
+		if ( is_readable( dirname( $pluginfile ) . '/build/vendor/scoper-autoload.php' ) ) {
+			require dirname( $pluginfile ) . '/build/vendor/scoper-autoload.php';
 		}
 
 		// Store our settings in memory to reduce mysql calls.
