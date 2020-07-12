@@ -24,7 +24,7 @@ return array(
 					'test',
 				)
 			)
-			->in( 'vendor/kornrunner' ),
+			->in( array( 'vendor/kornrunner', 'vendor/composer' ) ),
 		Finder::create()->append(
 			array(
 				'composer.json',
