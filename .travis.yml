@@ -38,6 +38,14 @@ jobs:
       dist: xenial
       name: PHPUnit tests (PHP 5.6, WP 3.9)
     - php: 5.6
+      env: WP_VERSION=4.4
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP 4.4)
+    - php: 5.6
+      env: WP_VERSION=4.5
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP 4.5)
+    - php: 5.6
       env: WP_VERSION=latest
       dist: xenial
       name: PHPUnit tests (PHP 5.6, latest WP)
