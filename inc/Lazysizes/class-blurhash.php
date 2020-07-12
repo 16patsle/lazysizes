@@ -63,6 +63,7 @@ class Blurhash {
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
 		$size = image_get_intermediate_size( $attachment_id );
+		echo json_encode($size);
 		if ( function_exists( 'wp_get_upload_dir' ) ) {
 			$upload_dir = wp_get_upload_dir();
 		} else {
