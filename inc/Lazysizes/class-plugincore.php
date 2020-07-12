@@ -127,6 +127,10 @@ class PluginCore {
 				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
 
 				add_action( 'wp_ajax_lazysizes_blurhash', array( $this, 'ajax_blurhash_handler' ) );
+
+				if ( $this->settings['blurhash_never_fancy'] ) {
+					add_filter( 'body_class', array( $this, 'body_class_blurhash_never_fancy' ) );
+				}
 			}
 		}
 	}
@@ -174,6 +178,7 @@ class PluginCore {
 			'skip_src',
 			'blurhash',
 			'blurhash_onload',
+			'blurhash_never_fancy',
 		);
 
 		// Start fresh.
@@ -452,6 +457,16 @@ class PluginCore {
 		?>
 			<style>img.lazyload:not([src]) { visibility: hidden; }</style>
 		<?php
+	}
+
+	/**
+	 * Add body class blurhash-no-fancy.
+	 * This is used to disable the advanced/fancy blurhash reveal effect.
+	 *
+	 * @since 1.3.0
+	 */
+	public function body_class_blurhash_never_fancy( $classes ) {
+		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
 	}
 
 	/**

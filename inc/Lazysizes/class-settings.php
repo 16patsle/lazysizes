@@ -375,6 +375,14 @@ class Settings {
 					<?php esc_html_e( 'WARNING: Only use for debug and setup purposes. Generating Blurhash placeholders can be very computationally expensive, and will add several seconds to the page load time. After the first run, the placeholders will be saved, and will not need to be re-generated, so you can use this option to easily generate Blurhash placeholders for existing images.', 'lazysizes' ); ?>
 				</p>
 			</label>
+			<br />
+			<label for="lazysizes_blurhash_never_fancy">
+				<input type='checkbox' id='lazysizes_blurhash_never_fancy' name='lazysizes_addons[lazysizes_blurhash_never_fancy]' <?php $this->checked_r( $options, 'lazysizes_blurhash_never_fancy', 1 ); ?> value="1">
+				<?php esc_html_e( 'Never use the advanced Blurhash reveal effect, even when supported.', 'lazysizes' ); ?>
+				<p class="description">
+					<?php esc_html_e( 'The advanced Blurhash reveal effect creates an additional image element positioned under the regular image. This gives the best result in combination with the fade effect, but might not support all WordPress themes. Safeguards exist to prevent using the advanced effect when not supported, but in some cases problems may still occur. This setting lets you override the advanced reveal, and never use it.', 'lazysizes' ); ?>
+				</p>
+			</label>
 		</fieldset>
 		<?php
 	}
