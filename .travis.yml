@@ -77,7 +77,7 @@ before_script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer install
+      composer install --ignore-platform-reqs
       vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
     fi
 
