@@ -464,6 +464,8 @@ class PluginCore {
 	 * This is used to disable the advanced/fancy blurhash reveal effect.
 	 *
 	 * @since 1.3.0
+	 * @param array $classes An array of body class names.
+	 * @return array An array of body class names.
 	 */
 	public function body_class_blurhash_never_fancy( $classes ) {
 		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
