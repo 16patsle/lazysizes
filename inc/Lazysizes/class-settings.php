@@ -350,18 +350,30 @@ class Settings {
 				</p>
 			</label>
 			<br />
+			<?php
+			$blurhash_unsupported = ! extension_loaded( 'imagick' ) && ! extension_loaded( 'gd' );
+			?>
 			<label for="lazysizes_blurhash">
-				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> value="1">
+				<input type='checkbox' id='lazysizes_blurhash' name='lazysizes_addons[lazysizes_blurhash]' <?php $this->checked_r( $options, 'lazysizes_blurhash', 1 ); ?> <?php echo $blurhash_unsupported ? 'disabled' : ''; ?> value="1">
 				<?php esc_html_e( 'Use Blurhash to generate blurry low-res placeholder images.', 'lazysizes' ); ?>
 				<p class="description">
 					<?php esc_html_e( 'Experimental. Currently only works on image attachments. Placeholders will need to be pregenerated, which can be done for each image in the Media Library. Images without a Blurhash string will show the regular blank placeholder.', 'lazysizes' ); ?>
 					<br>
 					<?php esc_html_e( 'Note: Limited compatibility with native loading and the fade in effect for images added through custom HTML or by some plugins.', 'lazysizes' ); ?>
 				</p>
+				<?php
+				if ( $blurhash_unsupported ) {
+					?>
+					<p class="description">
+						<?php esc_html_e( 'NOT SUPPORTED: Your current WordPress installation does not support Blurhash, since it is running on a version of PHP without image editing capabilities.', 'lazysizes' ); ?>
+					</p>
+					<?php
+				}
+				?>
 			</label>
 			<br />
 			<label for="lazysizes_blurhash_onload">
-				<input type='checkbox' id='lazysizes_blurhash_onload' name='lazysizes_addons[lazysizes_blurhash_onload]' <?php $this->checked_r( $options, 'lazysizes_blurhash_onload', 1 ); ?> value="1">
+				<input type='checkbox' id='lazysizes_blurhash_onload' name='lazysizes_addons[lazysizes_blurhash_onload]' <?php $this->checked_r( $options, 'lazysizes_blurhash_onload', 1 ); ?> <?php echo $blurhash_unsupported ? 'disabled' : ''; ?> value="1">
 				<?php esc_html_e( 'When Blurhash is activated, generate missing Blurhash placeholders on page load.', 'lazysizes' ); ?>
 				<p class="description">
 					<?php esc_html_e( 'WARNING: Only use for debug and setup purposes. Generating Blurhash placeholders can be very computationally expensive, and will add several seconds to the page load time. After the first run, the placeholders will be saved, and will not need to be re-generated, so you can use this option to easily generate Blurhash placeholders for existing images.', 'lazysizes' ); ?>
@@ -369,7 +381,7 @@ class Settings {
 			</label>
 			<br />
 			<label for="lazysizes_blurhash_never_fancy">
-				<input type='checkbox' id='lazysizes_blurhash_never_fancy' name='lazysizes_addons[lazysizes_blurhash_never_fancy]' <?php $this->checked_r( $options, 'lazysizes_blurhash_never_fancy', 1 ); ?> value="1">
+				<input type='checkbox' id='lazysizes_blurhash_never_fancy' name='lazysizes_addons[lazysizes_blurhash_never_fancy]' <?php $this->checked_r( $options, 'lazysizes_blurhash_never_fancy', 1 ); ?> <?php echo $blurhash_unsupported ? 'disabled' : ''; ?> value="1">
 				<?php esc_html_e( 'Never use the advanced Blurhash reveal effect, even when supported.', 'lazysizes' ); ?>
 				<p class="description">
 					<?php esc_html_e( 'The advanced Blurhash reveal effect creates an additional image element positioned under the regular image. This gives the best result in combination with the fade effect, but might not support all WordPress themes. Safeguards exist to prevent using the advanced effect when not supported, but in some cases problems may still occur. This setting lets you override the advanced reveal, and never use it.', 'lazysizes' ); ?>
