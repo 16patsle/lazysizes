@@ -37,3 +37,8 @@
 .blurhash-container-relative {
 	position: relative;
 }
+
+.lazyload:not(.blurhash),
+.lazyloading:not(.blurhash) {
+	opacity: 0;
+}
