@@ -56,6 +56,7 @@ function processImage(image) {
 
 	let useFancySetup = true;
 	if (
+		document.body.classList.contains('blurhash-no-fancy') ||
 		parentPosition === 'fixed' ||
 		parentPosition === 'sticky' ||
 		imagePosition === 'fixed' ||
