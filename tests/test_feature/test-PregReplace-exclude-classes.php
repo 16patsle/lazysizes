@@ -32,7 +32,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 	 * Test skipping filtering of img tag with excluded class.
 	 */
 	public function test_preg_excluded_class_img() {
-		$html =     '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class1">';
+		$html     = '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class1">';
 		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
 		$expected = $html;
 
