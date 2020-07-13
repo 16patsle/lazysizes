@@ -48,6 +48,11 @@ class Tests_PregReplace_Blurhash extends WP_UnitTestCase {
 		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
 		$expected = '<img data-aspectratio="300/400" data-blurhash="' . $blurhash . '" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
 
+		// If image editing extensions are not installed, no Blurhas should be added.
+		if ( ! extension_loaded( 'imagick' ) && ! extension_loaded( 'gd' ) ) {
+			$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
+		}
+
 		$this->assertEquals( $expected, $markup );
 	}
 
