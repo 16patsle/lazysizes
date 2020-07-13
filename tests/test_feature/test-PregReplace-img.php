@@ -10,7 +10,7 @@ use Lazysizes\PregReplace;
 /**
  * Testing for img element processing in the PregReplace class
  */
-class Tests_PregReplace_img extends WP_UnitTestCase {
+class Tests_PregReplace_Img extends WP_UnitTestCase {
 
 	/**
 	 * Create the class instance we use in the tests.

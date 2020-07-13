@@ -10,7 +10,7 @@ use Lazysizes\PregReplace;
 /**
  * Testing for the set_aspect_ratio method in the PregReplace class
  */
-class Tests_PregReplace_set_aspect_ratio extends WP_UnitTestCase {
+class Tests_PregReplace_SetAspectRatio extends WP_UnitTestCase {
 
 	/**
 	 * Create the class instance we use in the tests.

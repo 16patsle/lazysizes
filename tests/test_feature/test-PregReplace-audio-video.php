@@ -10,7 +10,7 @@ use Lazysizes\PregReplace;
 /**
  * Testing for audio/video element processing in the PregReplace class
  */
-class Tests_PregReplace_audio_video extends WP_UnitTestCase {
+class Tests_PregReplace_AudioVideo extends WP_UnitTestCase {
 
 	/**
 	 * Create the class instance we use in the tests.

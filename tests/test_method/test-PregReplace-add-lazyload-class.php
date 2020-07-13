@@ -10,7 +10,7 @@ use Lazysizes\PregReplace;
 /**
  * Testing for the add_lazyload_class method in the PregReplace class
  */
-class Tests_PregReplace_add_lazyload_class extends WP_UnitTestCase {
+class Tests_PregReplace_AddLazyloadClass extends WP_UnitTestCase {
 
 	/**
 	 * Create the class instance we use in the tests.

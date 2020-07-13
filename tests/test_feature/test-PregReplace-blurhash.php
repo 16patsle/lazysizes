@@ -10,7 +10,7 @@ use Lazysizes\PregReplace;
 /**
  * Testing for the blurhash functionality in the PregReplace class
  */
-class Tests_PregReplace_blurhash extends WP_UnitTestCase {
+class Tests_PregReplace_Blurhash extends WP_UnitTestCase {
 
 	/**
 	 * Test that a Blurhash string is added in the data-blurhash attribute when the src is an attachment.
