@@ -50,7 +50,7 @@ class PluginCore {
 	 */
 	public function __construct( $pluginfile ) {
 
-		// Load composer autoloader.
+		// Load composer autoloader for vendor files.
 		if ( is_readable( dirname( $pluginfile ) . '/build/vendor/scoper-autoload.php' ) ) {
 			require dirname( $pluginfile ) . '/build/vendor/scoper-autoload.php';
 		}
@@ -61,7 +61,6 @@ class PluginCore {
 
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
-			require dirname( __FILE__ ) . '/class-settings.php';
 			$settings_class = new Settings();
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
@@ -73,7 +72,6 @@ class PluginCore {
 				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 15 );
 			}
 		} else {
-			require dirname( __FILE__ ) . '/class-pregreplace.php';
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
 			// Add inline css to head, part of noscript support.
@@ -122,7 +120,6 @@ class PluginCore {
 			// Generate blurhash for new images.
 			// Should only fire in admin, but doesn't hurt to add it otherwise.
 			if ( $this->settings['blurhash'] ) {
-				require_once dirname( __FILE__ ) . '/class-blurhash.php';
 				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ), 10, 2 );
 				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
 
@@ -406,7 +403,6 @@ class PluginCore {
 		}
 
 		if ( $action === 'generate' && $nonce_valid_generate ) {
-			require_once dirname( __FILE__ ) . '/class-blurhash.php';
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty( $blurhash ) ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );

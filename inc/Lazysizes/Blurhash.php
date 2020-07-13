@@ -119,9 +119,7 @@ class Blurhash {
 		set_time_limit( 60 );
 
 		if ( version_compare( phpversion(), '7.2', '<' ) ) {
-			// Load LegacyBlurhash, the regular library requires PHP 7.2.
-			require_once dirname( __FILE__ ) . '/LegacyBlurhash/class-blurhash.php';
-
+			// Use LegacyBlurhash, the regular library requires PHP 7.2.
 			$blurhash = LegacyBlurhash\Blurhash::encode( $pixels, $components_x, $components_y );
 		} else {
 			// Generate Blurhash.
