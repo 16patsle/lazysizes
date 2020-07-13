@@ -105,4 +105,20 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $markup );
 	}
+
+	/**
+	 * Test skipping filtering of audio tag with excluded class.
+	 */
+	public function test_preg_excluded_class_audio_source() {
+		$html     = '
+		<audio class="class1">
+			<source src="myAudio.mp3" type="audio/mp3">
+			<source src="myAudio.ogg" type="audio/ogg">
+		</audio>
+		';
+		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
+		$expected = $html;
+
+		$this->assertEquals( $expected, $markup );
+	}
 }
