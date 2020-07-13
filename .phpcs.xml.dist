@@ -28,6 +28,8 @@
 	<config name="minimum_supported_wp_version" value="3.9"/>
 	<rule ref="WordPress">
 		<exclude name="WordPress.PHP.YodaConditions"/>
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 	</rule>
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
