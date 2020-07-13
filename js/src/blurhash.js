@@ -1,5 +1,28 @@
 import decode from './lib/decode';
 
+const canvases = [];
+
+function getCanvas(width, height) {
+	const unusedCanvases = canvases.filter(
+		(canvas) => canvas && canvas.used === false
+	);
+	let canvas = unusedCanvases[0];
+	if (canvas) {
+		canvas.ctx.clearRect(0, 0, canvas.element.width, canvas.element.height)
+	} else {
+		canvas = {
+			element: document.createElement('canvas'),
+		};
+		canvas.ctx = canvas.element.getContext('2d');
+		canvases.push(canvas);
+	}
+	canvas.element.width = width;
+	canvas.element.height = height;
+	canvas.imageData = canvas.ctx.createImageData(width, height);
+	canvas.used = true;
+	return canvas;
+}
+
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
@@ -129,15 +152,11 @@ function processImage(image) {
 
 	const pixels = decode(image.dataset.blurhash, width, height);
 
-	const canvas = document.createElement('canvas');
-	canvas.width = width;
-	canvas.height = height;
-	const ctx = canvas.getContext('2d');
-	const imageData = ctx.createImageData(width, height);
-	imageData.data.set(pixels);
-	ctx.putImageData(imageData, 0, 0);
+	const canvas = getCanvas(width, height);
+	canvas.imageData.data.set(pixels);
+	canvas.ctx.putImageData(canvas.imageData, 0, 0);
 
-	canvas.toBlob((blob) => {
+	canvas.element.toBlob((blob) => {
 		const url = URL.createObjectURL(blob);
 		if (useFancySetup) {
 			newImage.src = url;
@@ -150,6 +169,8 @@ function processImage(image) {
 			image.classList.remove('blurhashing');
 			image.classList.add('blurhashed');
 		}
+
+		canvas.used = false;
 	});
 }
 
