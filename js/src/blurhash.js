@@ -40,6 +40,16 @@ function installWorker() {
 installWorker();
 
 function blurhashLoad() {
+	if (
+		!(
+			'toBlob' in HTMLCanvasElement.prototype ||
+			'msToBlob' in HTMLCanvasElement.prototype
+		)
+	) {
+		// No support for canvas.toBlob
+		return;
+	}
+
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
 	blurhashImages.forEach(processImage);
