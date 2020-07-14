@@ -1,13 +1,17 @@
 // @ts-check
 import runAction from './blurhash/runAction';
 import getBlurhash from './blurhash/getBlurhash';
+import getWorker, {setWorkerUrl} from './blurhash/getWorker';
 
 let useWorker =
 	'Worker' in window &&
 	'OffscreenCanvas' in window &&
 	'convertToBlob' in OffscreenCanvas.prototype;
 
-let workerUrl;
+function workerErrorListener(error) {
+	console.log(error);
+	useWorker = false;
+}
 
 function installWorker() {
 	if (useWorker) {
@@ -23,17 +27,16 @@ function installWorker() {
 
 		const scriptSrcSplit = script.getAttribute('src').split('/');
 		scriptSrcSplit.pop();
-		workerUrl = scriptSrcSplit.join('/') + '/blurhash-worker.js';
+		const workerUrl = scriptSrcSplit.join('/') + '/blurhash-worker.js';
+		setWorkerUrl(workerUrl);
 
 		const worker = new Worker(workerUrl);
 		worker.addEventListener(
 			'error',
-			(error) => {
-				console.log(error);
-				useWorker = false;
-			},
+			workerErrorListener,
 			false
 		);
+		worker.terminate();
 	}
 }
 
@@ -212,11 +215,11 @@ function processImage(image) {
 		};
 
 		if (useWorker === true) {
-			const worker = new Worker(workerUrl);
-			worker.postMessage([image.dataset.blurhash, width, height]);
-			worker.onmessage = ({ data: blob }) => {
+			const worker = getWorker(workerErrorListener);
+			worker.worker.postMessage([image.dataset.blurhash, width, height]);
+			worker.worker.onmessage = ({ data: blob }) => {
 				callback(blob);
-				worker.terminate();
+				worker.used = false;
 			};
 		} else {
 			getBlurhash(image.dataset.blurhash, width, height, callback);
