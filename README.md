@@ -1,36 +1,26 @@
 # lazysizes
 Contributors: 16patsle
-Tags: Lazy Load, lazysizes, iframe, image, media, video, YouTube, Vimeo, audio
+Tags: lazy load, lazysizes, image, Blurhash, performance
 Requires at least: 3.9
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
 [![Build Status](https://travis-ci.org/16patsle/lazysizes.svg?branch=master)](https://travis-ci.org/16patsle/lazysizes)
 
-High performance, easy to use and SEO friendly lazy loader for images, iframes and more
+High performance and SEO friendly lazy loader for images, iframes and more. Many features, like low-res Blurhash placeholders and image fade-in
 
 ## Description
 
-**lazysizes** is a WordPress plugin for the fast (jank-free), SEO-friendly and self-initializing lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images with `srcset` and the `picture` tag), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster.
+**lazysizes** is a WordPress plugin for the high performance, SEO-friendly and auto-triggering lazyloader [with the same name](https://github.com/aFarkas/lazysizes). Support includes images (including responsive images with `srcset` and the `picture` tag), iframes, scripts/widgets and much more. It also prioritizes resources by differentiating between crucial in view and near view elements to make perceived performance even faster. Additionally, you can add low-res/blurry placeholder images using the Blurhash algorithm.
 
-This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images, iframes etc. dynamically when needed.
+This plugin works by loading the lazysizes script and replacing the `src` and `srcset` attributes with `data-src` and `data-srcset` on the front end of a WordPress site. When a post or page is loaded, the lazysizes javascript will load the images, iframes etc. dynamically when needed. All you need to do is to enable the plugin, and possibly tweak a few settings to your liking.
 
-Thanks to aFarkas and contributors for making the [lazysizes project](https://github.com/aFarkas/lazysizes) possible, and for letting me use the same name.
+Thanks to aFarkas and contributors for making the [lazysizes library](https://github.com/aFarkas/lazysizes) possible, and for letting me use the same name.
 
 Also thanks to dbhynds who made the Lazy Load XT plugin, which this plugin is based on.
-
-## Installation
-
-1. Install and activate the plugin through the 'Plugins' menu in WordPress
-
-or
-
-1. Download and unzip lazysizes.
-2. Upload the `lazysizes` folder to the `/wp-content/plugins/` directory
-3. Activate the plugin through the 'Plugins' menu in WordPress
 
 ## Frequently Asked Questions
 
@@ -40,22 +30,49 @@ Lazysizes filters images added to the page using `the_content`, `post_thumbnail_
 
 While this plugin has opt-in support for `wp_get_attachment_image`, it doesn't add a no-Javascript fallback, which causes images to become invisible for users where Javascript is disabled or unsupported. We cannot fix this for you automatically, but you can fix this with a couple of changes to the code that uses `wp_get_attachment_image`. For example, if a theme has: `echo wp_get_attachment_image($id);`, changing it to the following would lazy load the image and add no-Javascript fallback if enabled in settings: `echo get_lazysizes_html( wp_get_attachment_image($id) );`
 
-### But this plugin looks like Lazy Load XT!
+If a popular plugin is incompatible and has a filter for modifying the HTML output, lazysizes could most likely get support for that plugin. In that case, feel free to ask! If the plugin has no such way to filter the output, they would have to add one for lazysizes to leverage.
 
-Yes, it does. The PHP code for this plugin is heavily based on that of Lazy Load XT. The main difference is that this plugin is a bit simplified, and is using a completely different lazy loading library, with no jQuery dependency.
+### What is the Blurhash placeholder feature, and how do I use it?
+
+The low-res Blurhash placeholder feature generates a text string for each image using the [Blurhash](https://blurha.sh/) algorithm. This string includes all the information necessary for the Blurhash script running in the visitor's browser to decode it into a blurry image, which will be shown while the real image is loading.
+
+Because the final image placeholder is generated in JavaScript, users on faster internet connections can sometimes see the full image directly for images that are above the fold. Images lower down on the page will have a placeholder ready by the time the user reaches them.
+
+The placeholder Blurhash string is not computed on page load, as it can in some cases take several seconds to do so. Instead, it will need to be pregenerated. As long as Blurhash is enabled in the settings, all new images uploaded will have a Blurhash string generated automatically. Additionally, you can manage the Blurhash string for each attachment individually in the Media Library. There is an option to generate and store Blurhash strings on page load, which can be used to easily generate Blurhash strings for lots of images by visiting the page they're shown on. Just remember to turn that option back off, or your visitors may be slightly upset.
+
+For technical reasons, Blurhash is only supported for local image attachments, and at the moment is not officially supported for picture elements. Images without a Blurhash string will behave just like they do with the option turned off. Blurhash placeholders work with the existing effects, like fade-in, but in some cases the perfect fade-in effect may not be possible. The Blurhash placeholder will still fade in, but it might not fade when transitioning to the full image. This is because of a few edge cases not supported by the advanced Blurhash reveal effect.
+
+The advanced Blurhash reveal effect works by creating an additional image element positioned under the regular image. This gives the best result in combination with the fade effect, but might not support all WordPress themes. Safeguards exist to prevent using the advanced effect when not supported (by falling back to the slightly imperfect fade effect), but in some cases problems may still occur. If you see this type of problem, you can disable the advanced Blurhash reveal effect in the settings. Feel free to contact me on the support forums, and I may be able to work out what was going wrong.
+
+### There's a plugin called Lazy Load XT. Why does this one look a bit similar?
+
+The PHP code for this plugin was originally based on that of Lazy Load XT, with many changes since. The main difference is that this plugin is using a completely different lazy loading library (lazysizes), with no jQuery dependency. Additionally, this plugin is actively maintained and has advanced features like Blurhash support.
 
 Thanks to dbhynds for making the Lazy Load XT plugin. Without that project, this one would not be possible.
 
-### Why is this plugin called the same as the lazysizes JS library?
+### Why is this plugin called lazysizes, the same as the JS library it uses?
 
-There are a couple of reasons:
+There are a few reasons:
 
-1. I think it's a good name.
-2. I'm hoping it will help people discovering the plugin. I originally tried searching for a WordPress plugin using the library myself, and other people might be trying the same.
+1. I like the name name.
+2. It is a fitting name, as it makes you think of lazy loading.
+3. I'm hoping it will help people discover the plugin. I originally tried searching for a WordPress plugin using the library myself, and other people might be trying the same.
 
-This plugin is not affiliated with the lazysizes project. I got permission by aFarkas to use the name, but that's as far as any connection between the two go.
+This plugin is not affiliated with the lazysizes project, but I asked, and got permission by aFarkas to use the name. That's as far as any connection between the two go.
 
 ## Changelog
+
+### 1.3.0
+
+Note that this is the last release that will support PHP 5.6 and WordPress 3.9. The next release will most likely require PHP 7.2 and WordPress 4.5 or newer.
+
+- Add support for generating low-res placeholder images using [Blurhash](https://blurha.sh/), which stores the placeholder as a short text string. Computing this string does not happen on page load, as it's rather expensive, but when the blurhash placeholder option is enabled it can be controlled individually for each attachment, and new attachments will have a placeholder generated automatically. For more information, see the FAQ and the settings page.
+- Add custom lazysizes script and styles feature, which uses scripts and styles optimized for size and fewer requests.
+- Improve aspectratio calculation. Local images no longer need both width and height set, only one of them, since the aspect ratio can be calculated based on attachment metadata.
+- Various performance tweaks.
+- Add experimental option for skipping adding a src attribute to images, and letting the browser load the image progressively instead.
+- Fix issue where a picture element with an excluded class could still be lazy loaded.
+- Upgrade lazysizes library to 5.2.2.
 
 ### 1.2.1
 

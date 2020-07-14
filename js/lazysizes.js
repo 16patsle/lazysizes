@@ -1,3 +1,5 @@
+'use strict';
+
 (function(window, factory) {
 	var lazySizes = factory(window, window.document, Date);
 	window.lazySizes = lazySizes;
@@ -6,7 +8,6 @@
 	}
 }(typeof window != 'undefined' ?
       window : {}, function l(window, document, Date) { // Pass in the windoe Date function also for SSR because the Date class can be lost
-	'use strict';
 	/*jshint eqnull:true */
 
 	var lazysizes, lazySizesCfg;

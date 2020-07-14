@@ -5,11 +5,15 @@
  * @package Lazysizes
  */
 
-// If uninstall is not called from WordPress, exit.
+// If uninstall is not called from WordPress, die.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit();
+	die;
 }
 
+// Delete the options.
 foreach ( array( 'lazysizes_general', 'lazysizes_effects', 'lazysizes_addons', 'lazysizes_version' ) as $lazysizes_option ) {
 	delete_option( $lazysizes_option );
 }
+
+// Delete blurhash post meta from attachments.
+delete_post_meta_by_key( '_lazysizes_blurhash' );

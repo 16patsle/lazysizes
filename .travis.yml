@@ -1,5 +1,5 @@
-sudo: false
-dist: trusty
+os: linux
+dist: bionic
 
 language: php
 
@@ -12,27 +12,51 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-matrix:
+services:
+  - mysql
+
+jobs:
   include:
     - php: 7.4
       env: WP_VERSION=latest
+      name: PHPUnit tests (PHP 7.4, latest WP)
     - php: 7.3
       env: WP_VERSION=latest
+      name: PHPUnit tests (PHP 7.3, latest WP)
     - php: 7.2
       env: WP_VERSION=latest
+      name: PHPUnit tests (PHP 7.2, latest WP)
     - php: 7.1
       env: WP_VERSION=latest
+      name: PHPUnit tests (PHP 7.1, latest WP)
     - php: 7.0
       env: WP_VERSION=latest
+      dist: xenial
+      name: PHPUnit tests (PHP 7.0, latest WP)
     - php: 5.6
       env: WP_VERSION=3.9
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP 3.9)
+    - php: 5.6
+      env: WP_VERSION=4.4
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP 4.4)
+    - php: 5.6
+      env: WP_VERSION=4.5
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP 4.5)
     - php: 5.6
       env: WP_VERSION=latest
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, latest WP)
     - php: 5.6
       env: WP_VERSION=trunk
-    - php: 5.6
+      dist: xenial
+      name: PHPUnit tests (PHP 5.6, WP trunk)
+    - php: 7.2
       env: WP_TRAVISCI=phpcs
       dist: precise
+      name: PHP CodeSniffer
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -46,12 +70,17 @@ before_script:
     if [[ ! -z "$WP_VERSION" ]] ; then
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
       composer global require "phpunit/phpunit=4.8.*|5.7.*"
+      if [[ "$(phpenv version-name)" != "5.6" ]] && [[ "$(phpenv version-name)" != "7.0" ]] ; then
+        composer install --ignore-platform-reqs
+        vendor/bin/php-scoper add-prefix --force && cd build && composer dump-autoload && cd ..
+      else
+        composer dump-autoload
+      fi
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      composer global require wp-coding-standards/wpcs phpcompatibility/php-compatibility phpcompatibility/phpcompatibility-paragonie phpcompatibility/phpcompatibility-wp
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/phpcompatibility/php-compatibility,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp
-      phpcs --config-set ignore_warnings_on_exit 1
+      composer install --ignore-platform-reqs
+      vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
     fi
 
 script:
@@ -62,5 +91,5 @@ script:
     fi
   - |
     if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
+      vendor/bin/phpcs
     fi
