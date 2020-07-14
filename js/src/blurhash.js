@@ -27,7 +27,7 @@ function installWorker() {
 
 		const scriptSrcSplit = script.getAttribute('src').split('/');
 		scriptSrcSplit.pop();
-		const workerUrl = scriptSrcSplit.join('/') + '/blurhash-worker.js';
+		const workerUrl = scriptSrcSplit.join('/') + '/blurhash-worker.min.js';
 		setWorkerUrl(workerUrl);
 
 		const worker = new Worker(workerUrl);
