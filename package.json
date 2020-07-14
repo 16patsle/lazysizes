@@ -22,16 +22,11 @@
     "url": "git+https://github.com/16patsle/lazysizes.git"
   },
   "keywords": [
-    "Lazy",
-    "Load",
+    "lazy load",
     "lazysizes",
-    "iframe",
     "image",
-    "media",
-    "video",
-    "YouTube",
-    "Vimeo",
-    "audio"
+    "Blurhash",
+    "performance"
   ],
   "author": "Patrick Sletvold <patricksletvold@hotmail.com>",
   "license": "GPL-3.0-or-later",
