@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * @type {CanvasDataObject[]}
  */
@@ -7,9 +9,9 @@ const canvases = [];
  * Object containing a canvas and related objects and data
  * @typedef {Object} CanvasDataObject
  * @property {HTMLCanvasElement} element The canvas element
- * @property {CanvasRenderingContext2D} ctx The canvas rendering context
- * @property {ImageData} imageData The ImageData object used to render images
- * @property {boolean} used Whether this canvas is currently used
+ * @property {CanvasRenderingContext2D} [ctx] The canvas rendering context
+ * @property {ImageData} [imageData] The ImageData object used to render images
+ * @property {boolean} [used] Whether this canvas is currently used
  */
 
 /**

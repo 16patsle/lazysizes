@@ -1,3 +1,4 @@
+// @ts-check
 import runAction from './blurhash/runAction';
 import getBlurhash from './blurhash/getBlurhash';
 
@@ -6,7 +7,7 @@ function blurhashLoad() {
 
 	blurhashImages.forEach(processImage);
 
-	if (!'MutationObserver' in window) {
+	if (!('MutationObserver' in window)) {
 		return;
 	}
 
@@ -62,7 +63,7 @@ function processImage(image) {
 			}
 		}
 
-		const { position: parentPosition } = getComputedStyle(image.parentNode);
+		const { position: parentPosition } = getComputedStyle(image.parentElement);
 		const imageStyles = getComputedStyle(image);
 		const { position: imagePosition } = imageStyles;
 
@@ -87,11 +88,11 @@ function processImage(image) {
 		let newImage;
 
 		if (useFancySetup) {
-			image.parentNode.classList.add('blurhash-container');
+			image.parentElement.classList.add('blurhash-container');
 
 			// Make sure parent is either relative or absolute
 			if (parentPosition !== 'absolute') {
-				image.parentNode.classList.add('blurhash-container-relative');
+				image.parentElement.classList.add('blurhash-container-relative');
 			}
 
 			// Make sure image is either relative or absolute
@@ -99,6 +100,7 @@ function processImage(image) {
 				image.classList.add('blurhash-relative');
 			}
 
+			// @ts-ignore
 			newImage = image.cloneNode();
 
 			newImage.src =
@@ -120,6 +122,7 @@ function processImage(image) {
 			newImage.removeAttribute('data-blurhash');
 
 			if ('loading' in newImage) {
+				// @ts-ignore
 				newImage.loading = 'eager';
 			}
 

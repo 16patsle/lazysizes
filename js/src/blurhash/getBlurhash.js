@@ -1,3 +1,4 @@
+// @ts-check
 import decode from '../lib/decode';
 import getCanvas from './getCanvas';
 
