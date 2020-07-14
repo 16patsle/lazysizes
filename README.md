@@ -62,6 +62,10 @@ This plugin is not affiliated with the lazysizes project, but I asked, and got p
 
 ## Changelog
 
+### 1.3.1
+
+- Hotfix for partial deploy causing missing files in v1.3.0
+
 ### 1.3.0
 
 Note that this is the last release that will support PHP 5.6 and WordPress 3.9. The next release will most likely require PHP 7.2 and WordPress 4.5 or newer.
