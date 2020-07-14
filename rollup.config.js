@@ -70,8 +70,41 @@ const configs = [
 	},
 ];
 
-const configWorker = Object.assign({}, defaultConfigJS);
-configWorker.input = 'js/src/blurhash-worker.js';
+const configWorker = {
+	input: 'js/src/blurhash-worker.js',
+	output: [
+		{
+			dir: 'js/build',
+			entryFileNames: '[name].js',
+			format: 'iife',
+		},
+		{
+			dir: 'js/build',
+			entryFileNames: '[name].min.js',
+			format: 'iife',
+			plugins: [terser()],
+		},
+	],
+	plugins: [
+		babel({
+			babelHelpers: 'bundled',
+			presets: [
+				[
+					'@babel/env',
+					{
+						targets: [
+							'last 4 Chrome versions',
+							'Edge > 18',
+							'Firefox > 79'
+						],
+						bugfixes: true,
+					},
+				],
+			],
+		}),
+		resolve(),
+	],
+};
 configs.push(configWorker);
 
 inputsJS.forEach((val) => {
