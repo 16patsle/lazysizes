@@ -1,6 +1,5 @@
-import decode from './lib/decode';
-import getCanvas from './blurhash/getCanvas';
 import runAction from './blurhash/runAction';
+import getBlurhash from './blurhash/getBlurhash';
 
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
@@ -133,13 +132,7 @@ function processImage(image) {
 			image.classList.add('blurhashing');
 		}
 
-		const pixels = decode(image.dataset.blurhash, width, height);
-
-		const canvas = getCanvas(width, height);
-		canvas.imageData.data.set(pixels);
-		canvas.ctx.putImageData(canvas.imageData, 0, 0);
-
-		canvas.element.toBlob((blob) => {
+		getBlurhash(image.dataset.blurhash, width, height, (blob) => {
 			const url = URL.createObjectURL(blob);
 			if (useFancySetup) {
 				newImage.src = url;
@@ -152,8 +145,6 @@ function processImage(image) {
 				image.classList.remove('blurhashing');
 				image.classList.add('blurhashed');
 			}
-
-			canvas.used = false;
 			runAction();
 		});
 	});
