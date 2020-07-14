@@ -1,49 +1,6 @@
 import decode from './lib/decode';
-
-const canvases = [];
-
-function getCanvas(width, height) {
-	const unusedCanvases = canvases.filter(
-		(canvas) => canvas && canvas.used === false
-	);
-	let canvas = unusedCanvases[0];
-	if (canvas) {
-		canvas.ctx.clearRect(0, 0, canvas.element.width, canvas.element.height);
-	} else {
-		canvas = {
-			element: document.createElement('canvas'),
-		};
-		canvas.ctx = canvas.element.getContext('2d');
-		canvases.push(canvas);
-	}
-	canvas.element.width = width;
-	canvas.element.height = height;
-	canvas.imageData = canvas.ctx.createImageData(width, height);
-	canvas.used = true;
-	return canvas;
-}
-
-const processingQueue = [];
-const currentlyProcessing = 0;
-const maxConcurrent = 2;
-
-// Queue of actions to perform, with a limit on how many at the same time.
-function runAction(actionCallback) {
-	if (typeof actionCallback === 'function') {
-		processingQueue.push(actionCallback);
-	} else {
-		currentlyProcessing--;
-	}
-
-	while (
-		currentlyProcessing < maxConcurrent &&
-		typeof processingQueue[0] === 'function'
-	) {
-		currentlyProcessing++;
-		const upNext = processingQueue.shift();
-		upNext();
-	}
-}
+import getCanvas from './blurhash/getCanvas';
+import runAction from './blurhash/runAction';
 
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');

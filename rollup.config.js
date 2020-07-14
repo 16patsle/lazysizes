@@ -24,7 +24,7 @@ const defaultConfigJS = {
 	plugins: [
 		babel({
 			babelHelpers: 'bundled',
-			include: ['js/src/blurhash.js', 'js/src/lib/decode.js'],
+			include: ['js/src/blurhash.js', 'js/src/lib/decode.js', 'js/src/blurhash/*'],
 			presets: [
 				[
 					'@babel/env',
