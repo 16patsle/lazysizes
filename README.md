@@ -4,7 +4,7 @@ Tags: lazy load, lazysizes, image, Blurhash, performance
 Requires at least: 3.9
 Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 
@@ -61,6 +61,10 @@ There are a few reasons:
 This plugin is not affiliated with the lazysizes project, but I asked, and got permission by aFarkas to use the name. That's as far as any connection between the two go.
 
 ## Changelog
+
+### 1.3.1
+
+- Hotfix for partial deploy causing missing files in v1.3.0
 
 ### 1.3.0
 
