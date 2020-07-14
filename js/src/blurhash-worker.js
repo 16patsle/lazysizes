@@ -6,5 +6,3 @@ onmessage = (event) => {
 		postMessage(blob);
 	});
 };
-
-//getBlurhash(image.dataset.blurhash, width, height, callback);

@@ -30,7 +30,7 @@ export default function getCanvas(width, height) {
 	} else {
 		canvas = {};
 		if (typeof window !== 'undefined' && window.document) {
-			canvas.element = document.createElement('canvas')
+			canvas.element = document.createElement('canvas');
 		} else {
 			canvas.element = new OffscreenCanvas(width, height);
 		}

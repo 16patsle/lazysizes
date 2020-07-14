@@ -1,7 +1,7 @@
 // @ts-check
 import runAction from './blurhash/runAction';
 import getBlurhash from './blurhash/getBlurhash';
-import getWorker, {setWorkerUrl} from './blurhash/getWorker';
+import getWorker, { setWorkerUrl } from './blurhash/getWorker';
 
 let useWorker =
 	'Worker' in window &&
@@ -31,11 +31,7 @@ function installWorker() {
 		setWorkerUrl(workerUrl);
 
 		const worker = new Worker(workerUrl);
-		worker.addEventListener(
-			'error',
-			workerErrorListener,
-			false
-		);
+		worker.addEventListener('error', workerErrorListener, false);
 		worker.terminate();
 	}
 }
