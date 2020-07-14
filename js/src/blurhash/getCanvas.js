@@ -8,8 +8,8 @@ const canvases = [];
 /**
  * Object containing a canvas and related objects and data
  * @typedef {Object} CanvasDataObject
- * @property {HTMLCanvasElement} element The canvas element
- * @property {CanvasRenderingContext2D} [ctx] The canvas rendering context
+ * @property {HTMLCanvasElement|OffscreenCanvas} [element] The canvas element
+ * @property {CanvasRenderingContext2D|OffscreenCanvasRenderingContext2D} [ctx] The canvas rendering context
  * @property {ImageData} [imageData] The ImageData object used to render images
  * @property {boolean} [used] Whether this canvas is currently used
  */
@@ -28,9 +28,12 @@ export default function getCanvas(width, height) {
 	if (canvas) {
 		canvas.ctx.clearRect(0, 0, canvas.element.width, canvas.element.height);
 	} else {
-		canvas = {
-			element: document.createElement('canvas'),
-		};
+		canvas = {};
+		if (typeof window !== 'undefined' && window.document) {
+			canvas.element = document.createElement('canvas')
+		} else {
+			canvas.element = new OffscreenCanvas(width, height);
+		}
 		canvas.ctx = canvas.element.getContext('2d');
 		canvases.push(canvas);
 	}

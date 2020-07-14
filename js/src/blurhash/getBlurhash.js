@@ -16,10 +16,29 @@ export default function getBlurhash(blurhash, width, height, callback) {
 	canvas.imageData.data.set(pixels);
 	canvas.ctx.putImageData(canvas.imageData, 0, 0);
 
-	canvas.element.toBlob((blob) => {
-		canvas.used = false;
-		callback(blob);
-	});
+	if (
+		typeof HTMLCanvasElement !== 'undefined' &&
+		canvas.element instanceof HTMLCanvasElement
+	) {
+		// @ts-ignore
+		if (canvas.element.msToBlob) {
+			// @ts-ignore
+			callback(canvas.element.msToBlob());
+		} else {
+			canvas.element.toBlob((blob) => {
+				canvas.used = false;
+				callback(blob);
+			});
+		}
+	} else if (
+		typeof OffscreenCanvas !== 'undefined' &&
+		canvas.element instanceof OffscreenCanvas
+	) {
+		canvas.element.convertToBlob().then((blob) => {
+			canvas.used = false;
+			callback(blob);
+		});
+	}
 }
 
 /**

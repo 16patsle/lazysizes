@@ -2,6 +2,43 @@
 import runAction from './blurhash/runAction';
 import getBlurhash from './blurhash/getBlurhash';
 
+let useWorker =
+	'Worker' in window &&
+	'OffscreenCanvas' in window &&
+	'convertToBlob' in OffscreenCanvas.prototype;
+
+let workerUrl;
+
+function installWorker() {
+	if (useWorker) {
+		const script = document.currentScript;
+
+		if (
+			script === null ||
+			script.getAttribute('src').indexOf('lazysizes') === -1
+		) {
+			useWorker = false;
+			return;
+		}
+
+		const scriptSrcSplit = script.getAttribute('src').split('/');
+		scriptSrcSplit.pop();
+		workerUrl = scriptSrcSplit.join('/') + '/blurhash-worker.js';
+
+		const worker = new Worker(workerUrl);
+		worker.addEventListener(
+			'error',
+			(error) => {
+				console.log(error);
+				useWorker = false;
+			},
+			false
+		);
+	}
+}
+
+installWorker();
+
 function blurhashLoad() {
 	const blurhashImages = document.querySelectorAll('img[data-blurhash]');
 
@@ -148,7 +185,7 @@ function processImage(image) {
 			image.classList.add('blurhashing');
 		}
 
-		getBlurhash(image.dataset.blurhash, width, height, (blob) => {
+		const callback = (blob) => {
 			const url = URL.createObjectURL(blob);
 			if (useFancySetup) {
 				newImage.src = url;
@@ -162,7 +199,18 @@ function processImage(image) {
 				image.classList.add('blurhashed');
 			}
 			runAction();
-		});
+		};
+
+		if (useWorker === true) {
+			const worker = new Worker(workerUrl);
+			worker.postMessage([image.dataset.blurhash, width, height]);
+			worker.onmessage = ({ data: blob }) => {
+				callback(blob);
+				worker.terminate();
+			};
+		} else {
+			getBlurhash(image.dataset.blurhash, width, height, callback);
+		}
 	});
 }
 

@@ -70,6 +70,10 @@ const configs = [
 	},
 ];
 
+const configWorker = Object.assign({}, defaultConfigJS);
+configWorker.input = 'js/src/blurhash-worker.js';
+configs.push(configWorker);
+
 inputsJS.forEach((val) => {
 	const config = Object.assign({}, defaultConfigJS);
 	config.input = val;
