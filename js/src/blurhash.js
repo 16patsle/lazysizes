@@ -202,10 +202,31 @@ function processImage(image) {
 				// To trigger fade transition
 				newImage.classList.remove('blurhashing');
 				newImage.classList.add('blurhashed');
+
+				// Remove element used for fancy blurhash and revoke url when image is loaded
+				function lazyloadedCallback() {
+					image.removeEventListener('lazyloaded', lazyloadedCallback);
+					// Timeout is used to ensure animation is complete
+					setTimeout(() => {
+						URL.revokeObjectURL(url);
+						newImage.parentNode.removeChild(newImage);
+					}, 2000);
+				}
+				image.addEventListener('lazyloaded', lazyloadedCallback);
 			} else {
 				image.src = url;
 				image.classList.remove('blurhashing');
 				image.classList.add('blurhashed');
+
+				// Revoke url when image is loaded
+				function lazyloadedCallback() {
+					image.removeEventListener('lazyloaded', lazyloadedCallback);
+					// Timeout is used to ensure animation is complete
+					setTimeout(() => {
+						URL.revokeObjectURL(url);
+					}, 2000);
+				}
+				image.addEventListener('lazyloaded', lazyloadedCallback);
 			}
 			runAction();
 		};
