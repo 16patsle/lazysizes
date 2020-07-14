@@ -1,0 +1,44 @@
+.blurhashing {
+	opacity: 0;
+}
+
+.blurhashed {
+	opacity: 1;
+}
+
+.blurhash-container .lazyloaded {
+	z-index: 1;
+}
+
+.blurhash-container .lazyloaded.blurhash-relative {
+	position: relative;
+}
+
+.blurhash-container .blurhashing,
+.blurhash-container .blurhashed {
+	position: absolute;
+	top: 0;
+}
+
+.blurhash-container .blurhashing.left,
+.blurhash-container .blurhashed.left {
+	left: 0;
+}
+
+.blurhash-container .blurhashing.right,
+.blurhash-container .blurhashed.right {
+	right: 0;
+}
+
+.blurhash-container .blurhashed {
+	z-index: 0;
+}
+
+.blurhash-container-relative {
+	position: relative;
+}
+
+.lazyload:not(.blurhash),
+.lazyloading:not(.blurhash) {
+	opacity: 0;
+}

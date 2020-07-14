@@ -5,6 +5,7 @@
 /bin
 /css/src
 /js/src
+/js/admin/src
 /node_modules
 /scripts
 /tests

@@ -1,6 +1,7 @@
-/build
-/css/build
-/js/build
-/js/admin/build
+/build/vendor/composer/Installers
+/build/vendor/composer/installed.json
+/build/vendor/composer/LICENSE
+/css/build/*.js
+/js/admin/build/stats.html
 /node_modules
 /vendor
