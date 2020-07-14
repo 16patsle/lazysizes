@@ -11,9 +11,15 @@ function blurhashLoad() {
 	}
 
 	// Prepare MutationObserver
+	/**
+	 * @type {MutationObserverInit}
+	 */
 	const config = { childList: true, subtree: true };
 
-	// Callback to execute when mutations are observed
+	/**
+	 * Callback to execute when mutations are observed
+	 * @type {MutationCallback}
+	 */
 	const callback = function (mutationsList) {
 		for (let mutation of mutationsList) {
 			mutation.addedNodes.forEach(processImage);
@@ -24,6 +30,10 @@ function blurhashLoad() {
 	observer.observe(document.body, config);
 }
 
+/**
+ * Process an image element
+ * @param {HTMLImageElement} image The image element being processed
+ */
 function processImage(image) {
 	if (
 		image.nodeName !== 'IMG' ||
@@ -71,6 +81,9 @@ function processImage(image) {
 			useFancySetup = false;
 		}
 
+		/**
+		 * @type {HTMLImageElement}
+		 */
 		let newImage;
 
 		if (useFancySetup) {
