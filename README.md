@@ -58,7 +58,7 @@ There are a few reasons:
 2. It is a fitting name, as it makes you think of lazy loading.
 3. I'm hoping it will help people discover the plugin. I originally tried searching for a WordPress plugin using the library myself, and other people might be trying the same.
 
-This plugin is not affiliated with the lazysizes project, but I asked, and got permission by aFarkas to use the name. That's as far as any connection between the two go.
+This plugin is not affiliated with the lazysizes project, but I asked for, and got, permission by aFarkas to use the name. That's as far as any connection between the two go.
 
 ## Changelog
 
