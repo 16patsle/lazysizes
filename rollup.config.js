@@ -24,7 +24,11 @@ const defaultConfigJS = {
 	plugins: [
 		babel({
 			babelHelpers: 'bundled',
-			include: ['js/src/blurhash.js', 'js/src/lib/decode.js', 'js/src/blurhash/*'],
+			include: [
+				'js/src/blurhash.js',
+				'js/src/lib/decode.js',
+				'js/src/blurhash/*',
+			],
 			presets: [
 				[
 					'@babel/env',
@@ -68,44 +72,38 @@ const configs = [
 		],
 		plugins: [],
 	},
-];
-
-const configWorker = {
-	input: 'js/src/blurhash-worker.js',
-	output: [
-		{
-			dir: 'js/build',
-			entryFileNames: '[name].js',
-			format: 'iife',
-		},
-		{
-			dir: 'js/build',
-			entryFileNames: '[name].min.js',
-			format: 'iife',
-			plugins: [terser()],
-		},
-	],
-	plugins: [
-		babel({
-			babelHelpers: 'bundled',
-			presets: [
-				[
-					'@babel/env',
-					{
-						targets: [
-							'last 4 Chrome versions',
-							'Edge > 18',
-							'Firefox > 79'
-						],
-						bugfixes: true,
-					},
+	{
+		input: 'js/src/blurhash-worker.js',
+		output: [
+			{
+				dir: 'js/build',
+				entryFileNames: '[name].js',
+				format: 'iife',
+			},
+			{
+				dir: 'js/build',
+				entryFileNames: '[name].min.js',
+				format: 'iife',
+				plugins: [terser()],
+			},
+		],
+		plugins: [
+			babel({
+				babelHelpers: 'bundled',
+				presets: [
+					[
+						'@babel/env',
+						{
+							targets: ['last 4 Chrome versions', 'Edge > 18', 'Firefox > 79'],
+							bugfixes: true,
+						},
+					],
 				],
-			],
-		}),
-		resolve(),
-	],
-};
-configs.push(configWorker);
+			}),
+			resolve(),
+		],
+	},
+];
 
 inputsJS.forEach((val) => {
 	const config = Object.assign({}, defaultConfigJS);
