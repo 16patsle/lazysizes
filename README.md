@@ -62,7 +62,7 @@ This plugin is not affiliated with the lazysizes project, but I asked for, and g
 
 ## Changelog
 
-### 1.3.5
+### 1.3.2
 
 A partial deploy caused by human error led to a fatal error due to missing files for versions v.1.3.0 and v1.3.1. This has been fixed, along with the following:
 
