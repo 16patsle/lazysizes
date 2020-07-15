@@ -15,7 +15,6 @@ jobs:
         npm install
         npm run build
         bin/composer dump-autoload
-    - uses: actions/checkout@master
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@1.5.0
       env:
