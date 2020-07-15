@@ -327,7 +327,7 @@ class PluginCore {
 		}
 
 		// Use minified script unless SCRIPT_DEBUG is enabled.
-		$min = defined( SCRIPT_DEBUG ) && SCRIPT_DEBUG === true ? '' : '.min';
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
 		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );
