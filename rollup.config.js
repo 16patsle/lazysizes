@@ -70,7 +70,20 @@ const configs = [
 				plugins: [terser()],
 			},
 		],
-		plugins: [],
+		plugins: [
+			babel({
+				babelHelpers: 'bundled',
+				presets: [
+					[
+						'@babel/env',
+						{
+							targets: 'extends @wordpress/browserslist-config',
+							bugfixes: true,
+						},
+					],
+				],
+			}),
+		],
 	},
 	{
 		input: 'js/src/blurhash-worker.js',
