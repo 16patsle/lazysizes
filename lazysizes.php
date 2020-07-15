@@ -3,7 +3,7 @@
  * The main plugin file
  *
  * @package Lazysizes
- * @version 1.3.4
+ * @version 1.3.5
  */
 
 /*
@@ -12,7 +12,7 @@ Plugin URI: http://wordpress.org/plugins/lazysizes/
 Description: High performance and SEO friendly lazy loader for images (responsive and normal), iframes and more using <a href="https://github.com/aFarkas/lazysizes" target="_blank">lazysizes</a>.
 Author: Patrick Sletvold
 Author URI: https://www.multitek.no/
-Version: 1.3.4
+Version: 1.3.5
 Text Domain: lazysizes
 */
 
