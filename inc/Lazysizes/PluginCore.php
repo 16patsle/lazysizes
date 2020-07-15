@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.3.3
+ * @version 1.3.4
  */
 
 namespace Lazysizes;
