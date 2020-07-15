@@ -17,7 +17,7 @@ class Settings {
 	/**
 	 * Plugin version.
 	 */
-	const VER = '1.3.4';
+	const VER = '1.3.5';
 	/**
 	 * The default plugin settings values
 	 *
