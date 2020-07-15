@@ -1,4 +1,5 @@
 const templateString = `
+<%if (typeof lazysizesBlurhash !== 'undefined' && !lazysizesBlurhash) {%>
 <span class="setting lazysizes-blurhash">
 	<span class="name">Lazysizes Blurhash</span>
 	<span class="value" <%= !lazysizesBlurhash ? 'style="padding-top: 0;"' : '' %>>
@@ -24,6 +25,7 @@ const templateString = `
 <p class="description">
 	<%= lazysizesStrings.description %>
 </p>
+<%}%>
 `;
 
 const templateFunction = _.template(templateString);
