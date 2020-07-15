@@ -3,15 +3,15 @@
 /.wordpress-org
 /.vscode
 /bin
+/css/build/*.js
 /css/src
 /js/src
 /js/admin/src
 /node_modules
 /scripts
 /tests
-/vendor
 
-js/admin/build/stats.html
+/js/admin/build/stats.html
 
 .distignore
 .editorconfig
