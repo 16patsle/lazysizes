@@ -31,7 +31,6 @@ const templateString = `
 const templateFunction = _.template(templateString);
 
 const clickFunction = function(e) {
-	console.log('click')
 	let action = '';
 	if(e.target.classList.contains('lazysizes-blurhash-generate')) {
 		action = 'generate';
