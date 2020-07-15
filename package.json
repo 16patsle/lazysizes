@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-		"prepare": "npm run build && npm run build:php",
+		"build-all": "npm run build && npm run build:php",
     "test": "echo \"Error: no test specified\" && exit 1",
 		"build": "rollup --config",
 		"prebuild:php": "bin/composer install",
