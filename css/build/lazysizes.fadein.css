@@ -1,9 +1,0 @@
-.lazyload:not(.blurhash),
-.lazyloading:not(.blurhash) {
-	opacity: 0;
-}
-
-.lazyloaded, .blurhashed {
-	transition: opacity 0.3s;
-	opacity: 1;
-}
