@@ -62,6 +62,10 @@ This plugin is not affiliated with the lazysizes project, but I asked for, and g
 
 ## Changelog
 
+### 1.3.2
+
+- Fix for fatal error due to deployment issues
+
 ### 1.3.1
 
 - Hotfix for partial deploy causing missing files in v1.3.0
