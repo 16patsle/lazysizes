@@ -30,7 +30,25 @@ class Blurhash {
 		}
 
 		$attachment_id = attachment_url_to_postid( $url );
-		$metadata      = wp_get_attachment_metadata( $attachment_id );
+
+		// If attachment not found, try replacing size in url with '-scaled'.
+		if ( $attachment_id === 0 ) {
+			$url = preg_replace( '/-[\d]{1,4}x[\d]{1,4}\.(\w{3,})$/', '-scaled.$1', $url );
+			$attachment_id = attachment_url_to_postid( $url );
+
+			// If still not found, try removing '-scaled'.
+			if ( $attachment_id === 0 ) {
+				$url = preg_replace( '/-scaled\.(\w{3,})$/', '.$1', $url );
+				$attachment_id = attachment_url_to_postid( $url );
+
+				// If still not found, it's probably not an attachment.
+				if ( $attachment_id === 0 ) {
+					return false;
+				}
+			}
+		}
+
+		$metadata = wp_get_attachment_metadata( $attachment_id );
 
 		// Return if not image attachment.
 		if ( ! isset( $metadata ) || ( isset( $metadata['mime-type'] ) && strpos( $metadata['mime-type'], 'image' ) !== 0 ) ) {

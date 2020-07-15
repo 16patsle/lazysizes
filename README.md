@@ -62,13 +62,16 @@ This plugin is not affiliated with the lazysizes project, but I asked for, and g
 
 ## Changelog
 
-### 1.3.2
+### 1.3.5
 
-- Fix for fatal error due to deployment issues
+A partial deploy caused by human error led to a fatal error due to missing files for versions v.1.3.0 and v1.3.1. This has been fixed, along with the following:
 
-### 1.3.1
-
-- Hotfix for partial deploy causing missing files in v1.3.0
+- Fix warning caused by missing check for metadata existing.
+- Fix script for the attachment page being minified even when SCRIPT_DEBUG is true.
+- Properly implement Blurhash management support in the post editor.
+- Fix non-existent CSS stylesheet being enqueued when no lazy load effect was selected.
+- Improve logic for finding attachment id from an image url.
+- Fix issue with minified lazysizes script.
 
 ### 1.3.0
 

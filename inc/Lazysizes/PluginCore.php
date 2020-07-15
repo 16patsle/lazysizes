@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.3.4
+ * @version 1.3.5
  */
 
 namespace Lazysizes;
@@ -240,9 +240,11 @@ class PluginCore {
 				array_push( $styles, 'skipsrc' );
 			}
 
-			$stylename = 'lazysizes.' . implode( '-', $styles );
+			if ( count( $styles ) > 0 ) {
+				$stylename = 'lazysizes.' . implode( '-', $styles );
 
-			wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+				wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+			}
 
 			$scripts = array();
 
@@ -327,7 +329,7 @@ class PluginCore {
 		}
 
 		// Use minified script unless SCRIPT_DEBUG is enabled.
-		$min = defined( SCRIPT_DEBUG ) && SCRIPT_DEBUG === true ? '' : '.min';
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
 		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );

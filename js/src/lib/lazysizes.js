@@ -98,7 +98,7 @@ var factory = function () {
 
 		detail.instance = lazysizes;
 
-		var event = new CustomEvent(name, {
+		var event = new window.CustomEvent(name, {
 			detail: detail,
 			bubbles: !noBubbles,
 			cancelable: !noCancelable,
