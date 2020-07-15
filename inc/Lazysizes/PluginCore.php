@@ -240,9 +240,11 @@ class PluginCore {
 				array_push( $styles, 'skipsrc' );
 			}
 
-			$stylename = 'lazysizes.' . implode( '-', $styles );
+			if ( count( $styles ) > 0 ) {
+				$stylename = 'lazysizes.' . implode( '-', $styles );
 
-			wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+				wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
+			}
 
 			$scripts = array();
 
