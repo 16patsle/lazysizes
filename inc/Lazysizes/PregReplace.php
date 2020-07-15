@@ -402,7 +402,7 @@ class PregReplace {
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
 			// Check if src is a local image attachment.
-			if ( $metadata !== false && array_key_exists( 'sizes', $metadata ) ) {
+			if ( is_array( $metadata ) && array_key_exists( 'sizes', $metadata ) ) {
 				$width  = $metadata['width'];
 				$height = $metadata['height'];
 
