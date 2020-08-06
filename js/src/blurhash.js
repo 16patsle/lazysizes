@@ -109,7 +109,10 @@ function processImage(image) {
 			}
 		}
 
-		const { position: parentPosition } = getComputedStyle(image.parentElement);
+		const {
+			position: parentPosition,
+			display: parentDisplay,
+		} = getComputedStyle(image.parentElement);
 		const imageStyles = getComputedStyle(image);
 		const { position: imagePosition } = imageStyles;
 
@@ -134,11 +137,17 @@ function processImage(image) {
 		let newImage;
 
 		if (useFancySetup) {
-			image.parentElement.classList.add('blurhash-container');
+			let containerNode = image.parentElement;
+
+			// If image is wrapped in link, use link's parent
+			if (containerNode.nodeName === 'A' && parentDisplay === 'inline') {
+				containerNode = containerNode.parentElement;
+			}
+			containerNode.classList.add('blurhash-container');
 
 			// Make sure parent is either relative or absolute
 			if (parentPosition !== 'absolute') {
-				image.parentElement.classList.add('blurhash-container-relative');
+				containerNode.classList.add('blurhash-container-relative');
 			}
 
 			// Make sure image is either relative or absolute
