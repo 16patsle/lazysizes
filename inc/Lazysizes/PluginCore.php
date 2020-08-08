@@ -179,6 +179,7 @@ class PluginCore {
 			'aspectratio',
 			'acf_content',
 			'native_lazy',
+			'full_native',
 			'skip_src',
 			'blurhash',
 			'blurhash_onload',
@@ -267,9 +268,13 @@ class PluginCore {
 			if ( $this->settings['aspectratio'] ) {
 				array_push( $scripts, 'aspectratio' );}
 
-			// Enqueue native lazy loading.
+			// Enqueue combined native lazy loading.
 			if ( $this->settings['native_lazy'] ) {
 				array_push( $scripts, 'nativeloading' );}
+
+			// Enqueue full native lazy loading, if combined is disabled.
+			if ( $this->settings['full_native'] && !$this->settings['native_lazy'] ) {
+				array_push( $scripts, 'fullnative' );}
 
 			// Enqueue Blurhash.
 			if ( $this->settings['blurhash'] ) {
