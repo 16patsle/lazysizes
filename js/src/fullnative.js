@@ -51,6 +51,13 @@ function loadImages() {
  * @param {HTMLImageElement} image The image element being processed
  */
 function processImage(image) {
+	if (
+		image.nodeName !== 'IMG' ||
+		!image.classList.contains('lazyloadnative')
+	) {
+		return;
+	}
+
 	if (!('loading' in HTMLImageElement.prototype)) {
 		image.classList.remove('lazyloadnative');
 		image.classList.add('lazyload');
