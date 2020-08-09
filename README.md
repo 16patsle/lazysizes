@@ -64,7 +64,12 @@ This plugin is not affiliated with the lazysizes project, but I asked for, and g
 
 ### 1.3.3
 
+- Add support for WordPress 5.5 and native lazy loading (see point below).
+- Add option for full native lazyloading, which gives the browser full control over when to load the image. Not compatible with the old native lazy load option, which only gives the browser partial control over loading. Currently only supports images, other elements will be lazyloaded like previously.
+- Add support for transforming HTML using single quotes instead of double quotes for attributes.
+- Fix lazy loading for commenter avatars. This feature had actually been disabled for a while, because it was broken. The new support for single quote attributes fixes this.
 - Fix positioning of the blurhash placeholder when the image is directly inside a link element.
+- Fix incompatibilities with certain older versions of WordPress. Please note that it is always recommended to use the latest version of WordPress, and that the next major version of this plugin will require a more up to date WordPress installation than it does now.
 
 ### 1.3.2
 
