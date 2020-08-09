@@ -65,6 +65,7 @@ function processImage(image) {
 	}
 
 	image.setAttribute('src', image.getAttribute('data-src'));
+	image.setAttribute('loading', 'lazy');
 
 	if (image.complete) {
 		showImage(image);
