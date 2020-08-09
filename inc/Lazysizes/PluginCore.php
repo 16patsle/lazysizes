@@ -136,6 +136,9 @@ class PluginCore {
 					add_filter( 'body_class', array( $this, 'body_class_blurhash_never_fancy' ) );
 				}
 			}
+
+			// Disable adding loading=lazy attribute unless full native loading is enabled.
+			add_filter('wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
 		}
 	}
 
@@ -479,6 +482,24 @@ class PluginCore {
 	 */
 	public function body_class_blurhash_never_fancy( $classes ) {
 		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
+	}
+
+	/**
+	 * Control whether built-in WordPress lazy loading is enabled.
+	 *
+	 * @since 1.3.3
+	 * @param bool $default The boolean default of true to filter.
+	 * @param string $tag_name An HTML tag name. As of WP 5.5, only img is supported.
+	 * @return bool New value for $default.
+	 */
+	public function set_wp_lazy_load( $default, $tag_name ) {
+		if($tag_name === 'img') {
+			if($this->settings['full_native']) {
+				return true;
+			}
+			return false;
+		}
+		return $default;
 	}
 
 	/**
