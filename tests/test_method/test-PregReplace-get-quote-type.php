@@ -33,7 +33,7 @@ class Tests_PregReplace_GetQuoteType extends WP_UnitTestCase {
 	 */
 	public function test_returns_double_quote() {
 		$markup   = '<img src="image.jpg" width="100px" height="200px">';
-		$actual   = $this->class_instance->get_quote_type($markup, 'img');
+		$actual   = $this->class_instance->get_quote_type($markup);
 		$expected = '"';
 
 		$this->assertEquals( $expected, $actual );
@@ -44,7 +44,7 @@ class Tests_PregReplace_GetQuoteType extends WP_UnitTestCase {
 	 */
 	public function test_returns_single_quote() {
 		$markup   = '<img src=\'image.jpg\' width=\'100px\' height=\'200px\'>';
-		$actual   = $this->class_instance->get_quote_type($markup, 'img');
+		$actual   = $this->class_instance->get_quote_type($markup);
 		$expected = '\'';
 
 		$this->assertEquals( $expected, $actual );
@@ -55,7 +55,7 @@ class Tests_PregReplace_GetQuoteType extends WP_UnitTestCase {
 	 */
 	public function test_returns_default_double() {
 		$markup   = '<img>';
-		$actual   = $this->class_instance->get_quote_type($markup, 'img');
+		$actual   = $this->class_instance->get_quote_type($markup);
 		$expected = '"';
 
 		$this->assertEquals( $expected, $actual );
@@ -66,7 +66,7 @@ class Tests_PregReplace_GetQuoteType extends WP_UnitTestCase {
 	 */
 	public function test_returns_single_quote_data_attr() {
 		$markup   = '<img data-some-attribute=\'value\'>';
-		$actual   = $this->class_instance->get_quote_type($markup, 'img');
+		$actual   = $this->class_instance->get_quote_type($markup);
 		$expected = '\'';
 
 		$this->assertEquals( $expected, $actual );

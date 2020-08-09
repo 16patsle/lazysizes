@@ -480,11 +480,9 @@ class PregReplace {
 	 *
 	 * @since 1.3.3
 	 * @param string $content Content to search through.
-	 * @param string $tag The type of tag.
-	 * @param string $attr The attribute to look for, default is src.
 	 * @return string String containing either a double or a single quote. If not found, defaults to double.
 	 */
-	public function get_quote_type( $content, $tag, $attr = 'src' ) {
+	public function get_quote_type( $content ) {
 		$quote = null;
 
 		// Get the quote character used in the tag.
