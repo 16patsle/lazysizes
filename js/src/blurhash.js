@@ -125,7 +125,7 @@ function processImage(image) {
 			imagePosition === 'sticky' ||
 			// Check if length of parent is more than 1
 			Array.prototype.slice
-				.call(image.parentNode)
+				.call(image.parentNode.children)
 				.filter((val) => val.nodeName !== 'NOSCRIPT').length > 1
 		) {
 			useFancySetup = false;
