@@ -64,6 +64,8 @@ function processImage(image) {
 		return;
 	}
 
+	image.setAttribute('src', image.getAttribute('data-src'));
+
 	if (image.complete) {
 		showImage(image);
 	} else {
