@@ -331,16 +331,18 @@ class PregReplace {
 			return $replace_markup;
 		}
 
+		$lazyload_class = $this->settings['full_native'] ? 'lazyloadnative' : 'lazyload';
+
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
 			// If there is no class attribute, add one.
-			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), '<$1 class="lazyload">', $replace_markup );
+			$replace_markup = preg_replace( sprintf( '/<(%s.*?)>/', $tag ), sprintf( '<$1 class="%s">', $lazyload_class ), $replace_markup );
 		} elseif ( empty( trim( $classes ) ) ) {
 			// If the attribute is emtpy, just add 'lazyload'.
-			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), 'class="lazyload"', $replace_markup );
+			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), sprintf( 'class="%s"', $lazyload_class ), $replace_markup );
 		} elseif ( ! preg_match( '/class="(?:[^"]* )?lazyload(?: [^"]*)?"/', $replace_markup ) ) {
 			// Append lazyload class to end of attribute contents.
-			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), sprintf( 'class="%s lazyload"', $classes ), $replace_markup );
+			$replace_markup = str_replace( sprintf( 'class="%s"', $classes ), sprintf( 'class="%s %s"', $classes, $lazyload_class ), $replace_markup );
 		}
 
 		return $replace_markup;
