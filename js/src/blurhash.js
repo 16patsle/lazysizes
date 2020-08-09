@@ -200,6 +200,10 @@ function processImage(image) {
 
 			image.after(newImage);
 		} else {
+			if (image.classList.contains('lazyloadnative')) {
+				image.classList.remove('lazyloadnative');
+				image.classList.add('lazyload');
+			}
 			image.classList.add('blurhash');
 			image.classList.add('blurhashing');
 		}
