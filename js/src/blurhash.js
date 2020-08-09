@@ -163,6 +163,7 @@ function processImage(image) {
 
 			newImage.classList.add('blurhashing');
 			newImage.classList.remove('lazyload');
+			newImage.classList.remove('lazyloadnative');
 			newImage.classList.remove('lazyloading');
 
 			// Cleanup attributes
