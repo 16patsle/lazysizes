@@ -60,4 +60,15 @@ class Tests_PregReplace_GetQuoteType extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, $actual );
 	}
+
+	/**
+	 * Test if single quote is returned when single quote is used in data attribute.
+	 */
+	public function test_returns_single_quote_data_attr() {
+		$markup   = '<img data-some-attribute=\'value\'>';
+		$actual   = $this->class_instance->get_quote_type($markup, 'img');
+		$expected = '\'';
+
+		$this->assertEquals( $expected, $actual );
+	}
 }
