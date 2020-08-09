@@ -474,4 +474,33 @@ class PregReplace {
 		return $replace_markup;
 	}
 
+	/**
+	 * Get the type of quote used for attributes, single or double.
+	 * Based on https://core.trac.wordpress.org/attachment/ticket/44427/44427.10.diff
+	 *
+	 * @since 1.3.3
+	 * @param string $content Content to search through.
+	 * @param string $tag The type of tag.
+	 * @param string $attr The attribute to look for, default is src.
+	 * @return string String containing either a double or a single quote. If not found, defaults to double.
+	 */
+	public function get_quote_type( $content, $tag, $attr = 'src' ) {
+		$quote = null;
+
+		// Get the quote character used in the tag.
+		// Normally it will be a double quote but in some rare cases may be a single quote.
+		// This also checks if the `img` tag is not malformed, i.e. it has a `src` attribute.
+		if ( strpos( $content, sprintf( ' %s="', $attr ) ) !== false ) {
+		    $quote = '"';
+		} elseif ( preg_match( sprintf( '/\s%s\s*=(["\'])/', $attr ), $content, $matches ) ) {
+		        $quote = $matches[1];
+		}
+
+		if ( !$quote ) {
+		        $quote = '"';
+		}
+
+		return $quote;
+	}
+
 }
