@@ -72,3 +72,5 @@ function showImage(image) {
 	image.classList.remove('lazyloadnative');
 	image.classList.add('lazyloaded');
 }
+
+document.addEventListener('DOMContentLoaded', loadImages);
