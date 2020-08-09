@@ -65,11 +65,11 @@ function processImage(image) {
 	}
 
 	if (image.complete) {
-		showImage();
+		showImage(image);
 	} else {
 		image.addEventListener(
 			'load',
-			showImage,
+			()=>showImage(image),
 			onceSupported ? { once: true } : false
 		);
 	}
