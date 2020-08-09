@@ -489,15 +489,12 @@ class PregReplace {
 
 		// Get the quote character used in the tag.
 		// Normally it will be a double quote but in some rare cases may be a single quote.
-		// This also checks if the `img` tag is not malformed, i.e. it has a `src` attribute.
-		if ( strpos( $content, sprintf( ' %s="', $attr ) ) !== false ) {
-		    $quote = '"';
-		} elseif ( preg_match( sprintf( '/\s%s\s*=(["\'])/', $attr ), $content, $matches ) ) {
-		        $quote = $matches[1];
-		}
+		preg_match( '/\s[a-zA-Z-]+\s*=(["\'])/', $content, $matches );
 
-		if ( !$quote ) {
-		        $quote = '"';
+		if ( $matches ){
+			$quote = $matches[1];
+		} else {
+		    $quote = '"';
 		}
 
 		return $quote;
