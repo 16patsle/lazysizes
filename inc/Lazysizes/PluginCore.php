@@ -112,12 +112,10 @@ class PluginCore {
 				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 
-			/*
-			A if ( $this->settings['avatars'] ) {
+			if ( $this->settings['avatars'] ) {
 				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
-				add_filter( 'get_avatar', array($this,'filter_html'), PHP_INT_MAX );.
+				add_filter( 'get_avatar', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
-			*/
 
 			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
 			if ( $this->settings['attachment_image'] ) {
