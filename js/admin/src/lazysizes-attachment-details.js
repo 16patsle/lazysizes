@@ -64,10 +64,13 @@ const clickFunction = function(e) {
 // Based on code by Thomas Griffin.
 // See https://gist.github.com/sunnyratilal/5650341.
 
+const mediaTwoColumn = wp.media.view.Attachment.Details.TwoColumn
+
 // In Media Library.
-wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.TwoColumn.extend({
+wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
     initialize: function(){
-		wp.media.view.Attachment.Details.prototype.initialize.apply(this, arguments);
+		mediaTwoColumn.prototype.initialize.apply(this, arguments);
+
         // Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
 	},
@@ -75,8 +78,8 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
 		'click .setting.lazysizes-blurhash .button': clickFunction
 	},
     render: function(){
-        // Ensure that the main attachment fields are rendered.
-		wp.media.view.Attachment.prototype.render.apply(this, arguments);
+        // Ensure that the main attachment fields (and the fields of other plugins) are rendered.
+		mediaTwoColumn.prototype.render.apply(this, arguments);
 
 		if(this.model.changedAttributes(['lazysizesBlurhash', 'lazysizesError']) === false) {
 			this.model.fetch();
@@ -93,18 +96,22 @@ wp.media.view.Attachment.Details.TwoColumn = wp.media.view.Attachment.Details.Tw
     }
 });
 
+const mediaAttachmentDetails = wp.media.view.Attachment.Details
+
 // In post editor, when selecting attachment.
-wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
+wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
     initialize: function(){
+		mediaAttachmentDetails.prototype.initialize.apply(this, arguments);
+
         // Always make sure that our content is up to date.
-        this.listenTo(this.model, 'change', this.render);
+		this.listenTo(this.model, 'change', this.render);
 	},
 	events: {
 		'click .setting.lazysizes-blurhash .button': clickFunction
 	},
     render: function(){
-        // Ensure that the main attachment fields are rendered.
-		wp.media.view.Attachment.prototype.render.apply(this, arguments);
+        // Ensure that the main attachment fields (and the fields of other plugins) are rendered.
+		mediaAttachmentDetails.prototype.render.apply(this, arguments);
 
 		if(this.model.changedAttributes(['lazysizesBlurhash', 'lazysizesError']) === false) {
 			this.model.fetch();

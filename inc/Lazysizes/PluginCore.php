@@ -81,7 +81,7 @@ class PluginCore {
 
 			if ( $this->settings['blurhash'] ) {
 				// Enqueue blurhash lazysizes admin scripts and styles.
-				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 15 );
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 16 );
 			}
 		} else {
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
@@ -350,7 +350,7 @@ class PluginCore {
 		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
-		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, true );
 
 		wp_localize_script(
 			'lazysizes-attachment-details',
