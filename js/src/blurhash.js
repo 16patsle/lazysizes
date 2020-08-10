@@ -101,7 +101,7 @@ function processImage(image) {
 				height = parseInt(aspectratio[1], 10);
 
 				if (width <= 25 || height <= 25) {
-					// Probably an actual aspect ratio, we can't handel that yet.
+					// Probably an actual aspect ratio, we can't handle that yet.
 					return;
 				}
 			} else {
