@@ -341,9 +341,9 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		error_log($replace_markup);
+		error_log( $replace_markup );
 
-		$lazyload_class = $tag === 'img' && isset($this->settings['full_native']) && $this->settings['full_native'] ? 'lazyloadnative' : 'lazyload';
+		$lazyload_class = $tag === 'img' && isset( $this->settings['full_native'] ) && $this->settings['full_native'] ? 'lazyloadnative' : 'lazyload';
 
 		// Here we construct the new class attribute.
 		if ( ! count( $classes_r ) ) {
@@ -366,7 +366,7 @@ class PregReplace {
 	 * @since 1.0.0
 	 * @param string $replace_markup The HTML markup being processed.
 	 * @param string $tag The current tag type being processed.
-	 * @param string      $quote_type The type of quote being used, single or double.
+	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with preload attribute added.
 	 */
 	public function add_preload_attr( $replace_markup, $tag, $quote_type = '"' ) {
@@ -504,10 +504,10 @@ class PregReplace {
 		// Normally it will be a double quote but in some rare cases may be a single quote.
 		preg_match( '/\s[a-zA-Z-]+\s*=(["\'])/', $content, $matches );
 
-		if ( $matches ){
+		if ( $matches ) {
 			$quote = $matches[1];
 		} else {
-		    $quote = '"';
+			$quote = '"';
 		}
 
 		return $quote;

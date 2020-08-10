@@ -60,7 +60,7 @@ class PluginCore {
 		$this->dir      = plugin_dir_url( $pluginfile );
 
 		// wp_doing_ajax was introduced in WP 4.7.
-		if ( ! function_exists('wp_doing_ajax') ) {
+		if ( ! function_exists( 'wp_doing_ajax' ) ) {
 			function wp_doing_ajax() {
 				return defined( 'DOING_AJAX' ) && DOING_AJAX;
 			}
@@ -136,7 +136,7 @@ class PluginCore {
 			}
 
 			// Disable adding loading=lazy attribute unless full native loading is enabled.
-			add_filter('wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
+			add_filter( 'wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
 		}
 	}
 
@@ -274,7 +274,7 @@ class PluginCore {
 				array_push( $scripts, 'nativeloading' );}
 
 			// Enqueue full native lazy loading, if combined is disabled.
-			if ( $this->settings['full_native'] && !$this->settings['native_lazy'] ) {
+			if ( $this->settings['full_native'] && ! $this->settings['native_lazy'] ) {
 				array_push( $scripts, 'fullnative' );}
 
 			// Enqueue Blurhash.
@@ -486,13 +486,13 @@ class PluginCore {
 	 * Control whether built-in WordPress lazy loading is enabled.
 	 *
 	 * @since 1.3.3
-	 * @param bool $default The boolean default of true to filter.
+	 * @param bool   $default The boolean default of true to filter.
 	 * @param string $tag_name An HTML tag name. As of WP 5.5, only img is supported.
 	 * @return bool New value for $default.
 	 */
 	public function set_wp_lazy_load( $default, $tag_name ) {
-		if($tag_name === 'img') {
-			if($this->settings['full_native']) {
+		if ( $tag_name === 'img' ) {
+			if ( $this->settings['full_native'] ) {
 				return true;
 			}
 			return false;
