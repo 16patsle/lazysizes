@@ -162,6 +162,7 @@ function processImage(image) {
 				'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 			newImage.classList.add('blurhashing');
+			newImage.classList.remove('blurhash-relative');
 			newImage.classList.remove('lazyload');
 			newImage.classList.remove('lazyloadnative');
 			newImage.classList.remove('lazyloading');
