@@ -341,8 +341,6 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		error_log( $replace_markup );
-
 		$lazyload_class = $tag === 'img' && isset( $this->settings['full_native'] ) && $this->settings['full_native'] ? 'lazyloadnative' : 'lazyload';
 
 		// Here we construct the new class attribute.
