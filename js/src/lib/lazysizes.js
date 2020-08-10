@@ -92,7 +92,10 @@ var factory = function () {
 
 	var updatePolyfill = function (el, full) {
 		var polyfill;
-		if (!window.HTMLPictureElement && (polyfill = window.picturefill || lazySizesCfg.pf)) {
+		if (
+			!window.HTMLPictureElement &&
+			(polyfill = window.picturefill || lazySizesCfg.pf)
+		) {
 			if (full && full.src && !el.getAttribute('srcset')) {
 				el.setAttribute('srcset', full.src);
 			}
