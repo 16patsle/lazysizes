@@ -3,7 +3,7 @@
  * The main plugin class file
  *
  * @package Lazysizes
- * @version 1.3.2
+ * @version 1.3.3
  */
 
 namespace Lazysizes;
@@ -59,6 +59,18 @@ class PluginCore {
 		$this->settings = $this->get_settings();
 		$this->dir      = plugin_dir_url( $pluginfile );
 
+		// wp_doing_ajax was introduced in WP 4.7.
+		if ( ! function_exists( 'wp_doing_ajax' ) ) {
+			/**
+			 * Determines whether the current request is a WordPress Ajax request.
+			 *
+			 * @return bool True if it's a WordPress Ajax request, false otherwise.
+			 */
+			function wp_doing_ajax() {
+				return defined( 'DOING_AJAX' ) && DOING_AJAX;
+			}
+		}
+
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			$settings_class = new Settings();
@@ -69,7 +81,7 @@ class PluginCore {
 
 			if ( $this->settings['blurhash'] ) {
 				// Enqueue blurhash lazysizes admin scripts and styles.
-				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 15 );
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 16 );
 			}
 		} else {
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
@@ -105,12 +117,10 @@ class PluginCore {
 				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
 
-			/*
-			A if ( $this->settings['avatars'] ) {
+			if ( $this->settings['avatars'] ) {
 				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
-				add_filter( 'get_avatar', array($this,'filter_html'), PHP_INT_MAX );.
+				add_filter( 'get_avatar', array( $this, 'filter_html' ), PHP_INT_MAX );
 			}
-			*/
 
 			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
 			if ( $this->settings['attachment_image'] ) {
@@ -129,6 +139,9 @@ class PluginCore {
 					add_filter( 'body_class', array( $this, 'body_class_blurhash_never_fancy' ) );
 				}
 			}
+
+			// Disable adding loading=lazy attribute unless full native loading is enabled.
+			add_filter( 'wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
 		}
 	}
 
@@ -172,6 +185,7 @@ class PluginCore {
 			'aspectratio',
 			'acf_content',
 			'native_lazy',
+			'full_native',
 			'skip_src',
 			'blurhash',
 			'blurhash_onload',
@@ -260,9 +274,13 @@ class PluginCore {
 			if ( $this->settings['aspectratio'] ) {
 				array_push( $scripts, 'aspectratio' );}
 
-			// Enqueue native lazy loading.
+			// Enqueue combined native lazy loading.
 			if ( $this->settings['native_lazy'] ) {
 				array_push( $scripts, 'nativeloading' );}
+
+			// Enqueue full native lazy loading, if combined is disabled.
+			if ( $this->settings['full_native'] && ! $this->settings['native_lazy'] ) {
+				array_push( $scripts, 'fullnative' );}
 
 			// Enqueue Blurhash.
 			if ( $this->settings['blurhash'] ) {
@@ -332,7 +350,7 @@ class PluginCore {
 		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
-		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, false );
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, true );
 
 		wp_localize_script(
 			'lazysizes-attachment-details',
@@ -357,17 +375,9 @@ class PluginCore {
 	 * @return array Array of modified attachment details.
 	 */
 	public function prepare_attachment_blurhash( $response, $attachment ) {
-		if ( ! isset( $attachment->ID ) ) {
-			return $response;
-		}
-
-		$blurhash                      = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
-		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
-		$response['lazysizesError']    = false;
-		$response['lazysizesLoading']  = false;
-
 		// Add nonces.
 		$response['nonces']['lazysizes'] = array(
+			'fetch' => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
 			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
 		);
@@ -376,7 +386,7 @@ class PluginCore {
 	}
 
 	/**
-	 * AJAX handler to generate or delete blurhash for an image.
+	 * AJAX handler to fetch, generate or delete blurhash for an image.
 	 *
 	 * @since 1.3.0
 	 */
@@ -387,10 +397,11 @@ class PluginCore {
 		};
 
 		$nonce                = sanitize_key( wp_unslash( $_REQUEST['nonce'] ) );
+		$nonce_valid_fetch    = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-fetch' );
 		$nonce_valid_generate = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-generate' );
 		$nonce_valid_delete   = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-delete' );
 
-		if ( ! $nonce_valid_generate && ! $nonce_valid_delete ) {
+		if ( ! $nonce_valid_fetch && ! $nonce_valid_generate && ! $nonce_valid_delete ) {
 			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
 		}
 
@@ -404,7 +415,16 @@ class PluginCore {
 			$attachment_id = sanitize_key( wp_unslash( $_REQUEST['attachmentId'] ) );
 		}
 
-		if ( $action === 'generate' && $nonce_valid_generate ) {
+		if ( $action === 'fetch' && $nonce_valid_fetch ) {
+			$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
+
+			wp_send_json(
+				array(
+					'success'  => true,
+					'blurhash' => $blurhash !== '' ? $blurhash : false,
+				)
+			);
+		} elseif ( $action === 'generate' && $nonce_valid_generate ) {
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty( $blurhash ) ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
@@ -467,6 +487,24 @@ class PluginCore {
 	 */
 	public function body_class_blurhash_never_fancy( $classes ) {
 		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
+	}
+
+	/**
+	 * Control whether built-in WordPress lazy loading is enabled.
+	 *
+	 * @since 1.3.3
+	 * @param bool   $default The boolean default of true to filter.
+	 * @param string $tag_name An HTML tag name. As of WP 5.5, only img is supported.
+	 * @return bool New value for $default.
+	 */
+	public function set_wp_lazy_load( $default, $tag_name ) {
+		if ( $tag_name === 'img' ) {
+			if ( $this->settings['full_native'] ) {
+				return true;
+			}
+			return false;
+		}
+		return $default;
 	}
 
 	/**

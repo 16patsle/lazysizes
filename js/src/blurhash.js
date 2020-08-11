@@ -101,7 +101,7 @@ function processImage(image) {
 				height = parseInt(aspectratio[1], 10);
 
 				if (width <= 25 || height <= 25) {
-					// Probably an actual aspect ratio, we can't handel that yet.
+					// Probably an actual aspect ratio, we can't handle that yet.
 					return;
 				}
 			} else {
@@ -109,7 +109,10 @@ function processImage(image) {
 			}
 		}
 
-		const { position: parentPosition } = getComputedStyle(image.parentElement);
+		const {
+			position: parentPosition,
+			display: parentDisplay,
+		} = getComputedStyle(image.parentElement);
 		const imageStyles = getComputedStyle(image);
 		const { position: imagePosition } = imageStyles;
 
@@ -122,7 +125,7 @@ function processImage(image) {
 			imagePosition === 'sticky' ||
 			// Check if length of parent is more than 1
 			Array.prototype.slice
-				.call(image.parentNode)
+				.call(image.parentNode.children)
 				.filter((val) => val.nodeName !== 'NOSCRIPT').length > 1
 		) {
 			useFancySetup = false;
@@ -134,11 +137,17 @@ function processImage(image) {
 		let newImage;
 
 		if (useFancySetup) {
-			image.parentElement.classList.add('blurhash-container');
+			let containerNode = image.parentElement;
+
+			// If image is wrapped in link, use link's parent
+			if (containerNode.nodeName === 'A' && parentDisplay === 'inline') {
+				containerNode = containerNode.parentElement;
+			}
+			containerNode.classList.add('blurhash-container');
 
 			// Make sure parent is either relative or absolute
 			if (parentPosition !== 'absolute') {
-				image.parentElement.classList.add('blurhash-container-relative');
+				containerNode.classList.add('blurhash-container-relative');
 			}
 
 			// Make sure image is either relative or absolute
@@ -153,7 +162,9 @@ function processImage(image) {
 				'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 			newImage.classList.add('blurhashing');
+			newImage.classList.remove('blurhash-relative');
 			newImage.classList.remove('lazyload');
+			newImage.classList.remove('lazyloadnative');
 			newImage.classList.remove('lazyloading');
 
 			// Cleanup attributes
@@ -190,6 +201,10 @@ function processImage(image) {
 
 			image.after(newImage);
 		} else {
+			if (image.classList.contains('lazyloadnative')) {
+				image.classList.remove('lazyloadnative');
+				image.classList.add('lazyload');
+			}
 			image.classList.add('blurhash');
 			image.classList.add('blurhashing');
 		}

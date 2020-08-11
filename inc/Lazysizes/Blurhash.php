@@ -33,12 +33,12 @@ class Blurhash {
 
 		// If attachment not found, try replacing size in url with '-scaled'.
 		if ( $attachment_id === 0 ) {
-			$url = preg_replace( '/-[\d]{1,4}x[\d]{1,4}\.(\w{3,})$/', '-scaled.$1', $url );
+			$url           = preg_replace( '/-[\d]{1,4}x[\d]{1,4}\.(\w{3,})$/', '-scaled.$1', $url );
 			$attachment_id = attachment_url_to_postid( $url );
 
 			// If still not found, try removing '-scaled'.
 			if ( $attachment_id === 0 ) {
-				$url = preg_replace( '/-scaled\.(\w{3,})$/', '.$1', $url );
+				$url           = preg_replace( '/-scaled\.(\w{3,})$/', '.$1', $url );
 				$attachment_id = attachment_url_to_postid( $url );
 
 				// If still not found, it's probably not an attachment.

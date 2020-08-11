@@ -28,6 +28,7 @@ const defaultConfigJS = {
 				'js/src/blurhash.js',
 				'js/src/lib/decode.js',
 				'js/src/blurhash/*',
+				'js/src/fullnative.js'
 			],
 			presets: [
 				[

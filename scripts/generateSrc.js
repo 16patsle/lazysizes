@@ -5,16 +5,21 @@ const writeFileAsync = promisify(fs.writeFile);
 const getCombination = require('./getCombinations');
 
 // Script combinations
-const scripts = ['unveilhooks', 'autoload', 'aspectratio', 'nativeloading', 'blurhash'];
-const n = scripts.length;
+function getScriptCombinations(scripts) {
+	const n = scripts.length;
+	 return [
+		...getCombination(scripts, n, 1),
+		...getCombination(scripts, n, 2),
+		...getCombination(scripts, n, 3),
+		...getCombination(scripts, n, 4),
+		...getCombination(scripts, n, 5),
+	];
+}
 
 const scriptCombinations = [
-	...getCombination(scripts, n, 1),
-	...getCombination(scripts, n, 2),
-	...getCombination(scripts, n, 3),
-	...getCombination(scripts, n, 4),
-	...getCombination(scripts, n, 5)
-];
+	...getScriptCombinations(['unveilhooks', 'autoload', 'aspectratio', 'nativeloading', 'blurhash']),
+	...getScriptCombinations(['unveilhooks', 'autoload', 'aspectratio', 'fullnative', 'blurhash'])
+]
 
 const scriptEntryPoints = ['js/src/lazysizes.js'];
 

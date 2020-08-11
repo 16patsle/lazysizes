@@ -39,6 +39,7 @@
 }
 
 .lazyload:not(.blurhash),
+.lazyloadnative:not(.blurhash),
 .lazyloading:not(.blurhash) {
 	opacity: 0;
 }
