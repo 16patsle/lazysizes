@@ -25,6 +25,13 @@ const templateString = `
 <p class="description">
 	<%= lazysizesStrings.description %>
 </p>
+<%} else {%>
+<span class="setting lazysizes-blurhash">
+	<span class="name" style="margin-left: 0; margin-right: 0;">Lazysizes Blurhash</span>
+	<span class="value" style="padding-top: 0;">
+	<span class="spinner <%= lazysizesLoading ? 'is-active' : '' %>" style="padding-top: 0; float: none; min-width: 20px;"></span>
+	</span>
+</span>
 <%}%>
 `;
 
@@ -71,7 +78,7 @@ const handleServerRequest = function (e) {
 	);
 };
 
-const initialValues = {lazysizesBlurhash:false,lazysizesError:false,lazysizesLoading:true};
+const initialValues = {lazysizesBlurhash:undefined,lazysizesError:false,lazysizesLoading:true};
 
 // Based on code by Thomas Griffin.
 // See https://gist.github.com/sunnyratilal/5650341.
