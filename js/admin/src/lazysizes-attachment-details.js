@@ -30,41 +30,17 @@ const templateString = `
 
 const templateFunction = _.template(templateString);
 
-const fetchInitial = function (e) {
-	lazysizesAjax(
-		'fetch',
-		this.model.attributes.id,
-		this.model.attributes.nonces.lazysizes['fetch'],
-		(response, status, errorCode) => {
-			this.lsModel.set('lazysizesLoading', false);
-
-			if (status === 'error') {
-				this.lsModel.set(
-					'lazysizesError',
-					`${lazysizesStrings.error} (${errorCode})`
-				);
-			} else {
-				if (response.success) {
-					this.lsModel.set('lazysizesBlurhash', response.blurhash);
-				} else {
-					this.lsModel.set('lazysizesError', response.data[0].message);
-				}
-			}
-		}
-	);
-}
-
-const clickFunction = function (e) {
+const handleServerRequest = function (e) {
 	let action = '';
-	if (e.target.classList.contains('lazysizes-blurhash-generate')) {
+	if (e === undefined) {
+		action = 'fetch';
+	} else if (e.target.classList.contains('lazysizes-blurhash-generate')) {
 		action = 'generate';
 	} else if (e.target.classList.contains('lazysizes-blurhash-delete')) {
 		action = 'delete';
 	} else {
 		return;
 	}
-
-	console.log('click ' + action)
 
 	this.lsModel.set('lazysizesLoading', true);
 
@@ -82,7 +58,7 @@ const clickFunction = function (e) {
 				);
 			} else {
 				if (response.success) {
-					if (action === 'generate') {
+					if (action === 'fetch' || action === 'generate') {
 						this.lsModel.set('lazysizesBlurhash', response.blurhash);
 					} else if (action === 'delete') {
 						this.lsModel.set('lazysizesBlurhash', false);
@@ -108,14 +84,14 @@ wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
 		mediaTwoColumn.prototype.initialize.apply(this, arguments);
 
 		this.lsModel = new Backbone.Model(initialValues);
-		fetchInitial.apply(this);
+		handleServerRequest.apply(this);
 
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
 		this.listenTo(this.lsModel, 'change', this.render);
 	},
 	events: {
-		'click .setting.lazysizes-blurhash .button': clickFunction,
+		'click .setting.lazysizes-blurhash .button': handleServerRequest,
 	},
 	render: function () {
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
@@ -140,14 +116,14 @@ wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
 		mediaAttachmentDetails.prototype.initialize.apply(this, arguments);
 
 		this.lsModel = new Backbone.Model(initialValues);
-		fetchInitial.apply(this);
+		handleServerRequest.apply(this);
 
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
 		this.listenTo(this.lsModel, 'change', this.render);
 	},
 	events: {
-		'click .setting.lazysizes-blurhash .button': clickFunction,
+		'click .setting.lazysizes-blurhash .button': handleServerRequest,
 	},
 	render: function () {
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
