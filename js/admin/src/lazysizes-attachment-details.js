@@ -78,7 +78,7 @@ const handleServerRequest = function (e) {
 	);
 };
 
-const initialValues = {lazysizesBlurhash:undefined,lazysizesError:false,lazysizesLoading:true};
+const initialValues = {lazysizesBlurhash:undefined,lazysizesError:false,lazysizesLoading:false};
 
 // Based on code by Thomas Griffin.
 // See https://gist.github.com/sunnyratilal/5650341.
@@ -91,7 +91,6 @@ wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
 		mediaTwoColumn.prototype.initialize.apply(this, arguments);
 
 		this.lsModel = new Backbone.Model(initialValues);
-		handleServerRequest.apply(this);
 
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
@@ -103,6 +102,11 @@ wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
 	render: function () {
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
 		mediaTwoColumn.prototype.render.apply(this, arguments);
+
+		// If first load and the nonces have loaded, get initial data from server.
+		if (typeof this.lsModel.attributes.lazysizesBlurhash === 'undefined' && typeof this.model.attributes.nonces !== 'undefined' && !this.lsModel.attributes.lazysizesLoading) {
+			handleServerRequest.apply(this);
+		}
 
 		// Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
 		this.views.detach();
@@ -123,7 +127,6 @@ wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
 		mediaAttachmentDetails.prototype.initialize.apply(this, arguments);
 
 		this.lsModel = new Backbone.Model(initialValues);
-		handleServerRequest.apply(this);
 
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
@@ -135,6 +138,11 @@ wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
 	render: function () {
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
 		mediaAttachmentDetails.prototype.render.apply(this, arguments);
+
+		// If first load and the nonces have loaded, get initial data from server.
+		if (typeof this.lsModel.attributes.lazysizesBlurhash === 'undefined' && typeof this.model.attributes.nonces !== 'undefined' && !this.lsModel.attributes.lazysizesLoading) {
+			handleServerRequest.apply(this);
+		}
 
 		// Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
 		this.views.detach();
