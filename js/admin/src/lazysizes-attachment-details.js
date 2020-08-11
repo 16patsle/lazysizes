@@ -30,6 +30,30 @@ const templateString = `
 
 const templateFunction = _.template(templateString);
 
+const fetchInitial = function (e) {
+	lazysizesAjax(
+		'fetch',
+		this.model.attributes.id,
+		this.model.attributes.nonces.lazysizes['fetch'],
+		(response, status, errorCode) => {
+			this.lsModel.set('lazysizesLoading', false);
+
+			if (status === 'error') {
+				this.lsModel.set(
+					'lazysizesError',
+					`${lazysizesStrings.error} (${errorCode})`
+				);
+			} else {
+				if (response.success) {
+					this.lsModel.set('lazysizesBlurhash', response.blurhash);
+				} else {
+					this.lsModel.set('lazysizesError', response.data[0].message);
+				}
+			}
+		}
+	);
+}
+
 const clickFunction = function (e) {
 	let action = '';
 	if (e.target.classList.contains('lazysizes-blurhash-generate')) {
@@ -40,34 +64,38 @@ const clickFunction = function (e) {
 		return;
 	}
 
-	this.model.set('lazysizesLoading', true);
+	console.log('click ' + action)
+
+	this.lsModel.set('lazysizesLoading', true);
 
 	lazysizesAjax(
 		action,
 		this.model.attributes.id,
 		this.model.attributes.nonces.lazysizes[action],
 		(response, status, errorCode) => {
-			this.model.set('lazysizesLoading', false);
+			this.lsModel.set('lazysizesLoading', false);
 
 			if (status === 'error') {
-				this.model.set(
+				this.lsModel.set(
 					'lazysizesError',
 					`${lazysizesStrings.error} (${errorCode})`
 				);
 			} else {
 				if (response.success) {
 					if (action === 'generate') {
-						this.model.set('lazysizesBlurhash', response.blurhash);
+						this.lsModel.set('lazysizesBlurhash', response.blurhash);
 					} else if (action === 'delete') {
-						this.model.set('lazysizesBlurhash', false);
+						this.lsModel.set('lazysizesBlurhash', false);
 					}
 				} else {
-					this.model.set('lazysizesError', response.data[0].message);
+					this.lsModel.set('lazysizesError', response.data[0].message);
 				}
 			}
 		}
 	);
 };
+
+const initialValues = {lazysizesBlurhash:false,lazysizesError:false,lazysizesLoading:true};
 
 // Based on code by Thomas Griffin.
 // See https://gist.github.com/sunnyratilal/5650341.
@@ -79,8 +107,12 @@ wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
 	initialize: function () {
 		mediaTwoColumn.prototype.initialize.apply(this, arguments);
 
+		this.lsModel = new Backbone.Model(initialValues);
+		fetchInitial.apply(this);
+
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
+		this.listenTo(this.lsModel, 'change', this.render);
 	},
 	events: {
 		'click .setting.lazysizes-blurhash .button': clickFunction,
@@ -89,17 +121,10 @@ wp.media.view.Attachment.Details.TwoColumn = mediaTwoColumn.extend({
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
 		mediaTwoColumn.prototype.render.apply(this, arguments);
 
-		if (
-			this.model.changedAttributes(['lazysizesBlurhash', 'lazysizesError']) ===
-			false
-		) {
-			this.model.fetch();
-		}
-
 		// Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
 		this.views.detach();
 		if (this.model.attributes.type === 'image') {
-			this.$el.find('.settings').append(templateFunction(this.model.toJSON()));
+			this.$el.find('.settings').append(templateFunction(this.lsModel.toJSON()));
 		}
 		this.views.render();
 
@@ -114,8 +139,12 @@ wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
 	initialize: function () {
 		mediaAttachmentDetails.prototype.initialize.apply(this, arguments);
 
+		this.lsModel = new Backbone.Model(initialValues);
+		fetchInitial.apply(this);
+
 		// Always make sure that our content is up to date.
 		this.listenTo(this.model, 'change', this.render);
+		this.listenTo(this.lsModel, 'change', this.render);
 	},
 	events: {
 		'click .setting.lazysizes-blurhash .button': clickFunction,
@@ -124,17 +153,10 @@ wp.media.view.Attachment.Details = mediaAttachmentDetails.extend({
 		// Ensure that the main attachment fields (and the fields of other plugins) are rendered.
 		mediaAttachmentDetails.prototype.render.apply(this, arguments);
 
-		if (
-			this.model.changedAttributes(['lazysizesBlurhash', 'lazysizesError']) ===
-			false
-		) {
-			this.model.fetch();
-		}
-
 		// Detach the views, append our custom fields, make sure that our data is fully updated and re-render the updated view.
 		this.views.detach();
 		if (this.model.attributes.type === 'image') {
-			this.$el.append(templateFunction(this.model.toJSON()));
+			this.$el.append(templateFunction(this.lsModel.toJSON()));
 		}
 		this.views.render();
 

@@ -375,17 +375,9 @@ class PluginCore {
 	 * @return array Array of modified attachment details.
 	 */
 	public function prepare_attachment_blurhash( $response, $attachment ) {
-		if ( ! isset( $attachment->ID ) ) {
-			return $response;
-		}
-
-		$blurhash                      = get_post_meta( $attachment->ID, '_lazysizes_blurhash', true );
-		$response['lazysizesBlurhash'] = $blurhash !== '' ? $blurhash : false;
-		$response['lazysizesError']    = false;
-		$response['lazysizesLoading']  = false;
-
 		// Add nonces.
 		$response['nonces']['lazysizes'] = array(
+			'fetch' => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
 			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
 		);
@@ -394,7 +386,7 @@ class PluginCore {
 	}
 
 	/**
-	 * AJAX handler to generate or delete blurhash for an image.
+	 * AJAX handler to fetch, generate or delete blurhash for an image.
 	 *
 	 * @since 1.3.0
 	 */
@@ -405,10 +397,11 @@ class PluginCore {
 		};
 
 		$nonce                = sanitize_key( wp_unslash( $_REQUEST['nonce'] ) );
+		$nonce_valid_fetch    = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-fetch' );
 		$nonce_valid_generate = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-generate' );
 		$nonce_valid_delete   = wp_verify_nonce( $nonce, 'lazysizes-blurhash-nonce-delete' );
 
-		if ( ! $nonce_valid_generate && ! $nonce_valid_delete ) {
+		if ( ! $nonce_valid_fetch && ! $nonce_valid_generate && ! $nonce_valid_delete ) {
 			wp_send_json_error( new \WP_Error( '401', __( 'Invalid nonce. Reload page and try again.', 'lazysizes' ) ) );
 		}
 
@@ -422,7 +415,16 @@ class PluginCore {
 			$attachment_id = sanitize_key( wp_unslash( $_REQUEST['attachmentId'] ) );
 		}
 
-		if ( $action === 'generate' && $nonce_valid_generate ) {
+		if ( $action === 'fetch' && $nonce_valid_fetch ) {
+			$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
+
+			wp_send_json(
+				array(
+					'success'  => true,
+					'blurhash' => $blurhash !== '' ? $blurhash : false,
+				)
+			);
+		} elseif ( $action === 'generate' && $nonce_valid_generate ) {
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty( $blurhash ) ) {
 				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
