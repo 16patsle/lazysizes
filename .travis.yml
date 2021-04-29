@@ -24,20 +24,17 @@ jobs:
       env: WP_VERSION=latest
       name: PHPUnit tests (PHP 7.4, latest WP)
     - php: 7.3
+      env: WP_VERSION=4.6
+      name: PHPUnit tests (PHP 7.3, WP 4.6)
+    - php: 7.3
+      env: WP_VERSION=5.0
+      name: PHPUnit tests (PHP 7.3, WP 5.0)
+    - php: 7.3
       env: WP_VERSION=latest
       name: PHPUnit tests (PHP 7.3, latest WP)
-    - php: 7.2
-      env: WP_VERSION=4.6
-      name: PHPUnit tests (PHP 7.2, WP 4.6)
-    - php: 7.2
-      env: WP_VERSION=5.0
-      name: PHPUnit tests (PHP 7.2, WP 5.0)
-    - php: 7.2
-      env: WP_VERSION=latest
-      name: PHPUnit tests (PHP 7.2, latest WP)
-    - php: 7.2
+    - php: 7.3
       env: WP_VERSION=trunk
-      name: PHPUnit tests (PHP 7.2, WP trunk)
+      name: PHPUnit tests (PHP 7.3, WP trunk)
     - php: 7.2
       env: WP_TRAVISCI=phpcs
       dist: precise
