@@ -2,7 +2,7 @@
 Contributors: 16patsle
 Tags: lazy load, lazysizes, image, Blurhash, performance
 Requires at least: 4.6
-Requires PHP: 7.3
+Requires PHP: 7.2
 Tested up to: 5.7
 Stable tag: 1.2.1
 License: GPLv3 or later
