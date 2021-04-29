@@ -24,11 +24,6 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function get_blurhash( $url, $generate_if_missing = false ) {
-		if ( ! function_exists( 'attachment_url_to_postid' ) ) {
-			// WordPress version 3.9 does not support attachment_url_to_postid, load custom implementation.
-			require_once dirname( __FILE__ ) . '/attachment-url-to-postid.php';
-		}
-
 		$attachment_id = attachment_url_to_postid( $url );
 
 		// If attachment not found, try replacing size in url with '-scaled'.
@@ -136,13 +131,8 @@ class Blurhash {
 
 		set_time_limit( 60 );
 
-		if ( version_compare( phpversion(), '7.2', '<' ) ) {
-			// Use LegacyBlurhash, the regular library requires PHP 7.2.
-			$blurhash = LegacyBlurhash\Blurhash::encode( $pixels, $components_x, $components_y );
-		} else {
-			// Generate Blurhash.
-			$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
-		}
+		// Generate Blurhash.
+		$blurhash = PhpBlurhash::encode( $pixels, $components_x, $components_y );
 
 		// When no blurhash can be generated, it may return an empty string.
 		if ( $blurhash === '' ) {

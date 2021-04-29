@@ -408,11 +408,6 @@ class PregReplace {
 
 		// Try figuring out aspect ratio from attachment metadata.
 		if ( $src_attr !== false && ( empty( $width ) || empty( $height ) ) ) {
-			if ( ! function_exists( 'attachment_url_to_postid' ) ) {
-				// WordPress version 3.9 does not support attachment_url_to_postid, load custom implementation.
-				require_once dirname( __FILE__ ) . '/attachment-url-to-postid.php';
-			}
-
 			$metadata = wp_get_attachment_metadata( attachment_url_to_postid( $src_attr ) );
 
 			// Check if src is a local image attachment.

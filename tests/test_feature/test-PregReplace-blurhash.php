@@ -27,23 +27,10 @@ class Tests_PregReplace_Blurhash extends WP_UnitTestCase {
 			dirname( __FILE__ )
 		);
 
-		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
-			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
-		} else {
-			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
-			require_once dirname( __FILE__ ) . '/../inc/factory-attachment-upload.php';
-			$attachment_id = create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
-		}
+		$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
 
 		$url      = wp_get_attachment_url( $attachment_id );
 		$blurhash = 'LSE#Hk_OrCF}kEx]n$aLr;odWXR,';
-
-		global $wp_version;
-		if ( version_compare( $wp_version, '4.5', '<' ) ) {
-			// WordPress 4.5 introduced improvements to Imagick resizing.
-			// Versions before that have slightly different thumbnail images, which gives different Blurhash strings.
-			$blurhash = 'LTE#Hk_OrCF#kEx[n~aer;odWXR,';
-		}
 
 		$markup   = $class_instance->preg_replace_html( '<img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
 		$expected = '<img data-aspectratio="300/400" data-blurhash="' . $blurhash . '" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' . $url . '" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="' . $url . '" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
@@ -71,13 +58,7 @@ class Tests_PregReplace_Blurhash extends WP_UnitTestCase {
 			dirname( __FILE__ )
 		);
 
-		if ( method_exists( self::class, 'factory' ) && method_exists( self::factory()->attachment, 'create_upload_object' ) ) {
-			$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
-		} else {
-			// WordPress version 3.9 to 4.3 does not support create_upload_object, load custom implementation.
-			require_once dirname( __FILE__ ) . '/../inc/factory-attachment-upload.php';
-			$attachment_id = create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
-		}
+		$attachment_id = self::factory()->attachment->create_upload_object( __DIR__ . '/../assets/test-pineapple.jpg' );
 
 		$url = wp_get_attachment_url( $attachment_id );
 

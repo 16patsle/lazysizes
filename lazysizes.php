@@ -14,6 +14,8 @@ Author: Patrick Sletvold
 Author URI: https://www.multitek.no/
 Version: 1.3.3
 Text Domain: lazysizes
+License: GPLv3 or later
+License URI: <http://www.gnu.org/licenses/gpl-3.0.html>
 */
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );

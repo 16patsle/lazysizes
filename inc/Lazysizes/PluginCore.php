@@ -77,7 +77,6 @@ class PluginCore {
 			// If this is the first time we've enabled the plugin, setup default settings.
 			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
-			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
 			if ( $this->settings['blurhash'] ) {
 				// Enqueue blurhash lazysizes admin scripts and styles.
@@ -143,15 +142,6 @@ class PluginCore {
 			// Disable adding loading=lazy attribute unless full native loading is enabled.
 			add_filter( 'wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
 		}
-	}
-
-	/**
-	 * Load plugin textdomain.
-	 *
-	 * @since 0.1.2
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( 'lazysizes' );
 	}
 
 	/**
