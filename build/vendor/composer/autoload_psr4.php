@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Lazysizes\\Vendor\\kornrunner\\Blurhash\\' => array($vendorDir . '/kornrunner/blurhash/src'),
+    'Lazysizes\\Vendor\\PackageVersions\\' => array($vendorDir . '/composer/package-versions-deprecated/src/PackageVersions'),
     'Lazysizes\\Vendor\\Lazysizes\\' => array($baseDir . '/inc/Lazysizes'),
     'Lazysizes\\Vendor\\Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
 );

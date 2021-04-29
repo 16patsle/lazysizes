@@ -4,12 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd8684786dbd1993a10743b51274afb24
+class ComposerStaticInitc56cec94df020bdca4acfecbbc5fdf0e
 {
     public static $prefixLengthsPsr4 = array (
         'L' => 
         array (
             'Lazysizes\\Vendor\\kornrunner\\Blurhash\\' => 37,
+            'Lazysizes\\Vendor\\PackageVersions\\' => 33,
             'Lazysizes\\Vendor\\Lazysizes\\' => 27,
             'Lazysizes\\Vendor\\Composer\\Installers\\' => 37,
         ),
@@ -19,6 +20,10 @@ class ComposerStaticInitd8684786dbd1993a10743b51274afb24
         'Lazysizes\\Vendor\\kornrunner\\Blurhash\\' => 
         array (
             0 => __DIR__ . '/..' . '/kornrunner/blurhash/src',
+        ),
+        'Lazysizes\\Vendor\\PackageVersions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions',
         ),
         'Lazysizes\\Vendor\\Lazysizes\\' => 
         array (
@@ -30,11 +35,16 @@ class ComposerStaticInitd8684786dbd1993a10743b51274afb24
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd8684786dbd1993a10743b51274afb24::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd8684786dbd1993a10743b51274afb24::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc56cec94df020bdca4acfecbbc5fdf0e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc56cec94df020bdca4acfecbbc5fdf0e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc56cec94df020bdca4acfecbbc5fdf0e::$classMap;
 
         }, null, ClassLoader::class);
     }
