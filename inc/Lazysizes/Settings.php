@@ -5,6 +5,8 @@
  * @package Lazysizes
  */
 
+declare(strict_types=1);
+
 namespace Lazysizes;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -438,12 +440,11 @@ class Settings {
 	 * @param mixed[] $option Array of all options.
 	 * @param string  $key The key of the option to compare.
 	 * @param mixed   $current The other value to compare if not just true.
-	 * @param bool    $echo Whether to echo or just return the string.
-	 * @return string|void html attribute or empty string.
+	 * @return void
 	 */
-	public function checked_r( array $option, string $key, $current = true, bool $echo = true ) {
+	public function checked_r( array $option, string $key, $current = true ): void {
 		if ( is_array( $option ) && array_key_exists( $key, $option ) ) {
-			checked( $option[ $key ], $current, $echo );
+			checked( $option[ $key ], $current, true );
 		}
 	}
 
