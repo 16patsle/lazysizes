@@ -19,11 +19,11 @@ class Tests_PregReplace_Picture extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array(),
+			[
+				'excludeclasses' => [],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}
@@ -38,7 +38,7 @@ class Tests_PregReplace_Picture extends WP_UnitTestCase {
 			<img src="logo-narrow.png" alt="Logo">
 		</picture>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img', 'picture' ] );
 		$expected = '
 		<picture class="lazyload">
 			<source data-srcset="logo-wide.png" media="(min-width: 600px)">
@@ -66,7 +66,7 @@ class Tests_PregReplace_Picture extends WP_UnitTestCase {
 			<img src="logo-narrow.png" alt="Logo">
 		</picture>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img', 'picture' ] );
 		$expected = '
 		<picture class="lazyload">
 			<source data-srcset="logo-wide.png" media="(min-width: 600px)">

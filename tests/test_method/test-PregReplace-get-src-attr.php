@@ -19,11 +19,11 @@ class Tests_PregReplace_GetSrcAttr extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array(),
+			[
+				'excludeclasses' => [],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}

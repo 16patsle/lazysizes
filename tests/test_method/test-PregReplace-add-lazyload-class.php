@@ -19,11 +19,11 @@ class Tests_PregReplace_AddLazyloadClass extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array(),
+			[
+				'excludeclasses' => [],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}
@@ -33,7 +33,7 @@ class Tests_PregReplace_AddLazyloadClass extends WP_UnitTestCase {
 	 * This test has 4 classes.
 	 */
 	public function test_should_add_lazyload_class_four_classes() {
-		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg" class="class1 class2 class3 testclass">', 'img', array( 'class1', 'class2', 'class3', 'testclass' ) );
+		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg" class="class1 class2 class3 testclass">', 'img', [ 'class1', 'class2', 'class3', 'testclass' ] );
 		$expected = '<img src="image.jpg" class="class1 class2 class3 testclass lazyload">';
 
 		$this->assertEquals( $expected, $markup );
@@ -44,7 +44,7 @@ class Tests_PregReplace_AddLazyloadClass extends WP_UnitTestCase {
 	 * This test has an empty class attribute.
 	 */
 	public function test_should_add_lazyload_class_empty_class() {
-		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg" class="">', 'img', array( '' ) );
+		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg" class="">', 'img', [ '' ] );
 		$expected = '<img src="image.jpg" class="lazyload">';
 
 		$this->assertEquals( $expected, $markup );
@@ -55,7 +55,7 @@ class Tests_PregReplace_AddLazyloadClass extends WP_UnitTestCase {
 	 * This test has an empty class attribute.
 	 */
 	public function test_should_add_lazyload_class_no_classes() {
-		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg">', 'img', array() );
+		$markup   = $this->class_instance->add_lazyload_class( '<img src="image.jpg">', 'img', [] );
 		$expected = '<img src="image.jpg" class="lazyload">';
 
 		$this->assertEquals( $expected, $markup );

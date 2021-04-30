@@ -19,11 +19,11 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array(),
+			[
+				'excludeclasses' => [],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}
@@ -32,7 +32,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag.
 	 */
 	public function test_preg_replace_html_img() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -42,7 +42,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag with empty class attribute.
 	 */
 	public function test_preg_replace_html_img_empty_class() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=""></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -52,7 +52,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag with blank class attribute.
 	 */
 	public function test_preg_replace_html_img_blank_class() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  ">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  ">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="  "></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -62,7 +62,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag with existing classes.
 	 */
 	public function test_preg_replace_html_img_existing_class() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="existing-class lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="existing-class"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -72,7 +72,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag with existing classes padded with whitespace.
 	 */
 	public function test_preg_replace_html_img_existing_class_whitespace() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class ">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class ">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class=" existing-class  lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class=" existing-class "></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -82,7 +82,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 	 * Test the filtering of an img tag with a class containing the regex delimiter.
 	 */
 	public function test_preg_replace_html_img_regex_delimiter_class() {
-		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//">', array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//">', [ 'img' ] );
 		$expected = '<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="// lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="//"></noscript>';
 
 		$this->assertEquals( $expected, $markup );
@@ -99,7 +99,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 			<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
 		</noscript>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img' ] );
 		$expected = '
 		<noscript>
 			<img src="logo-narrow.png" alt="Logo">
@@ -122,7 +122,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 		</noscript>
 		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px">
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img' ] );
 		$expected = '
 		<noscript>
 			<img src="logo-narrow.png" alt="Logo">
@@ -145,7 +145,7 @@ class Tests_PregReplace_Img extends WP_UnitTestCase {
 			<img src="logo-wide.png" alt="Logo">
 		</noscript>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img' ] );
 		$expected = '
 		<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px"></noscript>
 		<noscript>

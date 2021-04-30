@@ -356,7 +356,7 @@ class PluginCore {
 	public function prepare_attachment_blurhash( array $response, WP_Post $attachment ): array {
 		// Add nonces.
 		$response['nonces']['lazysizes'] = [
-			'fetch' => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
+			'fetch'    => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
 			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
 		];

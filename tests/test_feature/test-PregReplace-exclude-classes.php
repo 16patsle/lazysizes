@@ -19,11 +19,11 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array( 'class1', 'class3' ),
+			[
+				'excludeclasses' => [ 'class1', 'class3' ],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}
@@ -33,7 +33,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 	 */
 	public function test_preg_excluded_class_img() {
 		$html     = '<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class1">';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img' ] );
 		$expected = $html;
 
 		$this->assertEquals( $expected, $markup );
@@ -48,7 +48,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class2">
 		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class3">
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img' ] );
 		$expected = '
 		<img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class1">
 		<img data-aspectratio="300/400" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="image.jpg" data-srcset="something" alt="Image" width="300px" height="400px" class="class2 lazyload"><noscript><img src="image.jpg" srcset="something" alt="Image" width="300px" height="400px" class="class2"></noscript>
@@ -68,7 +68,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 			<img src="logo-narrow.png" alt="Logo">
 		</picture>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img', 'picture' ] );
 		$expected = $html;
 
 		$this->assertEquals( $expected, $markup );
@@ -88,7 +88,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 			<img src="logo-narrow.png" alt="Logo">
 		</picture>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'img', 'picture' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'img', 'picture' ] );
 		$expected = '
 		<picture class="class1">
 			<source srcset="logo-wide.png" media="(min-width: 600px)">
@@ -116,7 +116,7 @@ class Tests_PregReplace_ExcludeClasses extends WP_UnitTestCase {
 			<source src="myAudio.ogg" type="audio/ogg">
 		</audio>
 		';
-		$markup   = $this->class_instance->preg_replace_html( $html, array( 'audio' ) );
+		$markup   = $this->class_instance->preg_replace_html( $html, [ 'audio' ] );
 		$expected = $html;
 
 		$this->assertEquals( $expected, $markup );

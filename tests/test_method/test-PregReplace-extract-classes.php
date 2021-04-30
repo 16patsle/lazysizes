@@ -19,11 +19,11 @@ class Tests_PregReplace_ExtractClasses extends WP_UnitTestCase {
 		parent::setUp();
 
 		$this->class_instance = new PregReplace(
-			array(
-				'excludeclasses' => array(),
+			[
+				'excludeclasses' => [],
 				'skip_src'       => false,
 				'blurhash'       => false,
-			),
+			],
 			dirname( __FILE__ )
 		);
 	}
@@ -34,7 +34,7 @@ class Tests_PregReplace_ExtractClasses extends WP_UnitTestCase {
 	 */
 	public function test_should_extract_four_classes() {
 		$classes  = $this->class_instance->extract_classes( '<img src="image.jpg" class="class1 class2 class3 testclass">' );
-		$expected = array( 'class1', 'class2', 'class3', 'testclass' );
+		$expected = [ 'class1', 'class2', 'class3', 'testclass' ];
 
 		$this->assertEquals( $expected, $classes );
 	}
@@ -45,7 +45,7 @@ class Tests_PregReplace_ExtractClasses extends WP_UnitTestCase {
 	 */
 	public function test_should_extract_empty_class() {
 		$classes  = $this->class_instance->extract_classes( '<img src="image.jpg" class="">' );
-		$expected = array( '' );
+		$expected = [ '' ];
 
 		$this->assertEquals( $expected, $classes );
 	}
@@ -56,7 +56,7 @@ class Tests_PregReplace_ExtractClasses extends WP_UnitTestCase {
 	 */
 	public function test_should_extract_no_classes() {
 		$classes  = $this->class_instance->extract_classes( '<img src="image.jpg">' );
-		$expected = array();
+		$expected = [];
 
 		$this->assertEquals( $expected, $classes );
 	}

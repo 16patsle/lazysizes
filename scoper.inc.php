@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 use Isolated\Symfony\Component\Finder\Finder;
 
-return array(
+return [
 	// The prefix configuration. If a non null value will be used, a random prefix will be generated.
 	'prefix'  => 'Lazysizes\\Vendor',
 
@@ -19,21 +19,21 @@ return array(
 	// following configuration key.
 	//
 	// For more see: https://github.com/humbug/php-scoper#finders-and-paths.
-	'finders' => array(
+	'finders' => [
 		Finder::create()
 			->files()
 			->ignoreVCS( true )
 			->notName( '/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock|\\.xml|\\.yml|\\.ini/' )
 			->exclude(
-				array(
+				[
 					'test',
-				)
+				]
 			)
-			->in( array( 'vendor/kornrunner', 'vendor/composer' ) ),
+			->in( [ 'vendor/kornrunner', 'vendor/composer' ] ),
 		Finder::create()->append(
-			array(
+			[
 				'composer.json',
-			)
+			]
 		),
-	),
-);
+	],
+];

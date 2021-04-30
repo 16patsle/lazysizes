@@ -75,7 +75,7 @@ class Blurhash {
 	 * @return string|false The Blurhash string, or false.
 	 */
 	public static function encode_blurhash( $metadata, int $attachment_id ) {
-		$size = image_get_intermediate_size( $attachment_id );
+		$size       = image_get_intermediate_size( $attachment_id );
 		$upload_dir = wp_get_upload_dir();
 
 		if ( $size === false || $upload_dir['error'] !== false ) {
