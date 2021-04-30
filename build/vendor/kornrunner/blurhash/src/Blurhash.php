@@ -45,7 +45,7 @@ class Blurhash
         $dc_value = \Lazysizes\Vendor\kornrunner\Blurhash\DC::encode(\array_shift($components) ?: []);
         $max_ac_component = 0;
         foreach ($components as $component) {
-            $component[] = $max_ac_component;
+            \array_push($component, $max_ac_component);
             $max_ac_component = \max($component);
         }
         $quant_max_ac_component = (int) \max(0, \min(82, \floor($max_ac_component * 166 - 0.5)));
@@ -70,7 +70,7 @@ class Blurhash
         $size_info = \Lazysizes\Vendor\kornrunner\Blurhash\Base83::decode($blurhash[0]);
         $size_y = \floor($size_info / 9) + 1;
         $size_x = $size_info % 9 + 1;
-        $length = \strlen($blurhash);
+        $length = (int) \strlen($blurhash);
         $expected_length = (int) (4 + 2 * $size_y * $size_x);
         if ($length !== $expected_length) {
             throw new \InvalidArgumentException("Blurhash length mismatch: length is {$length} but it should be {$expected_length}");

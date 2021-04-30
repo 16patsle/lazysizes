@@ -25,6 +25,6 @@ class Base83
         foreach (\str_split($hash) as $char) {
             $result = $result * self::BASE + (int) \array_search($char, self::ALPHABET, \true);
         }
-        return $result;
+        return (int) $result;
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e55dd9eebadf9eaaf6bab7eb5c4ee014",
+    "content-hash": "452a57aa6a6db52a55974c73cac9ba07",
     "packages": [
         {
             "name": "composer/installers",
@@ -158,26 +158,26 @@
         },
         {
             "name": "kornrunner/blurhash",
-            "version": "v1.2.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kornrunner/php-blurhash.git",
-                "reference": "7dde9c0c7ee7e688dc79fb7770ee110ed308ffc7"
+                "reference": "5a09325353229c108c8d2ff129ec08b447753f9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kornrunner/php-blurhash/zipball/7dde9c0c7ee7e688dc79fb7770ee110ed308ffc7",
-                "reference": "7dde9c0c7ee7e688dc79fb7770ee110ed308ffc7",
+                "url": "https://api.github.com/repos/kornrunner/php-blurhash/zipball/5a09325353229c108c8d2ff129ec08b447753f9b",
+                "reference": "5a09325353229c108c8d2ff129ec08b447753f9b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3|^8.0"
+                "php": "^7.2"
             },
             "require-dev": {
-                "ocramius/package-versions": "^1.4|^2.0",
+                "ocramius/package-versions": "<1.5",
                 "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^9",
-                "vimeo/psalm": "^4.3"
+                "phpunit/phpunit": "^8.2",
+                "vimeo/psalm": "^3.4"
             },
             "type": "library",
             "autoload": {
@@ -201,7 +201,7 @@
                 "issues": "https://github.com/kornrunner/php-blurhash/issues",
                 "source": "https://github.com/kornrunner/php-blurhash.git"
             },
-            "time": "2021-01-18T11:17:12+00:00"
+            "time": "2020-04-15T22:06:04+00:00"
         }
     ],
     "packages-dev": [
