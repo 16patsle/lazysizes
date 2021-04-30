@@ -54,7 +54,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function first_time_activation() {
+	public function first_time_activation(): void {
 		$defaults = $this->defaults;
 		foreach ( $defaults as $key => $val ) {
 			if ( get_option( 'lazysizes_' . $key, false ) === false ) {
@@ -69,7 +69,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function update() {
+	public function update(): void {
 		$defaults = $this->defaults;
 		$ver      = self::VER;
 		$dbver    = get_option( 'lazysizes_version', '' );
@@ -94,7 +94,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_add_admin_menu() {
+	public function lazysizes_add_admin_menu(): void {
 		$admin_page = add_options_page( 'Lazysizes', 'Lazysizes', 'manage_options', 'lazysizes', array( $this, 'settings_page' ) );
 	}
 
@@ -103,7 +103,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_enqueue_admin() {
+	public function lazysizes_enqueue_admin(): void {
 		$screen = get_current_screen();
 		if ( 'settings_page_lazysizes' === $screen->base ) {
 			wp_enqueue_style( 'thickbox-css' );
@@ -116,7 +116,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function ask_for_feedback() {
+	public function ask_for_feedback(): void {
 		?>
 		<div class="updated">
 			<p>
@@ -151,7 +151,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_settings_init() {
+	public function lazysizes_settings_init(): void {
 		register_setting( 'basicSettings', 'lazysizes_general' );
 		register_setting( 'basicSettings', 'lazysizes_effects' );
 		register_setting( 'basicSettings', 'lazysizes_addons' );
@@ -194,7 +194,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_general_render() {
+	public function lazysizes_general_render(): void {
 		$options = get_option( 'lazysizes_general' );
 		?>
 		<fieldset>
@@ -277,7 +277,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_effects_render() {
+	public function lazysizes_effects_render(): void {
 		$options = get_option( 'lazysizes_effects' );
 		?>
 		<fieldset>
@@ -304,7 +304,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_addons_render() {
+	public function lazysizes_addons_render(): void {
 		$options = get_option( 'lazysizes_addons' );
 		?>
 		<fieldset>
@@ -406,7 +406,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function lazysizes_basic_section_callback() {
+	public function lazysizes_basic_section_callback(): void {
 		esc_html_e( 'Customize the basic features of lazysizes.', 'lazysizes' );
 	}
 
@@ -416,7 +416,7 @@ class Settings {
 	 *
 	 * @since 0.1.0
 	 */
-	public function settings_page() {
+	public function settings_page(): void {
 		?>
 		<div class="wrap">
 			<h2><?php esc_html_e( 'lazysizes', 'lazysizes' ); ?></h2>

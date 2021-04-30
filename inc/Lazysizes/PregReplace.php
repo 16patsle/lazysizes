@@ -293,7 +293,7 @@ class PregReplace {
 	 * @param string      $quote_type The type of quote being used, single or double.
 	 * @return (string|false)[] The HTML markup with attributes replaced, and the contents of the src, or false.
 	 */
-	public function replace_attr( string $replace_markup, $tag = false, string $quote_type = '"' ) {
+	public function replace_attr( string $replace_markup, $tag = false, string $quote_type = '"' ): array {
 		if ( ! $tag ) {
 			return $replace_markup;
 		}

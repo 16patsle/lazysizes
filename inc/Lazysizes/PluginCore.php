@@ -199,7 +199,7 @@ class PluginCore {
 	 *
 	 * @since 0.1.0
 	 */
-	public function load_scripts() {
+	public function load_scripts(): void {
 
 		// Are these minified?
 		$min = ( $this->settings['minimize_scripts'] ) ? '.min' : '';
@@ -318,7 +318,7 @@ class PluginCore {
 	 * @since 1.3.0
 	 * @param string $admin_page The current admin page.
 	 */
-	public function load_scripts_admin_media( string $admin_page ) {
+	public function load_scripts_admin_media( string $admin_page ): void {
 		$current_screen = get_current_screen();
 
 		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) ) {
@@ -369,7 +369,7 @@ class PluginCore {
 	 *
 	 * @since 1.3.0
 	 */
-	public function ajax_blurhash_handler() {
+	public function ajax_blurhash_handler(): void {
 		$action = '';
 		if ( ! isset( $_REQUEST['nonce'] ) || ! isset( $_REQUEST['mode'] ) ) {
 			wp_send_json_error( new \WP_Error( '401', __( 'Missing nonce or action. If you see this, something is wrong.', 'lazysizes' ) ) );
@@ -438,7 +438,7 @@ class PluginCore {
 	 *
 	 * @since 1.3.0
 	 */
-	public function wp_head_noscript() {
+	public function wp_head_noscript(): void {
 		?>
 			<noscript><style>.lazyload { display: none !important; }</style></noscript>
 		<?php
@@ -450,7 +450,7 @@ class PluginCore {
 	 *
 	 * @since 1.3.0
 	 */
-	public function wp_head_skip_src() {
+	public function wp_head_skip_src(): void {
 		?>
 			<style>img.lazyload:not([src]) { visibility: hidden; }</style>
 		<?php
