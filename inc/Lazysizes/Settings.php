@@ -25,8 +25,8 @@ class Settings {
 	 *
 	 * @var array[]
 	 */
-	protected $defaults = array(
-		'general' => array(
+	protected $defaults = [
+		'general' => [
 			'lazysizes_minimize_scripts'         => 1,
 			'lazysizes_optimized_scripts_styles' => 1,
 			'lazysizes_thumbnails'               => 1,
@@ -36,17 +36,17 @@ class Settings {
 			'lazysizes_load_extras'              => 1,
 			'lazysizes_excludeclasses'           => '',
 			'lazysizes_img'                      => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-		),
-	);
+		],
+	];
 
 	/**
 	 * Set up actions needed for the plugin's admin interface
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'lazysizes_add_admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'lazysizes_settings_init' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'lazysizes_enqueue_admin' ) );
-		add_action( 'upgrader_process_complete', array( $this, 'update' ) );
+		add_action( 'admin_menu', [ $this, 'lazysizes_add_admin_menu' ] );
+		add_action( 'admin_init', [ $this, 'lazysizes_settings_init' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'lazysizes_enqueue_admin' ] );
+		add_action( 'upgrader_process_complete', [ $this, 'update' ] );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Settings {
 	 * @since 0.1.0
 	 */
 	public function lazysizes_add_admin_menu(): void {
-		$admin_page = add_options_page( 'Lazysizes', 'Lazysizes', 'manage_options', 'lazysizes', array( $this, 'settings_page' ) );
+		$admin_page = add_options_page( 'Lazysizes', 'Lazysizes', 'manage_options', 'lazysizes', [ $this, 'settings_page' ] );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Settings {
 		$screen = get_current_screen();
 		if ( 'settings_page_lazysizes' === $screen->base ) {
 			wp_enqueue_style( 'thickbox-css' );
-			// add_action( 'admin_notices', array($this,'ask_for_feedback') );//.
+			// add_action( 'admin_notices', [$this,'ask_for_feedback'] );//.
 		}
 	}
 
@@ -142,7 +142,7 @@ class Settings {
 	 * @return string[]
 	 */
 	public function lazysizes_action_links( array $links ): array {
-		$settings = array( '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>' );
+		$settings = [ '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>' ];
 		return array_merge( $settings, $links );
 	}
 
@@ -159,14 +159,14 @@ class Settings {
 		add_settings_section(
 			'lazysizes_basic_section',
 			__( 'General Settings', 'lazysizes' ),
-			array( $this, 'lazysizes_basic_section_callback' ),
+			[ $this, 'lazysizes_basic_section_callback' ],
 			'basicSettings'
 		);
 
 		add_settings_field(
 			'lazysizes_general',
 			__( 'Basics', 'lazysizes' ),
-			array( $this, 'lazysizes_general_render' ),
+			[ $this, 'lazysizes_general_render' ],
 			'basicSettings',
 			'lazysizes_basic_section'
 		);
@@ -174,7 +174,7 @@ class Settings {
 		add_settings_field(
 			'lazysizes_effects',
 			__( 'Effects', 'lazysizes' ),
-			array( $this, 'lazysizes_effects_render' ),
+			[ $this, 'lazysizes_effects_render' ],
 			'basicSettings',
 			'lazysizes_basic_section'
 		);
@@ -182,7 +182,7 @@ class Settings {
 		add_settings_field(
 			'lazysizes_addons',
 			__( 'Addons', 'lazysizes' ),
-			array( $this, 'lazysizes_addons_render' ),
+			[ $this, 'lazysizes_addons_render' ],
 			'basicSettings',
 			'lazysizes_basic_section'
 		);

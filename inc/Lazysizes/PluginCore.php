@@ -64,72 +64,72 @@ class PluginCore {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			$settings_class = new Settings();
 			// If this is the first time we've enabled the plugin, setup default settings.
-			register_activation_hook( $pluginfile, array( $settings_class, 'first_time_activation' ) );
-			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), array( $settings_class, 'lazysizes_action_links' ) );
+			register_activation_hook( $pluginfile, [ $settings_class, 'first_time_activation' ] );
+			add_filter( 'plugin_action_links_' . plugin_basename( $pluginfile ), [ $settings_class, 'lazysizes_action_links' ] );
 
 			if ( $this->settings['blurhash'] ) {
 				// Enqueue blurhash lazysizes admin scripts and styles.
-				add_action( 'admin_enqueue_scripts', array( $this, 'load_scripts_admin_media' ), 16 );
+				add_action( 'admin_enqueue_scripts', [ $this, 'load_scripts_admin_media' ], 16 );
 			}
 		} else {
 			$this->replace_class = new PregReplace( $this->settings, $pluginfile );
 
 			// Add inline css to head, part of noscript support.
 			if ( $this->settings['add_noscript'] ) {
-				add_action( 'wp_head', array( $this, 'wp_head_noscript' ) );
+				add_action( 'wp_head', [ $this, 'wp_head_noscript' ] );
 			}
 
 			// Also add CSS to hide broken image icons when not adding src placeholder.
 			// If optimize scripts/styles is enabled, it is bundled instead.
 			if ( $this->settings['skip_src'] && ! $this->settings['optimized_scripts_styles'] ) {
-				add_action( 'wp_head', array( $this, 'wp_head_skip_src' ) );
+				add_action( 'wp_head', [ $this, 'wp_head_skip_src' ] );
 			}
 
 			// Enqueue lazysizes scripts and styles.
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+			add_action( 'wp_enqueue_scripts', [ $this, 'load_scripts' ] );
 
 			// Replace the 'src' attr with 'data-src' in the_content.
-			add_filter( 'the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
+			add_filter( 'the_content', [ $this, 'filter_html' ], PHP_INT_MAX );
 
 			// If Advanced Custom Fields support is enabled, do the same there.
 			if ( $this->settings['acf_content'] ) {
-				add_filter( 'acf_the_content', array( $this, 'filter_html' ), PHP_INT_MAX );
+				add_filter( 'acf_the_content', [ $this, 'filter_html' ], PHP_INT_MAX );
 			}
 
 			// If enabled replace the 'src' attr with 'data-src' in text widgets.
 			if ( $this->settings['textwidgets'] ) {
-				add_filter( 'widget_text', array( $this, 'filter_html' ), PHP_INT_MAX );
+				add_filter( 'widget_text', [ $this, 'filter_html' ], PHP_INT_MAX );
 			}
 			// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
 			if ( $this->settings['thumbnails'] ) {
-				add_filter( 'post_thumbnail_html', array( $this, 'filter_html' ), PHP_INT_MAX );
+				add_filter( 'post_thumbnail_html', [ $this, 'filter_html' ], PHP_INT_MAX );
 			}
 
 			if ( $this->settings['avatars'] ) {
 				// If enabled replace the 'src' attr with 'data-src' in the_post_thumbnail.
-				add_filter( 'get_avatar', array( $this, 'filter_html' ), PHP_INT_MAX );
+				add_filter( 'get_avatar', [ $this, 'filter_html' ], PHP_INT_MAX );
 			}
 
 			// If enabled replace the 'src' attr with 'data-src' for wp_get_attachment_image the_post_thumbnail.
 			if ( $this->settings['attachment_image'] ) {
-				add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attributes' ), PHP_INT_MAX );
+				add_filter( 'wp_get_attachment_image_attributes', [ $this, 'filter_attributes' ], PHP_INT_MAX );
 			}
 
 			// Generate blurhash for new images.
 			// Should only fire in admin, but doesn't hurt to add it otherwise.
 			if ( $this->settings['blurhash'] ) {
-				add_filter( 'wp_generate_attachment_metadata', array( Blurhash::class, 'encode_blurhash_filter' ), 10, 2 );
-				add_filter( 'wp_prepare_attachment_for_js', array( $this, 'prepare_attachment_blurhash' ), 10, 2 );
+				add_filter( 'wp_generate_attachment_metadata', [ Blurhash::class, 'encode_blurhash_filter' ], 10, 2 );
+				add_filter( 'wp_prepare_attachment_for_js', [ $this, 'prepare_attachment_blurhash' ], 10, 2 );
 
-				add_action( 'wp_ajax_lazysizes_blurhash', array( $this, 'ajax_blurhash_handler' ) );
+				add_action( 'wp_ajax_lazysizes_blurhash', [ $this, 'ajax_blurhash_handler' ] );
 
 				if ( $this->settings['blurhash_never_fancy'] ) {
-					add_filter( 'body_class', array( $this, 'body_class_blurhash_never_fancy' ) );
+					add_filter( 'body_class', [ $this, 'body_class_blurhash_never_fancy' ] );
 				}
 			}
 
 			// Disable adding loading=lazy attribute unless full native loading is enabled.
-			add_filter( 'wp_lazy_loading_enabled', array( $this, 'set_wp_lazy_load' ), 10, 2 );
+			add_filter( 'wp_lazy_loading_enabled', [ $this, 'set_wp_lazy_load' ], 10, 2 );
 		}
 	}
 
@@ -147,7 +147,7 @@ class PluginCore {
 		$addons  = get_option( 'lazysizes_addons' );
 
 		// Set the array of options.
-		$settings_arr = array(
+		$settings_arr = [
 			'minimize_scripts',
 			'optimized_scripts_styles',
 			'footer',
@@ -169,10 +169,10 @@ class PluginCore {
 			'blurhash',
 			'blurhash_onload',
 			'blurhash_never_fancy',
-		);
+		];
 
 		// Start fresh.
-		$settings = array();
+		$settings = [];
 		// Loop through the settings we're looking for, and set them if they exist.
 		foreach ( $settings_arr as $setting ) {
 			if ( $general && array_key_exists( 'lazysizes_' . $setting, $general ) ) {
@@ -188,7 +188,7 @@ class PluginCore {
 			$settings[ $setting ] = $return;
 		}
 
-		$settings['excludeclasses'] = ( $settings['excludeclasses'] ) ? explode( ' ', $settings['excludeclasses'] ) : array();
+		$settings['excludeclasses'] = ( $settings['excludeclasses'] ) ? explode( ' ', $settings['excludeclasses'] ) : [];
 
 		// Return the settings.
 		return $settings;
@@ -211,7 +211,7 @@ class PluginCore {
 		$script_url_pre = $this->dir . 'js/';
 
 		if ( $this->settings['optimized_scripts_styles'] ) {
-			$styles = array();
+			$styles = [];
 
 			// Enqueue fade-in if enabled.
 			if ( $this->settings['fade_in'] ) {
@@ -239,7 +239,7 @@ class PluginCore {
 				wp_enqueue_style( 'lazysizes', $style_url_pre . $stylename . $min . '.css', false, $this->lazysizes_ver );
 			}
 
-			$scripts = array();
+			$scripts = [];
 
 			// Enqueue extras enabled.
 			if ( $this->settings['load_extras'] ) {
@@ -291,23 +291,23 @@ class PluginCore {
 
 			// Enqueue aspectratio if enabled.
 			if ( $this->settings['aspectratio'] ) {
-				wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre . 'ls.aspectratio' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-aspectratio', $script_url_pre . 'ls.aspectratio' . $min . '.js', [ 'lazysizes' ], $this->lazysizes_ver, $footer );
 			}
 
 			// Enqueue extras enabled.
 			if ( $this->settings['load_extras'] ) {
-				wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . 'ls.unveilhooks' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-unveilhooks', $script_url_pre . 'ls.unveilhooks' . $min . '.js', [ 'lazysizes' ], $this->lazysizes_ver, $footer );
 			}
 
 			// Enqueue native lazy loading.
 			if ( $this->settings['native_lazy'] ) {
-				wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . 'ls.native-loading' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
-				wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . 'ls.loading-attribute' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-native-loading', $script_url_pre . 'ls.native-loading' . $min . '.js', [ 'lazysizes' ], $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-native-loading-attr', $script_url_pre . 'ls.loading-attribute' . $min . '.js', [ 'lazysizes' ], $this->lazysizes_ver, $footer );
 			}
 
 			// Enqueue Blurhash.
 			if ( $this->settings['blurhash'] ) {
-				wp_enqueue_script( 'lazysizes-blurhash', $script_url_pre . 'build/lazysizes.blurhash' . $min . '.js', array( 'lazysizes' ), $this->lazysizes_ver, $footer );
+				wp_enqueue_script( 'lazysizes-blurhash', $script_url_pre . 'build/lazysizes.blurhash' . $min . '.js', [ 'lazysizes' ], $this->lazysizes_ver, $footer );
 			}
 		}
 	}
@@ -321,7 +321,7 @@ class PluginCore {
 	public function load_scripts_admin_media( string $admin_page ): void {
 		$current_screen = get_current_screen();
 
-		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) ) {
+		if ( empty( $current_screen ) || ! in_array( $current_screen->base, [ 'upload', 'post' ], true ) ) {
 			return;
 		}
 
@@ -329,19 +329,19 @@ class PluginCore {
 		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		// Enqueue attachment details extension for Blurhash.
-		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', array( 'media-views', 'media-grid' ), Settings::VER, true );
+		wp_enqueue_script( 'lazysizes-attachment-details', $this->dir . 'js/admin/build/lazysizes-attachment-details' . $min . '.js', [ 'media-views', 'media-grid' ], Settings::VER, true );
 
 		wp_localize_script(
 			'lazysizes-attachment-details',
 			'lazysizesStrings',
-			array(
+			[
 				'notGenerated' => esc_html__( 'Not generated', 'lazysizes' ),
 				'generate'     => esc_html__( 'Generate', 'lazysizes' ),
 				'delete'       => esc_html__( 'Delete', 'lazysizes' ),
 				'current'      => esc_html__( 'Current value: ', 'lazysizes' ),
 				'description'  => esc_html__( 'The Blurhash string is used to show a low-res placeholder when lazyloading. It can be automatically generated for new images, or you can manage it here manually.', 'lazysizes' ),
 				'error'        => esc_html__( 'An error occurred.', 'lazysizes' ),
-			)
+			]
 		);
 	}
 
@@ -355,11 +355,11 @@ class PluginCore {
 	 */
 	public function prepare_attachment_blurhash( array $response, WP_Post $attachment ): array {
 		// Add nonces.
-		$response['nonces']['lazysizes'] = array(
+		$response['nonces']['lazysizes'] = [
 			'fetch' => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
 			'generate' => wp_create_nonce( 'lazysizes-blurhash-nonce-generate' ),
 			'delete'   => wp_create_nonce( 'lazysizes-blurhash-nonce-delete' ),
-		);
+		];
 
 		return $response;
 	}
@@ -398,34 +398,34 @@ class PluginCore {
 			$blurhash = get_post_meta( $attachment_id, '_lazysizes_blurhash', true );
 
 			wp_send_json(
-				array(
+				[
 					'success'  => true,
 					'blurhash' => $blurhash !== '' ? $blurhash : false,
-				)
+				]
 			);
 		} elseif ( $action === 'generate' && $nonce_valid_generate ) {
 			$blurhash = Blurhash::encode_blurhash( false, $attachment_id );
 			if ( empty( $blurhash ) ) {
-				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not generate blurhash string.', 'lazysizes' ), [ 'attachmentId' => $attachment_id ] ) );
 			} else {
 				wp_send_json(
-					array(
+					[
 						'success'      => true,
 						'blurhash'     => $blurhash,
 						'attachmentId' => $attachment_id,
-					)
+					]
 				);
 			}
 		} elseif ( $action === 'delete' && $nonce_valid_delete ) {
 			$result = delete_post_meta( $attachment_id, '_lazysizes_blurhash' );
 			if ( ! $result ) {
-				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), array( 'attachmentId' => $attachment_id ) ) );
+				wp_send_json_error( new \WP_Error( '500', __( 'Could not delete blurhash string.', 'lazysizes' ), [ 'attachmentId' => $attachment_id ] ) );
 			} else {
 				wp_send_json(
-					array(
+					[
 						'success'      => $result,
 						'attachmentId' => $attachment_id,
-					)
+					]
 				);
 			}
 		} else {
@@ -465,7 +465,7 @@ class PluginCore {
 	 * @return array An array of body class names.
 	 */
 	public function body_class_blurhash_never_fancy( array $classes ): array {
-		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
+		return array_merge( $classes, [ 'blurhash-no-fancy' ] );
 	}
 
 	/**
@@ -505,23 +505,23 @@ class PluginCore {
 		}
 
 		// Combine the attribute associative array into array of html attribute strings.
-		$attr_html = array();
+		$attr_html = [];
 		foreach ( array_keys( $attr ) as $a ) {
 			array_push( $attr_html, $a . '="' . $attr[ $a ] . '"' );
 		}
 
 		// Construct an html string and run the replace function.
-		$markup = $this->replace_class->preg_replace_html( '<img ' . implode( ' ', $attr_html ) . ' />', array( 'img' ), false );
+		$markup = $this->replace_class->preg_replace_html( '<img ' . implode( ' ', $attr_html ) . ' />', [ 'img' ], false );
 
 		// Extract the attributes from the new html string.
-		$new_attr_html = array();
+		$new_attr_html = [];
 		preg_match_all( '/[^\s]+?=".+?"/m', $markup, $new_attr_html );
 
 		// Split array of html attributes into associative array with attribute name as keys.
-		$new_attr = array();
+		$new_attr = [];
 		foreach ( $new_attr_html[0] as $a ) {
 			$attribute = explode( '=', $a );
-			$new_attr  = array_merge( $new_attr, array( $attribute[0] => trim( $attribute[1], '"' ) ) );
+			$new_attr  = array_merge( $new_attr, [ $attribute[0] => trim( $attribute[1], '"' ) ] );
 		}
 
 		// Return the transformed attributes.
@@ -551,10 +551,10 @@ class PluginCore {
 			$newcontent = $content;
 			// If enabled, replace 'src' with 'data-src' on both images and extra elements.
 			if ( $this->settings['load_extras'] ) {
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture', 'iframe', 'video', 'audio' ), $this->settings['add_noscript'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, [ 'img', 'picture', 'iframe', 'video', 'audio' ], $this->settings['add_noscript'] );
 			} else {
 				// Replace 'src' with 'data-src' on images.
-				$newcontent = $this->replace_class->preg_replace_html( $newcontent, array( 'img', 'picture' ), $this->settings['add_noscript'] );
+				$newcontent = $this->replace_class->preg_replace_html( $newcontent, [ 'img', 'picture' ], $this->settings['add_noscript'] );
 			}
 			return $newcontent;
 		} else {

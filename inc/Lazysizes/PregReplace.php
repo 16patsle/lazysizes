@@ -56,7 +56,7 @@ class PregReplace {
 		// Loop through tags.
 		foreach ( $tags as $tag ) {
 			// Look for tag in content.
-			if ( in_array( $tag, array( 'picture', 'video', 'audio' ), true ) ) {
+			if ( in_array( $tag, [ 'picture', 'video', 'audio' ], true ) ) {
 				$result = $this->replace_picture_video_audio( $newcontent, $tag, $noscript );
 			} else {
 				$result = $this->replace_generic_tag( $newcontent, $tag, $noscript, false );
@@ -245,7 +245,7 @@ class PregReplace {
 	public function extract_classes( string $match, string $quote_type = '"' ): array {
 		preg_match( sprintf( '/[\s\r\n]class=%1$s(.*?)%1$s/', $quote_type ), $match, $classes );
 		// If it has assigned classes, explode them.
-		return ( array_key_exists( 1, $classes ) ) ? explode( ' ', $classes[1] ) : array();
+		return ( array_key_exists( 1, $classes ) ) ? explode( ' ', $classes[1] ) : [];
 	}
 
 	/**
@@ -258,7 +258,7 @@ class PregReplace {
 	 */
 	public function get_src_attr( string $tag, string $quote_type = '"' ): string {
 		// Elements requiring a 'src' attribute to be valid HTML.
-		$src_req = array( 'img', 'video' );
+		$src_req = [ 'img', 'video' ];
 
 		// If the element requires a 'src', set the src to default image.
 		$src = ( in_array( $tag, $src_req, true ) ) ? sprintf( ' src=%1$sdata:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7%1$s', $quote_type ) : '';
@@ -276,7 +276,7 @@ class PregReplace {
 	 * @return string The end regex for the current tag.
 	 */
 	public function get_tag_end( string $tag ): string {
-		if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
+		if ( in_array( $tag, [ 'img', 'embed', 'source' ], true ) ) {
 			$tag_end = '\/?';
 		} else {
 			$tag_end = '>.*?\s*<\/' . $tag;
@@ -298,13 +298,13 @@ class PregReplace {
 			return $replace_markup;
 		}
 
-		$src_attr = array();
+		$src_attr = [];
 		$had_src  = preg_match( sprintf( '/<%1$s[^>]*[\s]src=%2$s(.*?(?<!\\\\))%2$s/', $tag, $quote_type ), $replace_markup, $src_attr );
 
 		if ( 'source' === $tag ) {
-			$attrs = array( 'poster', 'srcset' );
+			$attrs = [ 'poster', 'srcset' ];
 		} else {
-			$attrs = array( 'src', 'poster', 'srcset' );
+			$attrs = [ 'src', 'poster', 'srcset' ];
 		}
 
 		// Attributes to search for.
@@ -322,7 +322,7 @@ class PregReplace {
 			$replace_markup = str_replace( sprintf( '<%s', $tag ), '<' . $tag . $this->get_src_attr( $tag, $quote_type ), $replace_markup );
 		}
 
-		return array( $replace_markup, $had_src === 1 ? $src_attr[1] : false );
+		return [ $replace_markup, $had_src === 1 ? $src_attr[1] : false ];
 	}
 
 	/**
@@ -339,7 +339,7 @@ class PregReplace {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
 
-		if ( in_array( $tag, array( 'source' ), true ) ) {
+		if ( in_array( $tag, [ 'source' ], true ) ) {
 			return $replace_markup;
 		}
 
@@ -370,7 +370,7 @@ class PregReplace {
 	 * @return string The HTML markup with preload attribute added.
 	 */
 	public function add_preload_attr( string $replace_markup, string $tag, string $quote_type = '"' ): string {
-		if ( in_array( $tag, array( 'picture' ), true ) ) {
+		if ( in_array( $tag, [ 'picture' ], true ) ) {
 			return $replace_markup;
 		}
 

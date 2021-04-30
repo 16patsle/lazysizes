@@ -86,17 +86,17 @@ class Blurhash {
 		$width  = $size['width'];
 		$height = $size['height'];
 
-		$pixels = array();
+		$pixels = [];
 
 		if ( extension_loaded( 'imagick' ) ) {
 			$image    = new \Imagick( $path );
 			$iterator = $image->getPixelIterator();
 
 			foreach ( $iterator as $image_pixels ) {
-				$row = array();
+				$row = [];
 				foreach ( $image_pixels as $pixel ) {
 					$colors = $pixel->getColor();
-					$row[]  = array( $colors['r'], $colors['g'], $colors['b'] );
+					$row[]  = [ $colors['r'], $colors['g'], $colors['b'] ];
 				}
 				$pixels[] = $row;
 			}
@@ -106,12 +106,12 @@ class Blurhash {
 			$image = imagecreatefromstring( file_get_contents( $path ) );
 
 			for ( $y = 0; $y < $height; ++$y ) {
-				$row = array();
+				$row = [];
 				for ( $x = 0; $x < $width; ++$x ) {
 					$index  = imagecolorat( $image, $x, $y );
 					$colors = imagecolorsforindex( $image, $index );
 
-					$row[] = array( $colors['red'], $colors['green'], $colors['blue'] );
+					$row[] = [ $colors['red'], $colors['green'], $colors['blue'] ];
 				}
 				$pixels[] = $row;
 			}
