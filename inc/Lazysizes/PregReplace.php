@@ -443,7 +443,7 @@ class PregReplace {
 	 * @return bool If the string matches or not.
 	 */
 	public function is_inside_tag( string $tag, string $escaped, string $content ): bool {
-		return preg_match( sprintf( '/<%1$s[^>]*>(?!<\/*%1$s>).*%2$s.*?<\/%1$s>/is', $tag, $escaped ), $content );
+		return preg_match( sprintf( '/<%1$s[^>]*>(?!<\/*%1$s>).*%2$s.*?<\/%1$s>/is', $tag, $escaped ), $content ) === 1;
 	}
 
 	/**
