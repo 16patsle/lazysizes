@@ -6,6 +6,8 @@
  * @version 1.3.3
  */
 
+declare(strict_types=1);
+
 namespace Lazysizes;
 
 use Lazysizes\Settings;
@@ -48,7 +50,7 @@ class PluginCore {
 	 *
 	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct( $pluginfile ) {
+	public function __construct( string $pluginfile ) {
 
 		// Load composer autoloader for vendor files.
 		if ( is_readable( dirname( $pluginfile ) . '/build/vendor/scoper-autoload.php' ) ) {
@@ -317,7 +319,7 @@ class PluginCore {
 	 * @since 1.3.0
 	 * @param string $admin_page The current admin page.
 	 */
-	public function load_scripts_admin_media( $admin_page ) {
+	public function load_scripts_admin_media( string $admin_page ) {
 		$current_screen = get_current_screen();
 
 		if ( empty( $current_screen ) || ! in_array( $current_screen->base, array( 'upload', 'post' ), true ) ) {
@@ -352,7 +354,7 @@ class PluginCore {
 	 * @param WP_Post $attachment Attachment object.
 	 * @return array Array of modified attachment details.
 	 */
-	public function prepare_attachment_blurhash( $response, $attachment ) {
+	public function prepare_attachment_blurhash( array $response, WP_Post $attachment ): array {
 		// Add nonces.
 		$response['nonces']['lazysizes'] = array(
 			'fetch' => wp_create_nonce( 'lazysizes-blurhash-nonce-fetch' ),
@@ -463,7 +465,7 @@ class PluginCore {
 	 * @param array $classes An array of body class names.
 	 * @return array An array of body class names.
 	 */
-	public function body_class_blurhash_never_fancy( $classes ) {
+	public function body_class_blurhash_never_fancy( array $classes ): array {
 		return array_merge( $classes, array( 'blurhash-no-fancy' ) );
 	}
 
@@ -475,7 +477,7 @@ class PluginCore {
 	 * @param string $tag_name An HTML tag name. As of WP 5.5, only img is supported.
 	 * @return bool New value for $default.
 	 */
-	public function set_wp_lazy_load( $default, $tag_name ) {
+	public function set_wp_lazy_load( bool $default, string $tag_name ): bool {
 		if ( $tag_name === 'img' ) {
 			if ( $this->settings['full_native'] ) {
 				return true;
@@ -492,7 +494,7 @@ class PluginCore {
 	 * @param array $attr Attributes for the image markup.
 	 * @return array The transformed attributes.
 	 */
-	public function filter_attributes( $attr ) {
+	public function filter_attributes( array $attr ): array {
 		if ( is_feed() || is_admin() ) {
 			return $attr;
 		}
@@ -534,7 +536,7 @@ class PluginCore {
 	 * @param string $content HTML content to transform.
 	 * @return string The transformed HTML content.
 	 */
-	public function filter_html( $content ) {
+	public function filter_html( string $content ): string {
 		if ( is_feed() ) {
 			return $content;
 		}

@@ -38,7 +38,7 @@ $lazysizes = new PluginCore( __FILE__ );
  * @param string $html HTML content to transform.
  * @return string The transformed HTML content.
  */
-function get_lazysizes_html( $html = '' ) {
+function get_lazysizes_html( string $html = '' ): string {
 	global $lazysizes;
 	return $lazysizes->filter_html( $html );
 }

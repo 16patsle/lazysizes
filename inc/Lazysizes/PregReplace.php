@@ -5,6 +5,8 @@
  * @package Lazysizes
  */
 
+declare(strict_types=1);
+
 namespace Lazysizes;
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
@@ -33,7 +35,7 @@ class PregReplace {
 	 * @param array  $settings The settings for this plugin.
 	 * @param string $pluginfile __FILE__ path to the main plugin file.
 	 */
-	public function __construct( $settings, $pluginfile ) {
+	public function __construct( array $settings, string $pluginfile ) {
 		// Store our settings in memory to reduce mysql calls.
 		$this->settings = $settings;
 		$this->dir      = plugin_dir_url( $pluginfile );
@@ -48,7 +50,7 @@ class PregReplace {
 	 * @param bool     $noscript If <noscript> fallbacks should be generated.
 	 * @return string The transformed HTML content.
 	 */
-	public function preg_replace_html( $content, $tags, $noscript = true ) {
+	public function preg_replace_html( string $content, array $tags, bool $noscript = true ): string {
 		$newcontent = $content;
 
 		// Loop through tags.
@@ -74,7 +76,7 @@ class PregReplace {
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_picture_video_audio( $content, $tag, $noscript = true ) {
+	public function replace_picture_video_audio( string $content, string $tag, bool $noscript = true ): string {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -156,7 +158,7 @@ class PregReplace {
 	 * @param bool   $inside_picture If tags inside picture tags should be transformed.
 	 * @return string The transformed HTML content.
 	 */
-	public function replace_generic_tag( $content, $tag, $noscript = true, $inside_picture = false ) {
+	public function replace_generic_tag( string $content, string $tag, bool $noscript = true, bool $inside_picture = false ): string {
 		// Set tag end, depending of if it's self-closing.
 		$tag_end = $this->get_tag_end( $tag );
 
@@ -194,7 +196,7 @@ class PregReplace {
 	 * @param bool   $noscript If <noscript> fallbacks should be generated.
 	 * @return string The new markup.
 	 */
-	public function get_replace_markup( $content, $match, $tag, $noscript = true ) {
+	public function get_replace_markup( string $content, string $match, string $tag, bool $noscript = true ): string {
 		$newcontent = $content;
 
 		// Find out which quote type is used.
@@ -240,7 +242,7 @@ class PregReplace {
 	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string[]|array The extracted classes.
 	 */
-	public function extract_classes( $match, $quote_type = '"' ) {
+	public function extract_classes( string $match, string $quote_type = '"' ): array {
 		preg_match( sprintf( '/[\s\r\n]class=%1$s(.*?)%1$s/', $quote_type ), $match, $classes );
 		// If it has assigned classes, explode them.
 		return ( array_key_exists( 1, $classes ) ) ? explode( ' ', $classes[1] ) : array();
@@ -254,7 +256,7 @@ class PregReplace {
 	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string A src string fit for the current tag.
 	 */
-	public function get_src_attr( $tag, $quote_type = '"' ) {
+	public function get_src_attr( string $tag, string $quote_type = '"' ): string {
 		// Elements requiring a 'src' attribute to be valid HTML.
 		$src_req = array( 'img', 'video' );
 
@@ -273,7 +275,7 @@ class PregReplace {
 	 * @param string $tag The current tag type being processed.
 	 * @return string The end regex for the current tag.
 	 */
-	public function get_tag_end( $tag ) {
+	public function get_tag_end( string $tag ): string {
 		if ( in_array( $tag, array( 'img', 'embed', 'source' ), true ) ) {
 			$tag_end = '\/?';
 		} else {
@@ -291,7 +293,7 @@ class PregReplace {
 	 * @param string      $quote_type The type of quote being used, single or double.
 	 * @return (string|false)[] The HTML markup with attributes replaced, and the contents of the src, or false.
 	 */
-	public function replace_attr( $replace_markup, $tag = false, $quote_type = '"' ) {
+	public function replace_attr( string $replace_markup, $tag = false, string $quote_type = '"' ) {
 		if ( ! $tag ) {
 			return $replace_markup;
 		}
@@ -333,7 +335,7 @@ class PregReplace {
 	 * @param string   $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with lazyload class added.
 	 */
-	public function add_lazyload_class( $replace_markup, $tag, $classes_r, $quote_type = '"' ) {
+	public function add_lazyload_class( string $replace_markup, string $tag, array $classes_r, string $quote_type = '"' ): string {
 		// The contents of the class attribute.
 		$classes = implode( ' ', $classes_r );
 
@@ -367,7 +369,7 @@ class PregReplace {
 	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with preload attribute added.
 	 */
-	public function add_preload_attr( $replace_markup, $tag, $quote_type = '"' ) {
+	public function add_preload_attr( string $replace_markup, string $tag, string $quote_type = '"' ): string {
 		if ( in_array( $tag, array( 'picture' ), true ) ) {
 			return $replace_markup;
 		}
@@ -397,7 +399,7 @@ class PregReplace {
 	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
-	public function set_aspect_ratio( $replace_markup, $src_attr, $tag, $quote_type = '"' ) {
+	public function set_aspect_ratio( string $replace_markup, string $src_attr, string $tag, string $quote_type = '"' ): string {
 		// Extract width.
 		preg_match( sprintf( '/width=%1$s([^%1$s]*)%1$s/i', $quote_type ), $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
@@ -440,7 +442,7 @@ class PregReplace {
 	 * @param string $content The content to search through.
 	 * @return bool If the string matches or not.
 	 */
-	public function is_inside_tag( $tag, $escaped, $content ) {
+	public function is_inside_tag( string $tag, string $escaped, string $content ): bool {
 		return preg_match( sprintf( '/<%1$s[^>]*>(?!<\/*%1$s>).*%2$s.*?<\/%1$s>/is', $tag, $escaped ), $content );
 	}
 
@@ -451,7 +453,7 @@ class PregReplace {
 	 * @param string $string The string to escape.
 	 * @return string The escaped string.
 	 */
-	public function escape_for_regex( $string ) {
+	public function escape_for_regex( string $string ): string {
 		return preg_replace( '/([\\\^$.[\]|()?*+{}\/~-])/', '\\\\$0', $string );
 	}
 
@@ -465,7 +467,7 @@ class PregReplace {
 	 * @param string      $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with blurhash attribute added.
 	 */
-	public function set_blurhash_attr( $replace_markup, $src_attr, $tag = false, $quote_type = '"' ) {
+	public function set_blurhash_attr( string $replace_markup, string $src_attr, $tag = false, string $quote_type = '"' ): string {
 		if ( ! $tag ) {
 			return $replace_markup;
 		}
@@ -490,7 +492,7 @@ class PregReplace {
 	 * @param string $content Content to search through.
 	 * @return string String containing either a double or a single quote. If not found, defaults to double.
 	 */
-	public function get_quote_type( $content ) {
+	public function get_quote_type( string $content ): string {
 		$quote = null;
 
 		// Get the quote character used in the tag.

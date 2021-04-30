@@ -139,7 +139,7 @@ class Settings {
 	 * @param array $links The links.
 	 * @return string[]
 	 */
-	public function lazysizes_action_links( $links ) {
+	public function lazysizes_action_links( array $links ): array {
 		$settings = array( '<a href="options-general.php?page=lazysizes">' . esc_html__( 'Settings', 'lazysizes' ) . '</a>' );
 		return array_merge( $settings, $links );
 	}
@@ -441,7 +441,7 @@ class Settings {
 	 * @param bool    $echo Whether to echo or just return the string.
 	 * @return string|void html attribute or empty string.
 	 */
-	public function checked_r( $option, $key, $current = true, $echo = true ) {
+	public function checked_r( array $option, string $key, $current = true, bool $echo = true ) {
 		if ( is_array( $option ) && array_key_exists( $key, $option ) ) {
 			checked( $option[ $key ], $current, $echo );
 		}

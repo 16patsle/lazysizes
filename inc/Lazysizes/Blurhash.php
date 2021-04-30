@@ -23,7 +23,7 @@ class Blurhash {
 	 * @param bool   $generate_if_missing Generate a blurhash string if none exists.
 	 * @return string|false The Blurhash string, or false.
 	 */
-	public static function get_blurhash( $url, $generate_if_missing = false ) {
+	public static function get_blurhash( string $url, bool $generate_if_missing = false ) {
 		$attachment_id = attachment_url_to_postid( $url );
 
 		// If attachment not found, try replacing size in url with '-scaled'.
@@ -74,7 +74,7 @@ class Blurhash {
 	 * @param int         $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.
 	 */
-	public static function encode_blurhash( $metadata, $attachment_id ) {
+	public static function encode_blurhash( $metadata, int $attachment_id ) {
 		$size = image_get_intermediate_size( $attachment_id );
 		$upload_dir = wp_get_upload_dir();
 
@@ -148,7 +148,7 @@ class Blurhash {
 	 * @param int   $attachment_id Current attachment ID.
 	 * @return string|false The Blurhash string, or false.
 	 */
-	public static function encode_blurhash_filter( $metadata, $attachment_id ) {
+	public static function encode_blurhash_filter( $metadata, int $attachment_id ) {
 		self::encode_blurhash( $metadata, $attachment_id );
 
 		return $metadata;
