@@ -59,18 +59,6 @@ class PluginCore {
 		$this->settings = $this->get_settings();
 		$this->dir      = plugin_dir_url( $pluginfile );
 
-		// wp_doing_ajax was introduced in WP 4.7.
-		if ( ! function_exists( 'wp_doing_ajax' ) ) {
-			/**
-			 * Determines whether the current request is a WordPress Ajax request.
-			 *
-			 * @return bool True if it's a WordPress Ajax request, false otherwise.
-			 */
-			function wp_doing_ajax() {
-				return defined( 'DOING_AJAX' ) && DOING_AJAX;
-			}
-		}
-
 		// If we're in the admin area, and not processing an ajax call, load the settings class.
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			$settings_class = new Settings();

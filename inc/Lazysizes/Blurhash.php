@@ -76,12 +76,7 @@ class Blurhash {
 	 */
 	public static function encode_blurhash( $metadata, $attachment_id ) {
 		$size = image_get_intermediate_size( $attachment_id );
-		if ( function_exists( 'wp_get_upload_dir' ) ) {
-			$upload_dir = wp_get_upload_dir();
-		} else {
-			// WordPress < 4.5 does not support wp_get_upload_dir, use wp_upload_dir instead.
-			$upload_dir = wp_upload_dir();
-		}
+		$upload_dir = wp_get_upload_dir();
 
 		if ( $size === false || $upload_dir['error'] !== false ) {
 			return false; // Something went wrong.
