@@ -393,10 +393,10 @@ class PregReplace {
 	 * Sets the data-aspectration attribute if a width and height is specified
 	 *
 	 * @since 1.0.0
-	 * @param string $replace_markup The HTML markup being processed.
+	 * @param string       $replace_markup The HTML markup being processed.
 	 * @param string|false $src_attr The contents of the src attribute.
-	 * @param string $tag The current tag type being processed.
-	 * @param string $quote_type The type of quote being used, single or double.
+	 * @param string       $tag The current tag type being processed.
+	 * @param string       $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
 	public function set_aspect_ratio( string $replace_markup, $src_attr, string $tag, string $quote_type = '"' ): string {
