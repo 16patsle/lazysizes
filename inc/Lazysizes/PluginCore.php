@@ -10,8 +10,7 @@ declare(strict_types=1);
 
 namespace Lazysizes;
 
-use Lazysizes\Settings;
-use Lazysizes\PregReplace;
+use Lazysizes\{Settings, PregReplace};
 
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
