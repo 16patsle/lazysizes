@@ -394,12 +394,12 @@ class PregReplace {
 	 *
 	 * @since 1.0.0
 	 * @param string $replace_markup The HTML markup being processed.
-	 * @param string $src_attr The contents of the src attribute.
+	 * @param string|false $src_attr The contents of the src attribute.
 	 * @param string $tag The current tag type being processed.
 	 * @param string $quote_type The type of quote being used, single or double.
 	 * @return string The HTML markup with data-aspectratio applied if possible.
 	 */
-	public function set_aspect_ratio( string $replace_markup, string $src_attr, string $tag, string $quote_type = '"' ): string {
+	public function set_aspect_ratio( string $replace_markup, $src_attr, string $tag, string $quote_type = '"' ): string {
 		// Extract width.
 		preg_match( sprintf( '/width=%1$s([^%1$s]*)%1$s/i', $quote_type ), $replace_markup, $match_width );
 		$width = ! empty( $match_width ) ? $match_width[1] : '';
