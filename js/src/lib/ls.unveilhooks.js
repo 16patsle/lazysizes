@@ -92,7 +92,12 @@ export default function (lazySizes) {
 					// handle data-script
 					tmp = target.getAttribute('data-script');
 					if (tmp) {
-						addStyleScript(tmp);
+						e.detail.firesLoad = true;
+						load = function () {
+							e.detail.firesLoad = false;
+							lazySizes.fire(target, '_lazyloaded', {}, true, true);
+						};
+						addStyleScript(tmp, null, load);
 					}
 
 					// handle data-require
@@ -139,7 +144,7 @@ export default function (lazySizes) {
 		);
 	}
 
-	function addStyleScript(src, style) {
+	function addStyleScript(src, style, cb) {
 		if (uniqueUrls[src]) {
 			return;
 		}
@@ -150,6 +155,13 @@ export default function (lazySizes) {
 			elem.rel = 'stylesheet';
 			elem.href = src;
 		} else {
+			elem.onload = function () {
+				elem.onerror = null;
+				elem.onload = null;
+				cb();
+			};
+			elem.onerror = elem.onload;
+
 			elem.src = src;
 		}
 		uniqueUrls[src] = true;

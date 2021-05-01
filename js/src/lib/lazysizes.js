@@ -2,7 +2,11 @@ var factory = function () {
 	// Pass in the windoe Date function also for SSR because the Date class can be lost
 	/*jshint eqnull:true */
 
-	var lazysizes, lazySizesCfg;
+	var lazysizes,
+		/**
+		 * @type { LazySizesConfigPartial }
+		 */
+		lazySizesCfg;
 
 	(function () {
 		var prop;
@@ -15,6 +19,8 @@ var factory = function () {
 			errorClass: 'lazyerror',
 			//strictClass: 'lazystrict',
 			autosizesClass: 'lazyautosizes',
+			fastLoadedClass: 'ls-is-cached',
+			iframeLoadMode: 0,
 			srcAttr: 'data-src',
 			srcsetAttr: 'data-srcset',
 			sizesAttr: 'data-sizes',
@@ -42,7 +48,13 @@ var factory = function () {
 	if (!document || !document.getElementsByClassName) {
 		return {
 			init: function () {},
+			/**
+			 * @type { LazySizesConfigPartial }
+			 */
 			cfg: lazySizesCfg,
+			/**
+			 * @type { true }
+			 */
 			noSupport: true,
 		};
 	}
@@ -73,6 +85,14 @@ var factory = function () {
 		});
 	};
 
+	/**
+	 * @param elem { Element }
+	 * @param name { string }
+	 * @param detail { any }
+	 * @param noBubbles { boolean }
+	 * @param noCancelable { boolean }
+	 * @returns { CustomEvent }
+	 */
 	var triggerEvent = function (elem, name, detail, noBubbles, noCancelable) {
 		var event = document.createEvent('Event');
 
@@ -109,6 +129,13 @@ var factory = function () {
 		return (getComputedStyle(elem, null) || {})[style];
 	};
 
+	/**
+	 *
+	 * @param elem { Element }
+	 * @param parent { Element }
+	 * @param [width] {number}
+	 * @returns {number}
+	 */
 	var getWidth = function (elem, parent, width) {
 		width = width || elem.offsetWidth;
 
@@ -469,9 +496,13 @@ var factory = function () {
 		};
 
 		var changeIframeSrc = function (elem, src) {
-			try {
+			var loadMode =
+				elem.getAttribute('data-load-mode') || lazySizesCfg.iframeLoadMode;
+
+			// loadMode can be also a string!
+			if (loadMode == 0) {
 				elem.contentWindow.location.replace(src);
-			} catch (e) {
+			} else if (loadMode == 1) {
 				elem.src = src;
 			}
 		};
@@ -561,7 +592,7 @@ var factory = function () {
 
 				if (!firesLoad || isLoaded) {
 					if (isLoaded) {
-						elem.classList.add('ls-is-cached');
+						elem.classList.add(lazySizesCfg.fastLoadedClass);
 					}
 					switchLoadingClass(event);
 					elem._lazyCache = true;
@@ -577,6 +608,10 @@ var factory = function () {
 			}, true);
 		});
 
+		/**
+		 *
+		 * @param elem { Element }
+		 */
 		var unveilElement = function (elem) {
 			if (elem._lazyRace) {
 				return;
@@ -684,6 +719,18 @@ var factory = function () {
 						subtree: true,
 						attributes: true,
 					});
+				} else {
+					docElem.addEventListener(
+						'DOMNodeInserted',
+						throttledCheckElements,
+						true
+					);
+					docElem.addEventListener(
+						'DOMAttrModified',
+						throttledCheckElements,
+						true
+					);
+					setInterval(throttledCheckElements, 999);
 				}
 
 				addEventListener('hashchange', throttledCheckElements, true);
@@ -742,6 +789,12 @@ var factory = function () {
 				updatePolyfill(elem, event.detail);
 			}
 		});
+		/**
+		 *
+		 * @param elem {Element}
+		 * @param dataAttr
+		 * @param [width] { number }
+		 */
 		var getSizeElement = function (elem, dataAttr, width) {
 			var event;
 			var parent = elem.parentNode;
@@ -804,6 +857,9 @@ var factory = function () {
 	});
 
 	lazysizes = {
+		/**
+		 * @type { LazySizesConfigPartial }
+		 */
 		cfg: lazySizesCfg,
 		autoSizer: autoSizer,
 		loader: loader,
