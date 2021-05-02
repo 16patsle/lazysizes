@@ -346,7 +346,7 @@ class Settings {
 				<input type='checkbox' id='lazysizes_full_native' name='lazysizes_addons[lazysizes_full_native]' <?php $this->checked_r( $options, 'lazysizes_full_native', 1 ); ?> value="1">
 				<?php esc_html_e( 'Use full native lazy loading when supported.', 'lazysizes' ); ?>
 				<p class="description">
-					<?php esc_html_e( 'Chrome 76+, Firefox 75+ and Edge 84+ supports native lazy loading, giving the browser control over when to load images and iframes. This option gives supporting browsers full control over when to load the image, while keeping support for image loading effects like fade and Blurhash. Not compatible with native loading elay after lazysizes option above', 'lazysizes' ); ?>
+					<?php esc_html_e( 'Chrome 76+, Firefox 75+ and Edge 84+ supports native lazy loading, giving the browser control over when to load images and iframes. This option gives supporting browsers full control over when to load the image, while keeping support for image loading effects like fade and Blurhash. Not compatible with native loading delay after lazysizes option above', 'lazysizes' ); ?>
 				</p>
 			</label>
 			<br />

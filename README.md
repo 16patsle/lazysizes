@@ -67,6 +67,7 @@ This plugin is not affiliated with the lazysizes project, but I asked for, and g
 Note: The plugin now requires PHP 7.2 and WordPress 4.9. Updating the required PHP and WordPress versions makes developing the plugin easier, as it allows me to use more modern code, as well as reduces the need for testing the plugin on various combinations of older versions. Older PHP versions no longer receive important security fixes, so you should update anyways for improved security and performance. [Read more on wordpress.org](https://wordpress.org/support/update-php/).
 
 - Update the lazysizes library to 5.3.3.
+- Fix a typo on the settings screen.
 
 ### 1.3.3
 
